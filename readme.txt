@@ -17,13 +17,13 @@ Spider Video Player for WordPress is a video player plugin that allows you to ea
 Spider Video Player for WordPress is a video player extension that allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player. Spider Video Player is one of the best video players available in WordPress plugin directory. Spider Video Player provides a convenient user interface, incorporating all the common features for video players including video quality selection, sharing, full screen, shuffle etc. Moreover, you have the option of designing different themes for the video player by customizing each feature available. This is an optimal video player solution for your WordPress website, providing effective integration and high level of customization.  
 
 Features of Spider Video Player:  
-  
+
 -You can add the listed types of videos into Spider Video Player:  
-   * Http – You can provide the URL of the video and its HD version (UrlHD) in the video player or select it from the uploaded videos.  
+   * Http: You can provide the URL of the video and its HD version (UrlHD) in the video player or select it from the uploaded videos.  
   
-   * YouTube – Provide the YouTube link to the video in the URL field.  
+   * YouTube: Provide the YouTube link to the video in the URL field.  
   
-   * rtmp – Fill in the Flash Media Server (FMS) URL of the video for the video player along with the regular URL and UrlHD (HD version).  
+   * rtmp: Fill in the Flash Media Server (FMS) URL of the video for the video player along with the regular URL and UrlHD (HD version).  
 -Each video in the Spider Video Player can have an image (thumb) representing it in the video player window. There is also an option for adding an image for the whole video playlist.  
 -Multiple playlists for each video player. Possibility to add tags for each video. Parameters for sorting videos and creating video playlists.  
 -Possibility to define the height and width of the video player, also defining the video size adjustment options for the player window.  
