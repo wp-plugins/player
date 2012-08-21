@@ -12,7 +12,7 @@ Spider Video Player for WordPress is a video player plugin that allows you to ea
 
 == Description ==
 
-### [Spider Video Player](http://web-dorado.com/products/spider-video-player-wordpress.html)
+###[Spider Video Player](http://web-dorado.com/products/spider-video-player-wordpress.html)
 
 Spider Video Player for WordPress is a video player extension that allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player. Spider Video Player is one of the best video players available in WordPress plugin directory. Spider Video Player provides a convenient user interface, incorporating all the common features for video players including video quality selection, sharing, full screen, shuffle etc. Moreover, you have the option of designing different themes for the video player by customizing each feature available. This is an optimal video player solution for your WordPress website, providing effective integration and high level of customization.    
 
