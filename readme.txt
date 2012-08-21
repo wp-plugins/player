@@ -8,7 +8,9 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Spider Video Player for WordPress is a video player plugin that allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player.== Description ==
+Spider Video Player for WordPress is a video player plugin that allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player.
+
+== Description ==
 
 ### [Spider Video Player](http://web-dorado.com/products/spider-video-player-wordpress.html)
 
