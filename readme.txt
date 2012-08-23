@@ -117,149 +117,142 @@ If any problem occurs with Spider Video Player, please contact us info@web-dorad
 
 == Spider Video Player Step by step guide Step 1 ==    
 = Installing Spider Video Player =    
-
-1.1 Minimum requirements.
-* Wordpress 3.0+
-* PHP 5.x
-* MySQL 5.x
-
-1.2 Perform a new installation.
-After downloading the ZIP file  
+  
+1.1 Minimum requirements of Spider Video Player.  
+  
+* Wordpress 3.0+  
+* PHP 5.x  
+* MySQL 5.x  
+  
+1.2 Perform a new installation of Spider Video Player.  
+  
 1.  Login to your WordPress site administrator panel and head over the 'Plugins' menu  
 2.  Click 'Add New'  
-3.  Choose the 'Upload' option
+3.  Choose the 'Upload' option  
 4.  Click **Choose file** (**Browse**) and select the Spider Video Player zip file.   
 5.  Click **Install Now** button.  
 6.  Once it is complete, activate the plugin.  
-
+  
 Once the plugin is activated, you'll notice a menu on the left called "Video Player".  
-If any problem occurs with Spider Video Player, please contact us info@web-dorado.com.  
-
+If any problem occurs with Spider Video Player, please contact us at info@web-dorado.com.   
+  
 == Spider Video Player Step by step guide Step 2 ==    
 = Adding Tags =    
-
-The Tag is a custom parameter of videos by which you can search videos
-while creating playlists. Here are some examples of Tags: Year, Date,
-Artist, Album, Genre, Location, Country, Section etc.
-
-**2.1** On the left menu select.**Video Player \> Tags**  
   
- **2.2** In the upper left corner click on the **“Add Tag”**button.  
+The Tag is a custom parameter of videos by which you can search videos while creating playlists. Here are some examples of Tags: Year, Date, Artist, Album, Genre, Location, Country, Section etc.  
   
- **2.3 Name.** Define a name for the tag (e.g. Artist).  
+2.1 On the left menu select Video Player > Tags  
+2.2 In the upper left corner click on the “Add Tag” button for adding tags to Spider Video Player.  
+2.3 Name. Define a name for the tag for a Spider Video Player (e.g. Artist).  
+2.4 Required. Choose if the tag has to be defined for each video added or not in Spider Video Player.  
+2.5 Published. Choose whether to publish the tag or not in Spider Video Player.  
   
- **2.4 Required.** Choose if the tag has to be defined for each video
-added or not.  
-  
- **2.5 Published.** Choose whether to publish the tag or not.  
-
 == Spider Video Player Step by step guide Step 3 ==    
-= Adding Videos =      
- **3.1** On the left menu select.**Video Player \> Videos**  
+= Adding Videos to Spider Video Player =    
   
- **3.2** In the upper left corner click on the **“Add video”**button.  
+3.1 On the left menu select Video Player > Videos  
+3.2 In the upper left corner click on the “Add video” button to Spider Video Player.  
+3.3 Title. Add a title for the video  
+3.4 Type   
+		http – Select the video (URL) and its HD version (UrlHD). You can provide the URL of the video or select it from the uploaded videos of Spider Video Player.  
   
- **3.3 Title.** Add a title for the video.  
+		* youtube – Provide the youtube link to the video in the URL field.  
   
- **3.4 Type.**
-
-                  - http – Select the video (URL) and its HD version (UrlHD). You can provide the URL of the video or select it from the uploaded videos.
-
-                  - youtube – Provide the youtube link to the video in the URL field.
-
-                  - rtmp – Fill in the Flash Media Server (FMS) URL of the video along with
-the regular URL and UrlHD (HD version).
-
-**3.5 Thumb.** Select an image for the video thumbnail out of the
-uploaded images. Use the “Remove Image” option to remove the selected
-image.  
+		* rtmp – Fill in the Flash Media Server (FMS) URL of the video along with the regular URL and UrlHD (HD version).  
+3.5 Thumb. Select an image for the video thumbnail out of the uploaded images. Use the “Remove Image” option to remove the selected image.  
+3.6 Tags. Fill in the available tags for your video in Spider Video Player (see Step 2 for adding tags).  
   
- **3.6 Tags.** Fill in the available tags for your video (see Step 2 for
-adding tags).  
-
 == Spider Video Player Step by step guide Step 4 ==    
-= Creating Playlists =    
+= Creating Playlists in Spider Video Player =    
   
- **4.1** On the left menu select.**Video Player \> Playlist**  
+4.1 On the left menu select  Video Player > Playlists  
+4.2 In the upper left corner click on the “Add playlist” button.  
+4.3 Title. Choose a title for the playlist in Spider Video Player.  
+4.4 Videos. Use the “Add” button to add videos to your playlist from the list of existing videos.   
+4.5 Thumb. Select a thumbnail image for the playlist. Use the “Remove Image” option to remove the selected image.  
   
- **4.2** In the upper left corner click on the **“Add video”**button.  
-  
- **4.3 Title.** Choose a title for the playlist.  
-  
- **4.4 Videos.**Use the **“Add”** button to add videos to your playlist
-from the list of existing videos.   
-  
- **4.5 Thumb.** Select a thumbnail image for the playlist. Use the
-“Remove Image” option to remove the selected image.  
-
 == Spider Video Player Step by step guide Step 5 ==    
-= Creating Themes =    
+= Creating Themes in Spider Video Player =    
   
-=**5.1 General Parameters**=    
+= 5.1 General Parameters of a theme in Spider Video Player =  
   
- **5.1.1 **On the left menu select **Video Player \>** **Theme**  
+5.1.1 On the left menu select  Video Player > Theme  
+5.1.2 In the upper right corner click on the “Add a Theme” button.  
+5.1.3 Title of theme. Choose a title for the theme.  
+5.1.4 Width of player. Define the width of the video player.  
+5.1.5 Height of player. Define the height of the video player.  
+5.1.6 Start with. Define the mode of the player at start (Video or Playlist).  
+5.1.7 Show Track Id. Choose whether to show the sequential number of the track in the playlist.  
+5.1.7 Auto hide time. Define how long the control bar and the playlist stay on screen while being inactive.  
+5.1.8 Keep aspect ratio. Choose whether to keep the original aspect ratio of the video player or not.  
+5.1.9 Control bar over video. Choose whether the control bar appears on the video area of the player or above/below the player.  
+5.1.10 Watermark image. You can add an image to appear as a watermark on the screen.  
+5.1.11 Watermark position. Choose a position for the watermark image for Spider Video Player.  
+5.1.12 Watermark size. Select a size for the watermark image for Spider Video Player.  
+5.1.13 Watermark margin. Select the distance between the watermark image and the edge of the player window.  
+5.1.14 Watermark transparency. Select the transparency level for the watermark image for Spider Video Player.  
   
- **5.1.2**In the upper left corner click on the **“Add a
-Theme” **button.  
+= 5.2 Style Parameters of Spider Video Player =  
   
- **5.1.3 Title of theme.**Choose a title for the theme.  
+5.2.1 Center button transparency. Define the transparency level of the play/pause button at the center of the screen (‘0’ for complete transparency).  
+5.2.2 Background color. Choose the main background color of the Spider Video Player.  
+5.2.3 Video background color. Choose the color of the video background of the Spider Video Player.  
+5.2.4 Frames background color. Choose the background color of the control bar and the playlist.  
+5.2.5 Frames background transparency. Define the transparency level of the control bar and the playlist.   
+5.2.6 Control buttons main color. Select the color of the control buttons of Spider Video Player.  
+5.2.7 Control buttons hover color. Select the color of the hovered control buttons of the Spider Video Player.  
+5.2.8 Control buttons transparency. Select the transparency level of the control buttons of the Spider Video Player.  
+5.2.9 Sliders color. Select the color of the sliders of the Spider Video Player.  
+5.2.10 Hovered item background color. Choose what color a playlist item gets when being pointed on by the mouse cursor.  
+5.2.11 Selected item background color. Choose what color an item gets after being selected.  
+5.2.12 Text color. Select the default text color for the player.  
+5.2.13 Hovered text color. Select the color for the hovered text of the Spider Video Player.  
+5.2.14 Selected text color. Choose the color of the selected text of the Spider Video Player.  
+5.2.15 Loading animation type. Choose what animation is being shown while loading the video of the Spider Video Player.  
   
- **5.1.4 Width of player.**Define the width of the player.  
+= 5.3 Playback Parameters =  
   
- **5.1.5 Height of player.**Define the height of the player.  
+5.3.1 Auto play. Choose whether the player automatically starts the playback on page opening or not.  
+5.3.2 Auto next song. Choose whether player automatically switches to the next track in the playlist when the previous one is finished or not.  
+5.3.3 Auto next album. Choose whether Spider Video Player automatically switches to the next playlists when the previous one is finished or not.  
+5.3.4 Default volume. Define the default sound volume of the player.  
+5.3.5 Repeat. Choose whether the player repeats the current track or the whole playlist by default or not.  
+* Off: Do not repeat  
+* One: Repeat the current track  
+* All: Repeat the whole playlist  
+5.3.6 Shuffle. Choose whether Spider Video Player shuffles the tracks by default or not.  
+5.3.7 Control bar auto hide. Enable or disable control bar auto hide of the Spider Video Player.  
   
- **5.1.6 Start with.** Define the mode of the player at start (Video or
-Playlist).  
+= 5.4 Playlist and Library Parameters of the Spider Video Player =  
   
- **5.1.7 Show Track Id.**Choose whether to****show the sequential number
-of the track in the playlist.  
+5.4.1 Playlist position. Choose whether the playlist appears on the left or on the right side of the player.  
+5.4.2 Width of playlist. Define the width of the playlist in the Spider Video Player.  
+5.4.3 Playlist over video. Choose whether the Playlist appears on the video area or at the left/right side of Spider Video Player.  
+5.4.4 Playlist auto hide. Enable or disable the option of automatically hiding the playlist of the Spider Video Player.  
+5.4.5 Playlist text size. Define the size of the playlist text in the Spider Video Player.  
+5.4.6 Library columns. Define the number of columns in the library in Spider Video Player.  
+5.4.7 Library rows. Define the number of rows in the library in the Spider Video Player.  
+5.4.8 Library list text size. Define the size of the text in the library list.  
+5.4.9 Library details text size. Define the size of the text in the library details in the Spider Video Player.  
   
- **5.1.7 Auto hide time.**Define how long the control bar and the
-playlist stay on screen while being inactive.  
+= 5.5 Video Control Parameters of the Spider Video Player =  
   
- **5.1.8 Keep aspect ratio.**Choose whether to keep the original aspect
-ratio of the video or not.  
+5.5.1 Play/pause on click. Enable or disable play/pause by clicking on the player screen.  
+5.5.2 Play/pause by space key. Enable or disable play/pause of the Spider Video Player by pressing the ‘space’ key.  
+5.5.3 Volume control by mouse scroll. Enable or disable sound volume control of the Spider Video Player through the mouse scroll.  
+5.5.4 Control bar position. Choose whether the control bar is at the top or at the bottom of the player window.  
+5.5.5 Buttons order on control bar. Select the order of buttons on the control of the Spider Video Player bar by dragging and dropping them from one position to another. Click on a button to enable/disable it.  
   
- **5.1.9 Control bar over video.** Choose whether the control bar
-appears on the video area or above/below it.  
-  
- **5.1.10 Watermark image.** You can add an image to appear as a
-watermark on the screen.  
-  
- **5.1.11 Watermark position.** Choose a position for the watermark
-image.  
-  
- **5.1.12 Watermark size.**Select a size for the watermark image.  
-  
- **5.1.13 Watermark margin.** Select the distance between the watermark
-image and the edge of the player window.  
-  
- **5.1.14 Watermark transparency.** Select the transparency level for
-the watermark image.
-
-
 == Spider Video Player Step by step guide Step 6 ==    
 = Publishing the created player =    
-
- To insert a player into a Page or a Post.  
-   
- ![][] **  
-**  
- **&nbsp;&nbsp;6.1.**&nbsp;Press the button named&nbsp;**Insert Spider Video Player**&nbsp;in a
-post or a page you want to show the player.  
-   
- **&nbsp;&nbsp;6.2.**&nbsp;Select a player from the list.  
-   
-   
- ![][1]   
-
-**&nbsp;&nbsp;6.3.**&nbsp;Save the page or the post.&nbsp;  
-   
- *Alternatively, you can use Spider Video Player without the button on
-the toolbar: Add the shortcode&nbsp;**[Spider\_Video\_Player id=“N”]**(where
-N is the id of the player, for the player with id=2, the shortcode must
-be&nbsp;**[****Spider\_Video\_Player id=“2”]**to the pages and posts, where
-you want the player to appear.*
-
-  []: /images/sipdervideoplayerwordpressguide/2.png
-  [1]: /images/sipdervideoplayerwordpressguide/3.png
+  
+To insert a player into a Page or a Post.  
+  
+  6.1. Press the button named Insert Spider Video Player in a post or a page you want to show the player.  
+  
+  6.2. Select a player from the list.  
+  
+  6.3. Save the page or the post.   
+  
+Alternatively, you can use Spider Video Player without the button on the toolbar: Add the shortcode [Spider_Video_Player id="N"] (where N is the id of the player, for the player with id=2, the shortcode must be [Spider_Video_Player id="2"] to the pages and posts, where you want the player to appear.  
+  
