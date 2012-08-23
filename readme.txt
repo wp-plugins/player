@@ -154,11 +154,11 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 3.2 In the upper left corner click on the "Add video" button to Spider Video Player.  
 3.3 Title. Add a title for the video  
 3.4 Type   
-		http – Select the video (URL) and its HD version (UrlHD). You can provide the URL of the video or select it from the uploaded videos of Spider Video Player.  
+    * http – Select the video (URL) and its HD version (UrlHD). You can provide the URL of the video or select it from the uploaded videos of Spider Video Player.  
   
-		* youtube – Provide the youtube link to the video in the URL field.  
+    * youtube – Provide the youtube link to the video in the URL field.  
   
-		* rtmp – Fill in the Flash Media Server (FMS) URL of the video along with the regular URL and UrlHD (HD version).  
+    * rtmp – Fill in the Flash Media Server (FMS) URL of the video along with the regular URL and UrlHD (HD version).  
 3.5 Thumb. Select an image for the video thumbnail out of the uploaded images. Use the "Remove Image" option to remove the selected image.  
 3.6 Tags. Fill in the available tags for your video in Spider Video Player (see Step 2 for adding tags).  
   
@@ -217,9 +217,9 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 5.3.3 Auto next album. Choose whether Spider Video Player automatically switches to the next playlists when the previous one is finished or not.  
 5.3.4 Default volume. Define the default sound volume of the player.  
 5.3.5 Repeat. Choose whether the player repeats the current track or the whole playlist by default or not.  
-* Off: Do not repeat  
-* One: Repeat the current track  
-* All: Repeat the whole playlist  
+    * Off: Do not repeat  
+    * One: Repeat the current track  
+    * All: Repeat the whole playlist  
 5.3.6 Shuffle. Choose whether Spider Video Player shuffles the tracks by default or not.  
 5.3.7 Control bar auto hide. Enable or disable control bar auto hide of the Spider Video Player.  
   
@@ -247,11 +247,8 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 = Publishing the created player =    
   
 To insert a player into a Page or a Post.  
-  
   6.1. Press the button named Insert Spider Video Player in a post or a page you want to show the player.  
-  
   6.2. Select a player from the list.  
-  
   6.3. Save the page or the post.   
   
 Alternatively, you can use Spider Video Player without the button on the toolbar: Add the shortcode [Spider_Video_Player id="N"] (where N is the id of the player, for the player with id=2, the shortcode must be [Spider_Video_Player id="2"] to the pages and posts, where you want the player to appear.  
