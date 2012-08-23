@@ -114,3 +114,61 @@ After downloading the ZIP file
 
 Once the plugin is activated, you'll notice a menu on the left called "Video Player".  
 If any problem occurs with Spider Video Player, please contact us info@web-dorado.com.  
+
+== Spider Video Player Step by step guide Step 1 ==    
+= Installing Spider Video Player =    
+
+1.1 Minimum requirements.
+* Wordpress 3.0+
+* PHP 5.x
+* MySQL 5.x
+
+1.2 Perform a new installation.
+After downloading the ZIP file  
+1.  Login to your WordPress site administrator panel and head over the 'Plugins' menu  
+2.  Click 'Add New'  
+3.  Choose the 'Upload' option
+4.  Click **Choose file** (**Browse**) and select the Spider Video Player zip file.   
+5.  Click **Install Now** button.  
+6.  Once it is complete, activate the plugin.  
+
+Once the plugin is activated, you'll notice a menu on the left called "Video Player".  
+If any problem occurs with Spider Video Player, please contact us info@web-dorado.com.  
+
+== Spider Video Player Step by step guide Step 2 ==    
+= Adding Tags =    
+
+The Tag is a custom parameter of videos by which you can search videos
+while creating playlists. Here are some examples of Tags: Year, Date,
+Artist, Album, Genre, Location, Country, Section etc.
+
+**2.1** On the left menu select.**Video Player \> Tags**\
+\
+ **2.2** In the upper left corner click on the **“Add Tag”**button.\
+\
+ **2.3 Name.** Define a name for the tag (e.g. Artist).\
+\
+ **2.4 Required.** Choose if the tag has to be defined for each video
+added or not.\
+\
+ **2.5 Published.** Choose whether to publish the tag or not.\
+
+
+== Spider Video Player Step by step guide Step 3 ==    
+= Installing Spider Video Player =    
+
+
+== Spider Video Player Step by step guide Step 4 ==    
+= Installing Spider Video Player =    
+
+
+== Spider Video Player Step by step guide Step 5 ==    
+= Installing Spider Video Player =    
+
+
+== Spider Video Player Step by step guide Step 1 ==    
+= Installing Spider Video Player =    
+
+
+== Spider Video Player Step by step guide Step 1 ==    
+= Installing Spider Video Player =    
