@@ -142,7 +142,7 @@ If any problem occurs with Spider Video Player, please contact us at info@web-do
 The Tag is a custom parameter of videos by which you can search videos while creating playlists. Here are some examples of Tags: Year, Date, Artist, Album, Genre, Location, Country, Section etc.  
   
 2.1 On the left menu select Video Player > Tags  
-2.2 In the upper left corner click on the “Add Tag” button for adding tags to Spider Video Player.  
+2.2 In the upper left corner click on the "Add Tag" button for adding tags to Spider Video Player.  
 2.3 Name. Define a name for the tag for a Spider Video Player (e.g. Artist).  
 2.4 Required. Choose if the tag has to be defined for each video added or not in Spider Video Player.  
 2.5 Published. Choose whether to publish the tag or not in Spider Video Player.  
@@ -151,7 +151,7 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 = Adding Videos to Spider Video Player =    
   
 3.1 On the left menu select Video Player > Videos  
-3.2 In the upper left corner click on the “Add video” button to Spider Video Player.  
+3.2 In the upper left corner click on the "Add video" button to Spider Video Player.  
 3.3 Title. Add a title for the video  
 3.4 Type   
 		http – Select the video (URL) and its HD version (UrlHD). You can provide the URL of the video or select it from the uploaded videos of Spider Video Player.  
@@ -159,17 +159,17 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 		* youtube – Provide the youtube link to the video in the URL field.  
   
 		* rtmp – Fill in the Flash Media Server (FMS) URL of the video along with the regular URL and UrlHD (HD version).  
-3.5 Thumb. Select an image for the video thumbnail out of the uploaded images. Use the “Remove Image” option to remove the selected image.  
+3.5 Thumb. Select an image for the video thumbnail out of the uploaded images. Use the "Remove Image" option to remove the selected image.  
 3.6 Tags. Fill in the available tags for your video in Spider Video Player (see Step 2 for adding tags).  
   
 == Spider Video Player Step by step guide Step 4 ==    
 = Creating Playlists in Spider Video Player =    
   
 4.1 On the left menu select  Video Player > Playlists  
-4.2 In the upper left corner click on the “Add playlist” button.  
+4.2 In the upper left corner click on the "Add playlist" button.  
 4.3 Title. Choose a title for the playlist in Spider Video Player.  
-4.4 Videos. Use the “Add” button to add videos to your playlist from the list of existing videos.   
-4.5 Thumb. Select a thumbnail image for the playlist. Use the “Remove Image” option to remove the selected image.  
+4.4 Videos. Use the "Add" button to add videos to your playlist from the list of existing videos.   
+4.5 Thumb. Select a thumbnail image for the playlist. Use the "Remove Image" option to remove the selected image.  
   
 == Spider Video Player Step by step guide Step 5 ==    
 = Creating Themes in Spider Video Player =    
@@ -177,7 +177,7 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 = 5.1 General Parameters of a theme in Spider Video Player =  
   
 5.1.1 On the left menu select  Video Player > Theme  
-5.1.2 In the upper right corner click on the “Add a Theme” button.  
+5.1.2 In the upper right corner click on the "Add a Theme" button.  
 5.1.3 Title of theme. Choose a title for the theme.  
 5.1.4 Width of player. Define the width of the video player.  
 5.1.5 Height of player. Define the height of the video player.  
@@ -194,7 +194,7 @@ The Tag is a custom parameter of videos by which you can search videos while cre
   
 = 5.2 Style Parameters of Spider Video Player =  
   
-5.2.1 Center button transparency. Define the transparency level of the play/pause button at the center of the screen (‘0’ for complete transparency).  
+5.2.1 Center button transparency. Define the transparency level of the play/pause button at the center of the screen ('0' for complete transparency).  
 5.2.2 Background color. Choose the main background color of the Spider Video Player.  
 5.2.3 Video background color. Choose the color of the video background of the Spider Video Player.  
 5.2.4 Frames background color. Choose the background color of the control bar and the playlist.  
@@ -238,7 +238,7 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 = 5.5 Video Control Parameters of the Spider Video Player =  
   
 5.5.1 Play/pause on click. Enable or disable play/pause by clicking on the player screen.  
-5.5.2 Play/pause by space key. Enable or disable play/pause of the Spider Video Player by pressing the ‘space’ key.  
+5.5.2 Play/pause by space key. Enable or disable play/pause of the Spider Video Player by pressing the 'space' key.  
 5.5.3 Volume control by mouse scroll. Enable or disable sound volume control of the Spider Video Player through the mouse scroll.  
 5.5.4 Control bar position. Choose whether the control bar is at the top or at the bottom of the player window.  
 5.5.5 Buttons order on control bar. Select the order of buttons on the control of the Spider Video Player bar by dragging and dropping them from one position to another. Click on a button to enable/disable it.  
