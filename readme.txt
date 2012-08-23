@@ -154,11 +154,11 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 3.2 In the upper left corner click on the "Add video" button to Spider Video Player.  
 3.3 Title. Add a title for the video  
 3.4 Type  
-    * http – Select the video (URL) and its HD version (UrlHD). You can provide the URL of the video or select it from the uploaded videos of Spider Video Player.  
+    * http: Select the video (URL) and its HD version (UrlHD). You can provide the URL of the video or select it from the uploaded videos of Spider Video Player.  
   
-    * youtube – Provide the youtube link to the video in the URL field.  
+    * youtube: Provide the youtube link to the video in the URL field.  
   
-    * rtmp – Fill in the Flash Media Server (FMS) URL of the video along with the regular URL and UrlHD (HD version).  
+    * rtmp: Fill in the Flash Media Server (FMS) URL of the video along with the regular URL and UrlHD (HD version).  
 3.5 Thumb. Select an image for the video thumbnail out of the uploaded images. Use the "Remove Image" option to remove the selected image.  
 3.6 Tags. Fill in the available tags for your video in Spider Video Player (see Step 2 for adding tags).  
   
