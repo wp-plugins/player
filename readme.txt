@@ -19,11 +19,11 @@ Spider Video Player for WordPress is a video player extension that allows you to
 Features of Spider Video Player:  
 
 * You can add the listed types of videos into Spider Video Player:  
-   - Http: You can provide the URL of the video and its HD version (UrlHD) in the video player or select it from the uploaded videos.  
+    - Http: You can provide the URL of the video and its HD version (UrlHD) in the video player or select it from the uploaded videos.  
   
-   - YouTube: Provide the YouTube link to the video in the URL field.  
+    - YouTube: Provide the YouTube link to the video in the URL field.  
   
-   - rtmp: Fill in the Flash Media Server (FMS) URL of the video for the video player along with the regular URL and UrlHD (HD version).  
+    - rtmp: Fill in the Flash Media Server (FMS) URL of the video for the video player along with the regular URL and UrlHD (HD version).  
 * Each video in the Spider Video Player can have an image (thumb) representing it in the video player window. There is also an option for adding an image for the whole video playlist.  
 * Multiple playlists for each video player. Possibility to add tags for each video. Parameters for sorting videos and creating video playlists.  
 * Possibility to define the height and width of the video player, also defining the video size adjustment options for the player window.  
@@ -108,7 +108,7 @@ After downloading the ZIP file
 1.  Login to your WordPress site administrator panel and head over the 'Plugins' menu  
 2.  Click 'Add New'  
 3.  Choose the 'Upload' option
-4.  Click **Choose file** (**Browse**) and select the Spider Video Player zip file.   
+4.  Click **Choose file** (**Browse**) and select the Spider Video Player zip file.  
 5.  Click **Install Now** button.  
 6.  Once it is complete, activate the plugin.  
 
@@ -129,12 +129,12 @@ If any problem occurs with Spider Video Player, please contact us info@web-dorad
 1.  Login to your WordPress site administrator panel and head over the 'Plugins' menu  
 2.  Click 'Add New'  
 3.  Choose the 'Upload' option  
-4.  Click **Choose file** (**Browse**) and select the Spider Video Player zip file.   
+4.  Click **Choose file** (**Browse**) and select the Spider Video Player zip file.  
 5.  Click **Install Now** button.  
 6.  Once it is complete, activate the plugin.  
   
 Once the plugin is activated, you'll notice a menu on the left called "Video Player".  
-If any problem occurs with Spider Video Player, please contact us at info@web-dorado.com.   
+If any problem occurs with Spider Video Player, please contact us at info@web-dorado.com.  
   
 == Spider Video Player Step by step guide Step 2 ==    
 = Adding Tags =    
@@ -153,7 +153,7 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 3.1 On the left menu select Video Player > Videos  
 3.2 In the upper left corner click on the "Add video" button to Spider Video Player.  
 3.3 Title. Add a title for the video  
-3.4 Type   
+3.4 Type  
     * http – Select the video (URL) and its HD version (UrlHD). You can provide the URL of the video or select it from the uploaded videos of Spider Video Player.  
   
     * youtube – Provide the youtube link to the video in the URL field.  
@@ -168,7 +168,7 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 4.1 On the left menu select  Video Player > Playlists  
 4.2 In the upper left corner click on the "Add playlist" button.  
 4.3 Title. Choose a title for the playlist in Spider Video Player.  
-4.4 Videos. Use the "Add" button to add videos to your playlist from the list of existing videos.   
+4.4 Videos. Use the "Add" button to add videos to your playlist from the list of existing videos.  
 4.5 Thumb. Select a thumbnail image for the playlist. Use the "Remove Image" option to remove the selected image.  
   
 == Spider Video Player Step by step guide Step 5 ==    
@@ -198,7 +198,7 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 5.2.2 Background color. Choose the main background color of the Spider Video Player.  
 5.2.3 Video background color. Choose the color of the video background of the Spider Video Player.  
 5.2.4 Frames background color. Choose the background color of the control bar and the playlist.  
-5.2.5 Frames background transparency. Define the transparency level of the control bar and the playlist.   
+5.2.5 Frames background transparency. Define the transparency level of the control bar and the playlist.  
 5.2.6 Control buttons main color. Select the color of the control buttons of Spider Video Player.  
 5.2.7 Control buttons hover color. Select the color of the hovered control buttons of the Spider Video Player.  
 5.2.8 Control buttons transparency. Select the transparency level of the control buttons of the Spider Video Player.  
@@ -249,7 +249,7 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 To insert a player into a Page or a Post.  
   6.1. Press the button named Insert Spider Video Player in a post or a page you want to show the player.  
   6.2. Select a player from the list.  
-  6.3. Save the page or the post.   
+  6.3. Save the page or the post.  
   
 Alternatively, you can use Spider Video Player without the button on the toolbar: Add the shortcode [Spider_Video_Player id="N"] (where N is the id of the player, for the player with id=2, the shortcode must be [Spider_Video_Player id="2"] to the pages and posts, where you want the player to appear.  
   
