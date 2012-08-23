@@ -142,33 +142,124 @@ The Tag is a custom parameter of videos by which you can search videos
 while creating playlists. Here are some examples of Tags: Year, Date,
 Artist, Album, Genre, Location, Country, Section etc.
 
-**2.1** On the left menu select.**Video Player \> Tags**\
-\
- **2.2** In the upper left corner click on the **“Add Tag”**button.\
-\
- **2.3 Name.** Define a name for the tag (e.g. Artist).\
-\
+**2.1** On the left menu select.**Video Player \> Tags**  
+  
+ **2.2** In the upper left corner click on the **“Add Tag”**button.  
+  
+ **2.3 Name.** Define a name for the tag (e.g. Artist).  
+  
  **2.4 Required.** Choose if the tag has to be defined for each video
-added or not.\
-\
- **2.5 Published.** Choose whether to publish the tag or not.\
-
+added or not.  
+  
+ **2.5 Published.** Choose whether to publish the tag or not.  
 
 == Spider Video Player Step by step guide Step 3 ==    
-= Installing Spider Video Player =    
+= Adding Videos =      
+ **3.1** On the left menu select.**Video Player \> Videos**  
+  
+ **3.2** In the upper left corner click on the **“Add video”**button.  
+  
+ **3.3 Title.** Add a title for the video.  
+  
+ **3.4 Type.**
 
+                  - http – Select the video (URL) and its HD version (UrlHD). You can provide the URL of the video or select it from the uploaded videos.
+
+                  - youtube – Provide the youtube link to the video in the URL field.
+
+                  - rtmp – Fill in the Flash Media Server (FMS) URL of the video along with
+the regular URL and UrlHD (HD version).
+
+**3.5 Thumb.** Select an image for the video thumbnail out of the
+uploaded images. Use the “Remove Image” option to remove the selected
+image.  
+  
+ **3.6 Tags.** Fill in the available tags for your video (see Step 2 for
+adding tags).  
 
 == Spider Video Player Step by step guide Step 4 ==    
-= Installing Spider Video Player =    
-
+= Creating Playlists =    
+  
+ **4.1** On the left menu select.**Video Player \> Playlist**  
+  
+ **4.2** In the upper left corner click on the **“Add video”**button.  
+  
+ **4.3 Title.** Choose a title for the playlist.  
+  
+ **4.4 Videos.**Use the **“Add”** button to add videos to your playlist
+from the list of existing videos.   
+  
+ **4.5 Thumb.** Select a thumbnail image for the playlist. Use the
+“Remove Image” option to remove the selected image.  
 
 == Spider Video Player Step by step guide Step 5 ==    
-= Installing Spider Video Player =    
+= Creating Themes =    
+  
+=**5.1 General Parameters**=    
+  
+ **5.1.1 **On the left menu select **Video Player \>** **Theme**  
+  
+ **5.1.2**In the upper left corner click on the **“Add a
+Theme” **button.  
+  
+ **5.1.3 Title of theme.**Choose a title for the theme.  
+  
+ **5.1.4 Width of player.**Define the width of the player.  
+  
+ **5.1.5 Height of player.**Define the height of the player.  
+  
+ **5.1.6 Start with.** Define the mode of the player at start (Video or
+Playlist).  
+  
+ **5.1.7 Show Track Id.**Choose whether to****show the sequential number
+of the track in the playlist.  
+  
+ **5.1.7 Auto hide time.**Define how long the control bar and the
+playlist stay on screen while being inactive.  
+  
+ **5.1.8 Keep aspect ratio.**Choose whether to keep the original aspect
+ratio of the video or not.  
+  
+ **5.1.9 Control bar over video.** Choose whether the control bar
+appears on the video area or above/below it.  
+  
+ **5.1.10 Watermark image.** You can add an image to appear as a
+watermark on the screen.  
+  
+ **5.1.11 Watermark position.** Choose a position for the watermark
+image.  
+  
+ **5.1.12 Watermark size.**Select a size for the watermark image.  
+  
+ **5.1.13 Watermark margin.** Select the distance between the watermark
+image and the edge of the player window.  
+  
+ **5.1.14 Watermark transparency.** Select the transparency level for
+the watermark image.
 
 
-== Spider Video Player Step by step guide Step 1 ==    
-= Installing Spider Video Player =    
+== Spider Video Player Step by step guide Step 6 ==    
+= Publishing the created player =    
 
+ To insert a player into a Page or a Post.  
+   
+ ![][] **  
+**  
+ **&nbsp;&nbsp;6.1.**&nbsp;Press the button named&nbsp;**Insert Spider Video Player**&nbsp;in a
+post or a page you want to show the player.  
+   
+ **&nbsp;&nbsp;6.2.**&nbsp;Select a player from the list.  
+   
+   
+ ![][1]   
 
-== Spider Video Player Step by step guide Step 1 ==    
-= Installing Spider Video Player =    
+**&nbsp;&nbsp;6.3.**&nbsp;Save the page or the post.&nbsp;  
+   
+ *Alternatively, you can use Spider Video Player without the button on
+the toolbar: Add the shortcode&nbsp;**[Spider\_Video\_Player id=“N”]**(where
+N is the id of the player, for the player with id=2, the shortcode must
+be&nbsp;**[****Spider\_Video\_Player id=“2”]**to the pages and posts, where
+you want the player to appear.*
+
+  []: /images/sipdervideoplayerwordpressguide/2.png
+  [1]: /images/sipdervideoplayerwordpressguide/3.png
