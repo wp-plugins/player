@@ -251,3 +251,12 @@ To insert a player into a Page or a Post.
   
 Alternatively, you can use Spider Video Player without the button on the toolbar: Add the shortcode [Spider_Video_Player id="N"] (where N is the id of the player, for the player with id=2, the shortcode must be [Spider_Video_Player id="2"] to the pages and posts, where you want the player to appear.  
   
+== Screenshots ==
+1.  Spider Video Player  - Theme parameters  
+2.  Spider Video Player  - Orange player 
+3.  Spider Video Player  - Add a video item  
+4.  Spider Video Player  - Add a playlist  
+5.  Spider Video Player  - Red player
+6.  Spider Video Player  - Black player  
+7.  Spider Video Player  - Album view
+ 
