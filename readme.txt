@@ -259,4 +259,5 @@ Alternatively, you can use Spider Video Player without the button on the toolbar
 5.  Spider Video Player  - Red player
 6.  Spider Video Player  - Black player  
 7.  Spider Video Player  - Album view
+8.  Spider Video Player  - Album view
  
