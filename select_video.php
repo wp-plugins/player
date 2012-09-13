@@ -1,5 +1,3 @@
-
-
 <?php
 $path  = ''; // It should be end with a trailing slash  
 if ( !defined('WP_LOAD_PATH') ) {
@@ -71,17 +69,18 @@ echo '<link rel="stylesheet" href="http://localhost/wordpress3/wp-admin/load-sty
 			$limit=0;
 		}
 	if(isset($_POST['search_video'])){
-		$where=' WHERE title LIKE "%'.$_POST['search_video'].'%"';
+		$where=' WHERE title LIKE "%'.$_POST['search_video'].'%" AND published=1 ';
 		
 		}
 		
 		else
 		{
-		$$where="";
+		$where=" WHERE published=1 ";
 		}
 		
 	$query = "SELECT COUNT(*) FROM ".$wpdb->prefix."Spider_Video_Player_video". $where;
 	$total = $wpdb->get_var($query);
+	if(!$total) $total=0;
 	$pageNav['total'] =$total;
 	$pageNav['limit'] =	 $limit/20+1;
 	
@@ -307,7 +306,6 @@ function checkAll( n, fldName ) {
  <th scope="col" id="type" class="<?php if($sort["sortid_by"]=="type") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:80px" ><a href="javascript:ordering('type',<?php if($sort["sortid_by"]=="type") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Type</span><span class="sorting-indicator"></span></a></th>
   <th scope="col" id="URL" class="<?php if($sort["sortid_by"]=="url") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="" ><a href="javascript:ordering('url',<?php if($sort["sortid_by"]=="url") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>URL</span><span class="sorting-indicator"></span></a></th>
   <th scope="col" id="UrlHD" class="<?php if($sort["sortid_by"]=="urlHD") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="" ><a href="javascript:ordering('urlHD',<?php if($sort["sortid_by"]=="urlHD") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>UrlHD</span><span class="sorting-indicator"></span></a></th><th scope="col" id="thumb" class="<?php if($sort["sortid_by"]=="thumb") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style=" width:120px" ><a href="javascript:ordering('thumb',<?php if($sort["sortid_by"]=="thumb") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Thumb</span><span class="sorting-indicator"></span></a></th>
-  <th scope="col" id="TrackId" class="<?php if($sort["sortid_by"]=="trackId") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style=" width:80px" ><a href="javascript:ordering('trackId',<?php if($sort["sortid_by"]=="trackId") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>TrackId</span><span class="sorting-indicator"></span></a></th>
   <th scope="col" id="published" class="<?php if($sort["sortid_by"]=="published") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style=" width:120px" ><a href="javascript:ordering('published',<?php if($sort["sortid_by"]=="published") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Published</span><span class="sorting-indicator"></span></a></th>
         </tr>
     </thead>
@@ -334,8 +332,7 @@ function checkAll( n, fldName ) {
         	<td><?php echo $row->type ?></td>    
         	<td><?php echo $row->url ?></td>    
         	<td><?php echo $row->urlHD ?></td>
-        	<td><img style="max-height:60px; max-width:60px" src="<?php echo $row->thumb ?>"  /></td>            
-        	<td><?php echo $row->trackId ?></td>            
+        	<td><img style="max-height:60px; max-width:60px" src="<?php echo $row->thumb ?>"  /></td>                      
         	<td align="center"><?php echo  $row->published?></td>            
         </tr>
         <?php
