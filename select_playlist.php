@@ -1,4 +1,3 @@
-
 <?php
 
 $path  = ''; // It should be end with a trailing slash  
@@ -80,19 +79,24 @@ echo '<link rel="stylesheet" href="http://localhost/wordpress3/wp-admin/load-sty
 		{
 		$search_tag="";
 		}
+
 	if ( $search_tag ) {
-		$where= ' WHERE name LIKE "%'.$search_tag.'%"';
+		$whereee= ' WHERE published=1 AND title LIKE "%'.$search_tag.'%"';
+	}
+	else
+	{
+		$whereee=' WHERE published=1';
 	}
 	
 	
 	
 	// get the total number of records
-	$query = "SELECT COUNT(*) FROM ".$wpdb->prefix."Spider_Video_Player_playlist". $where;
+	$query = "SELECT COUNT(*) FROM ".$wpdb->prefix."Spider_Video_Player_playlist ". $whereee;
 	$total = $wpdb->get_var($query);
 	$pageNav['total'] =$total;
 	$pageNav['limit'] =	 $limit/20+1;
 	
-	$query = "SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist".$where." ". $order." "." LIMIT ".$limit.",20";
+	$query = "SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist ".$whereee." ". $order." "." LIMIT ".$limit.",20";
 	if($sort["sortid_by"] == 'videos')
 	{
 		if($_POST['asc_or_desc'])
@@ -107,22 +111,11 @@ echo '<link rel="stylesheet" href="http://localhost/wordpress3/wp-admin/load-sty
 					$order=" DESC";
 				}
 			}
-	$query = 'SELECT *, (LENGTH(  `videos` ) - LENGTH( REPLACE(  `videos` ,  ",",  "" ) )) AS video_count FROM '.$wpdb->prefix.'Spider_Video_Player_playlist'. $where. ' ORDER BY  `video_count` '.$order." LIMIT ".$limit.",20";
-	echo $query;
+	$query = 'SELECT *, (LENGTH(  `videos` ) - LENGTH( REPLACE(  `videos` ,  ",",  "" ) )) AS video_count FROM '.$wpdb->prefix.'Spider_Video_Player_playlist '. $whereee. ' ORDER BY  `video_count` '.$order." LIMIT ".$limit.",20";
+	
 	}
 	$rows = $wpdb->get_results($query);
 	html_select_video($rows, $pageNav,$sort);
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -155,19 +148,6 @@ return;
 submitform( pressbutton );
 
 }
-
-function tableOrdering( order, dir, task ) {
-
-    var form = document.adminForm;
-
-    form.filter_order_playlist.value     = order;
-
-    form.filter_order_Dir_playlist.value = dir;
-
-    submitform( task );
-
-}
-
 function xxx()
 {
 	var VIDS =[];
@@ -185,6 +165,12 @@ function xxx()
 			}
 	window.parent.jSelectVideoS(VIDS, title, thumb, number_of_vids);
 }
+function ordering(name,as_or_desc)
+	{
+		document.getElementById('asc_or_desc').value=as_or_desc;		
+		document.getElementById('order_by').value=name;
+		document.getElementById('admin_form').submit();
+	}
 function checkAll( n, fldName ) {
   if (!fldName) {
      fldName = 'cb';
@@ -207,7 +193,7 @@ function checkAll( n, fldName ) {
 }
 </script>
 
-	<form action="<?php echo bloginfo('url')."/wp-admin/admin.php?page=Spider_Video_Player&task=add_Spider_Video_Player" ?>" method="post" name="adminForm">
+	<form action="<?php echo plugins_url("select_playlist.php",__FILE__)?>" method="post" id="admin_form" name="adminForm">
     
 		<table width="95%">
            <td align="right" width="100%">
@@ -226,7 +212,7 @@ function checkAll( n, fldName ) {
 	<div class="alignleft actions">
    		<input type="button" value="Search" onclick="document.getElementById(\'page_number\').value=\'1\'; document.getElementById(\'serch_or_not\').value=\'search\';
 		 document.getElementById(\'admin_form\').submit();" class="button-secondary action">
-		 <input type="button" value="Reset" onclick="window.location.href=\'admin.php?page=Tags_Spider_Video_Player\'" class="button-secondary action">
+		 <input type="button" value="Reset" onclick="window.location.href=\''. plugins_url("select_playlist.php",__FILE__).'\'" class="button-secondary action">
     </div>';
 	 print_html_nav($pageNav['total'],$pageNav['limit'],$serch_fields);	
 	 ?>
@@ -271,6 +257,8 @@ function checkAll( n, fldName ) {
 	}
 	?>
     </table>
+    <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php echo $_POST['asc_or_desc'] ?>"  />
+ 	<input type="hidden" name="order_by" id="order_by" value="<?php echo $_POST['order_by'] ?>"  />
     <input type="hidden" name="option" value="com_Spider_Video_Player">
     <input type="hidden" name="task" value="select_playlist">    
     <input type="hidden" name="boxchecked" value="0"> 
