@@ -137,7 +137,7 @@ Once the plugin is activated, you'll notice a menu on the left called "Video Pla
 If any problem occurs with Spider Video Player, please contact us at info@web-dorado.com.  
   
 == Spider Video Player Step by step guide Step 2 ==    
-= Adding Tags to Spider [WordPress Video Player](http://web-dorado.com/products/wordpress-player.html) =    
+= Adding Tags to Spider  [WordPress Video Player](http://web-dorado.com/products/wordpress-player.html)  =    
   
 The Tag is a custom parameter of videos by which you can search videos while creating playlists. Here are some examples of Tags: Year, Date, Artist, Album, Genre, Location, Country, Section etc.  
   
