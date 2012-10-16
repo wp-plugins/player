@@ -14,7 +14,7 @@ Spider Video Player for WordPress is a video player plugin that allows you to ea
 
 ###Spider Video [WordPress  Player](http://web-dorado.com/products/wordpress-player.html)
 
-Spider Video Player for WordPress is a video player extension that allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player. Spider Video Player is one of the best video players available in WordPress plugin directory. Spider Video Player provides a convenient user interface, incorporating all the common features for video players including video quality selection, sharing, full screen, shuffle etc. Moreover, you have the option of designing different themes for the video player by customizing each feature available. This is an optimal video player solution for your WordPress website, providing effective integration and high level of customization.  
+Spider Video Player is a WordPress video plugin that allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player. Spider Video Player is one of the best WordPress video players available in WordPress plugin directory. This WordPress Video Player provides a convenient user interface, incorporating all the common features for video players including video quality selection, sharing, full screen, shuffle etc. Moreover, you have the option of designing different themes for the video player by customizing each feature available. This is an optimal video player solution for your WordPress website, providing effective integration and high level of customization.  
 
 Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordpress-player.html):  
 
@@ -24,7 +24,7 @@ Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordp
     - YouTube: Provide the YouTube link to the video in the URL field.  
   
     - rtmp: Fill in the Flash Media Server (FMS) URL of the video for the video player along with the regular URL and UrlHD (HD version).  
-* Each video in the Spider Video Player can have an image (thumb) representing it in the video player window. There is also an option for adding an image for the whole video playlist.  
+* Each video in the Wordpress Video Player Plugin can have an image (thumb) representing it in the video player window. There is also an option for adding an image for the whole video playlist.  
 * Multiple playlists for each video player. Possibility to add tags for each video. Parameters for sorting videos and creating video playlists.  
 * Possibility to define the height and width of the video player, also defining the video size adjustment options for the player window.  
 * Possibility to add a watermark image for the video player and change the size, position and border spacing of watermark image.  
@@ -113,7 +113,7 @@ After downloading the ZIP file
 6.  Once it is complete, activate the plugin.  
 
 Once the plugin is activated, you'll notice a menu on the left called "Video Player".  
-If any problem occurs with Spider Video Player, please contact us info@web-dorado.com.  
+If any problem occurs with Spider [WordPress Video Plugin](http://wordpress.org/extend/plugins/player/), please contact us info@web-dorado.com.  
 
 == Spider Video Player Step by step guide Step 1 ==    
 = Installing Spider Video Player =    
@@ -185,7 +185,7 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 5.1.8 Keep aspect ratio. Choose whether to keep the original aspect ratio of the video player or not.  
 5.1.9 Control bar over video. Choose whether the control bar appears on the video area of the player or above/below the player.  
 5.1.10 Watermark image. You can add an image to appear as a watermark on the screen.  
-5.1.11 Watermark position. Choose a position for the watermark image for Spider Video Player.  
+5.1.11 Watermark position. Choose a position for the watermark image for [WordPress Video Plugin](http://wordpress.org/extend/plugins/player/).  
 5.1.12 Watermark size. Select a size for the watermark image for Spider Video Player.  
 5.1.13 Watermark margin. Select the distance between the watermark image and the edge of the player window.  
 5.1.14 Watermark transparency. Select the transparency level for the watermark image for Spider Video Player.  
@@ -204,7 +204,7 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 5.2.10 Hovered item background color. Choose what color a playlist item gets when being pointed on by the mouse cursor.  
 5.2.11 Selected item background color. Choose what color an item gets after being selected.  
 5.2.12 Text color. Select the default text color for the player.  
-5.2.13 Hovered text color. Select the color for the hovered text of the Spider Video Player.  
+5.2.13 Hovered text color. Select the color for the hovered text of [WordPress Video Player Plugin](http://wordpress.org/extend/plugins/player/).  
 5.2.14 Selected text color. Choose the color of the selected text of the Spider Video Player.  
 5.2.15 Loading animation type. Choose what animation is being shown while loading the video of the Spider Video Player.  
   
@@ -238,7 +238,7 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 5.5.1 Play/pause on click. Enable or disable play/pause by clicking on the player screen.  
 5.5.2 Play/pause by space key. Enable or disable play/pause of the Spider Video Player by pressing the 'space' key.  
 5.5.3 Volume control by mouse scroll. Enable or disable sound volume control of the Spider Video Player through the mouse scroll.  
-5.5.4 Control bar position. Choose whether the control bar is at the top or at the bottom of the player window.  
+5.5.4 Control bar position. Choose whether the control bar is at the top or at the bottom of the [WordPress Video Plugin](http://wordpress.org/extend/plugins/player/) window.  
 5.5.5 Buttons order on control bar. Select the order of buttons on the control of the Spider Video Player bar by dragging and dropping them from one position to another. Click on a button to enable/disable it.  
   
 == Spider Video Player Step by step guide Step 6 ==    
@@ -255,9 +255,9 @@ Alternatively, you can use Spider Video Player without the button on the toolbar
 1.  Spider Video Player  - Theme parameters  
 2.  Spider Video Player  - Orange player 
 3.  Spider Video Player  - Add a video item  
-4.  Spider Video Player  - Add a playlist  
+4.  [WordPress Video Plugin](http://wordpress.org/extend/plugins/player/)  - Add a playlist  
 5.  Spider Video Player  - Red player
-6.  Spider Video Player  - Black player  
+6.  [WordPress Video Player](http://web-dorado.com/products/wordpress-player.html)  - Black player  
 7.  Spider Video Player  - Album view
 8.  Spider Video Player  - Album view
  
