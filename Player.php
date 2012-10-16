@@ -1,7 +1,7 @@
 <?php 
 
 /*
-Plugin Name: Spider Video Player
+Plugin Name: Wordpress Video Plugin
 Plugin URI: http://web-dorado.com/
 Version: 1.2
 Author: http://web-dorado.com/
