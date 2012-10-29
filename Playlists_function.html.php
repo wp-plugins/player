@@ -223,23 +223,20 @@ jQuery(function() {
 </script>
 
 <style type="text/css">
-.admintable
-{
-border-right:1px solid #cccccc;
-border-top:1px solid #cccccc;
-}
 .admintable td
 {
 padding:15px;
 border-left:1px solid #cccccc;
+border-right:1px solid #cccccc;
 border-bottom:1px solid #cccccc;
+border-top:1px solid #cccccc;
 }
 </style>
 
 
 
 <form action="admin.php?page=Spider_Video_Player_Playlists" method="post" name="adminForm" id="adminForm">
- <table width="100%">
+ <table width="90%">
  <tr>      
   <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
@@ -276,7 +273,7 @@ border-bottom:1px solid #cccccc;
 					</td>
 					<td  style="width:1000px" >
                    <?php wp_enqueue_script( 'theme-preview' ); ?>
-<a href="<?php echo plugins_url("select_video.php",__FILE__) ?>?post_id=270&amp;TB_iframe=1&amp;width=1024&amp;height=394" class="thickbox thickbox-preview" id="content-add_media" title="Add Media" onclick="return false;"><img src="<?php echo plugins_url("images/add_but.png",__FILE__) ?>" ></a>
+<a href="<?php echo admin_url('admin-ajax.php?action=spiderVeideoPlayerselectvideo') ?>&post_id=270&amp;TB_iframe=1&amp;width=1024&amp;height=394" class="thickbox thickbox-preview" id="content-add_media" title="Add Media" onclick="return false;"><img src="<?php echo plugins_url("images/add_but.png",__FILE__) ?>" ></a>
 <table width="100%">
 <tbody id="video_list"></tbody>
 </table>
@@ -369,13 +366,15 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
 <td style="text-align:right;font-size:16px;padding:20px; padding-right:50px">
 
 	</td>
-           <td colspan="7" align="right" style="font-size:16px;">
+      
+  <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
 		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
         </td>
-    </tr>
+        </tr>
+
     </table>
     <?php
 	if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=$_POST['search_events_by_title']; }else{$serch_value="";}} 
@@ -742,12 +741,21 @@ jQuery(function() {
 });
 </script>
 
-
+<style type="text/css">
+.admintable td
+{
+padding:15px;
+border-left:1px solid #cccccc;
+border-right:1px solid #cccccc;
+border-bottom:1px solid #cccccc;
+border-top:1px solid #cccccc;
+}
+</style>
 
 <form action="admin.php?page=Spider_Video_Player_Playlists<?php echo "&id=".$row->id?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
- <table width="100%">
- <tr>
-        <td colspan="7" align="right" style="font-size:16px;">
+ <table width="90%">
+ <tr>      
+  <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
 		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
@@ -755,7 +763,7 @@ jQuery(function() {
         </td>
         </tr>
     <tr>
-  <td width="100%"><h2>Add Playlist</h2></td>
+  <td width="100%"><h2>Edit Playlist - <?php echo $row->title ?></h2></td>
   <td align="right"><input type="button" onclick="submitbutton('Save')" value="Save" class="button-secondary action"> </td>  
   <td align="right"><input type="button" onclick="submitbutton('Apply')" value="Apply" class="button-secondary action"> </td> 
   <td align="right"><input type="button" onclick="window.location.href='admin.php?page=Spider_Video_Player_Playlists'" value="Cancel" class="button-secondary action"> </td> 
@@ -782,7 +790,7 @@ jQuery(function() {
 					</td>
 					<td  style="width:1000px" >
                    <?php wp_enqueue_script( 'theme-preview' ); ?>
-<a href="<?php echo plugins_url("select_video.php",__FILE__) ?>?post_id=270&amp;TB_iframe=1&amp;width=1024&amp;height=394" class="thickbox thickbox-preview" id="content-add_media" title="Add Media" onclick="return false;"><img src="<?php echo plugins_url("images/add_but.png",__FILE__) ?>" ></a>
+<a href="<?php echo admin_url('admin-ajax.php?action=spiderVeideoPlayerselectvideo') ?>&post_id=270&amp;TB_iframe=1&amp;width=1024&amp;height=394" class="thickbox thickbox-preview" id="content-add_media" title="Add Media" onclick="return false;"><img src="<?php echo plugins_url("images/add_but.png",__FILE__) ?>" ></a>
 <table width="100%">
 <tbody id="video_list"></tbody>
 </table>

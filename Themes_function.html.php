@@ -68,7 +68,7 @@ function refresh_()
 	appWidth			=parseInt(document.getElementById('appWidth').value);
 	appHeight			=parseInt(document.getElementById('appHeight').value);
 	refresh_ctrl();
-	document.getElementById('priview_td').childNodes[0].href='<?php echo plugins_url("priview.php",__FILE__) ?>?post_id=270&appWidth='+appWidth+'&appHeight='+appHeight+'&amp;TB_iframe=1';
+	document.getElementById('priview_td').childNodes[0].href='<?php echo admin_url('admin-ajax.php?action=spiderVeideoPlayerPrewieve')?>&post_id=270&appWidth='+appWidth+'&appHeight='+appHeight+'&amp;TB_iframe=1';
 }
 
 function submitbutton(pressbutton) {
@@ -141,7 +141,7 @@ jQuery(function() {
 }
 ?>
 
-
+$.noConflict();
 jQuery(document).ready(function($) {	
 	$(document).ready(function(){
 	for (var i = 0; i < <?php echo $n ?>; i++)
@@ -768,15 +768,17 @@ a img.calendar {
 
 
     <table width="90%">
-    <tr>       <td colspan="7" align="right" style="font-size:16px;">
+    <tr>      
+  <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
-		<img src="<?php echo plugins_url('images/header.png',__FILE__);  ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
+		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
 		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
-        </td></tr>
+        </td>
+        </tr>
     <tr>
   <td width="100%"><h2>Adding New Theme</h2></td>
-<td id="priview_td" onclick="refresh_ctrl();"><a href="<?php echo plugins_url("priview.php",__FILE__) ?>?post_id=270&appWidth=640&appHeight=480&amp;TB_iframe=1&amp;width=640&amp;height=218" class="thickbox thickbox-preview" id="content-add_media" title="Spider Video Player" onclick="return false;"><input type="button"  value="preview" class="button-primary"></a></td>
+<td id="priview_td" onclick="refresh_ctrl();"><a href="<?php echo admin_url('admin-ajax.php?action=spiderVeideoPlayerPrewieve') ?>&post_id=270&appWidth=640&appHeight=480&amp;TB_iframe=1&amp;width=640&amp;height=218" class="thickbox thickbox-preview" id="content-add_media" title="Spider Video Player" onclick="return false;"><input type="button"  value="preview" class="button-primary"></a></td>
   <td align="right"><input type="button" onclick="submitbutton('Save')" value="Save" class="button-secondary action"> </td>  
   <td align="right"><input type="button" onclick="submitbutton('Apply')" value="Apply" class="button-secondary action"> </td> 
   <td align="right"><input type="button" onclick="window.location.href='admin.php?page=Spider_Video_Player_Themes'" value="Cancel" class="button-secondary action"> </td> 
@@ -797,7 +799,7 @@ a img.calendar {
  
  
  
- <div style="width:35%; float:left; min-width:390px">
+ <div style="width:35%; float:left; min-width:390px"">
  <fieldset class="adminform">
 						<legend>General Parameters</legend>
                         <table class="admintable">
@@ -965,7 +967,7 @@ a img.calendar {
                         </table>
 </fieldset>
 </div>
-<div style="width:35%; float:left; min-width:390px">
+<div style="width:35%; float:left; min-width:390px"">
 <fieldset class="adminform">
 						<legend>Style Parameters</legend>
                         <table class="admintable">
@@ -1135,7 +1137,7 @@ a img.calendar {
                         </table>
 </fieldset>
 </div>
-<div style="width:35%; float:left; min-width:390px">
+<div style="width:35%; float:left; min-width:390px"">
 <fieldset class="adminform">
 						<legend>Playback Parameters</legend>
                         <table class="admintable">
@@ -1235,7 +1237,7 @@ a img.calendar {
 </fieldset>
 </div>
 
-<div style="width:35%; float:left; min-width:390px">
+<div style="width:35%; float:left; min-width:390px"">
 <fieldset class="adminform">
 						<legend>Playlist and Library Parameters</legend>
                         <table class="admintable">
@@ -1519,13 +1521,14 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
 <td style="text-align:right;font-size:16px;padding:20px; padding-right:50px">
 
 	</td>
-    <td colspan="7" align="right" style="font-size:16px;">
+ 
+  <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
-		<img src="<?php echo plugins_url('images/header.png',__FILE__);  ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
+		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
 		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
-  
-    </td>
+        </td>
+
     </tr>
     </table>
     <?php
@@ -1646,7 +1649,7 @@ function refresh_()
 	appWidth			=parseInt(document.getElementById('appWidth').value);
 	appHeight			=parseInt(document.getElementById('appHeight').value);
 	refresh_ctrl();
-	document.getElementById('priview_td').childNodes[0].href='<?php echo plugins_url("priview.php",__FILE__) ?>?post_id=270&appWidth='+appWidth+'&appHeight='+appHeight+'&amp;TB_iframe=1';
+	document.getElementById('priview_td').childNodes[0].href='<?php echo admin_url('admin-ajax.php?action=spiderVeideoPlayerPrewieve') ?>&post_id=270&appWidth='+appWidth+'&appHeight='+appHeight+'&amp;TB_iframe=1';
 }
 
 function submitbutton(pressbutton) {
@@ -1724,9 +1727,8 @@ jQuery(function() {
 }
 ?>
 
-
 jQuery(document).ready(function($) {	
-	$(document).ready(function(){
+	jQuery(document).ready(function(){
 	for (var i = 0; i < <?php echo $n ?>; i++)
 	{
 		$("#arr_" + i).bind('click',{i:i},function(event){
@@ -2368,15 +2370,17 @@ a img.calendar {
     
     
     <table width="90%">
-    <tr>       <td colspan="7" align="right" style="font-size:16px;">
+    <tr>      
+  <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
-		<img src="<?php echo plugins_url('images/header.png',__FILE__);  ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
+		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
 		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
-        </td></tr>
+        </td>
+        </tr>
     <tr>
   <td width="100%"><h2>Theme <?php echo htmlspecialchars($row->title)?></h2></td>
-<td id="priview_td" onclick="refresh_ctrl();"><a href="<?php echo plugins_url("priview.php",__FILE__) ?>?post_id=270&appWidth=640&appHeight=480&amp;TB_iframe=1&amp;width=640&amp;height=218" class="thickbox thickbox-preview" id="content-add_media" title="Spider Video Player" onclick="return false;"><input type="button"  value="preview" class="button-primary"></a></td>
+<td id="priview_td" onclick="refresh_ctrl();"><a href="<?php echo admin_url('admin-ajax.php?action=spiderVeideoPlayerPrewieve') ?>&post_id=270&appWidth=640&appHeight=480&amp;TB_iframe=1&amp;width=640&amp;height=218" class="thickbox thickbox-preview" id="content-add_media" title="Spider Video Player" onclick="return false;"><input type="button"  value="preview" class="button-primary"></a></td>
   <td align="right"><input type="button" onclick="submitbutton('Save')" value="Save" class="button-secondary action"> </td>  
   <td align="right"><input type="button" onclick="submitbutton('Apply')" value="Apply" class="button-secondary action"> </td> 
   <td align="right"><input type="button" onclick="window.location.href='admin.php?page=Spider_Video_Player_Themes'" value="Cancel" class="button-secondary action"> </td> 
@@ -2392,7 +2396,7 @@ a img.calendar {
  
  
  
- <div style="width:35%; float:left; min-width:390px">
+ <div style="width:35%; float:left; min-width:390px"">
  <fieldset class="adminform">
 						<legend>General Parameters</legend>
                         <table class="admintable">
@@ -2560,7 +2564,7 @@ a img.calendar {
                         </table>
 </fieldset>
 </div>
-<div style="width:35%; float:left; min-width:390px">
+<div style="width:35%; float:left; min-width:390px"">
 <fieldset class="adminform">
 						<legend>Style Parameters</legend>
                         <table class="admintable">
@@ -2730,7 +2734,7 @@ a img.calendar {
                         </table>
 </fieldset>
 </div>
-<div style="width:35%; float:left; min-width:390px">
+<div style="width:35%; float:left; min-width:390px"">
 <fieldset class="adminform">
 						<legend>Playback Parameters</legend>
                         <table class="admintable">
@@ -2830,7 +2834,7 @@ a img.calendar {
 </fieldset>
 </div>
 
-<div style="width:35%; float:left; min-width:390px">
+<div style="width:35%; float:left; min-width:390px"">
 <fieldset class="adminform">
 						<legend>Playlist and Library Parameters</legend>
                         <table class="admintable">

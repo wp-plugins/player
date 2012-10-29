@@ -1,9 +1,9 @@
 <?php 
 
 /*
-Plugin Name: Wordpress Video Plugin
+Plugin Name: Spider Video Player
 Plugin URI: http://web-dorado.com/
-Version: 1.2
+Version: 1.3
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -111,7 +111,7 @@ function flashShare(type,b,c)
   
 		   var so = new SWFObject(\"".plugins_url("videoSpider_Video_Player.swf",__FILE__)."?wdrand=".mt_rand() ."\", \"Spider_Video_Player\", \"100%\", \"100%\", \"8\", \"#000000\");
 	
-		   so.addParam(\"FlashVars\", \"settingsUrl=".str_replace("&","@",  str_replace("&amp;","@",plugins_url("settings.php",__FILE__)."?playlist=".$playlist."&theme=".$theme."&s_v_player_id=".$id))."&playlistUrl=".str_replace("&","@",str_replace("&amp;","@",plugins_url("playlist.php",__FILE__)."?playlist=".$playlist."&show_trackid=".$show_trackid))."&defaultAlbumId=".$_GET['AlbumId']."&defaultTrackId=".$_GET['TrackId']."\");
+		   so.addParam(\"FlashVars\", \"settingsUrl=".str_replace("&","@",  str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml')."&playlist=".$playlist."&theme=".$theme."&s_v_player_id=".$id))."&playlistUrl=".str_replace("&","@",str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml')."&playlist=".$playlist."&show_trackid=".$show_trackid))."&defaultAlbumId=".$_GET['AlbumId']."&defaultTrackId=".$_GET['TrackId']."\");
 		   so.addParam(\"quality\", \"high\");
 		   so.addParam(\"menu\", \"false\");
 		   so.addParam(\"wmode\", \"transparent\");
@@ -170,13 +170,23 @@ add_action('admin_head', 'add_button_style_Spider_Video_Player');
 
 
 
+//////////////////////////////////////////////////////////////////////////actions for popup and xmls
+require_once('functions_for_xml_and_ajax.php'); //include all functions for down call ajax
+add_action('wp_ajax_spiderVeideoPlayerPrewieve'			, 'spider_Veideo_Player_Prewieve');
+add_action('wp_ajax_spiderVeideoPlayerpreviewsettings'	, 'spider_video_preview_settings');
+add_action('wp_ajax_spiderVeideoPlayerpreviewplaylist'	, 'spider_video_preview_playlist');
+add_action('wp_ajax_spiderVeideoPlayerselectplaylist'	, 'spider_video_select_playlist');
+add_action('wp_ajax_spiderVeideoPlayerselectvideo'		, 'spider_video_select_video');
+add_action('wp_ajax_spiderVeideoPlayersettingsxml'		, 'generete_sp_video_settings_xml');
+add_action('wp_ajax_spiderVeideoPlayerplaylistxml'		, 'generete_sp_video_playlist_xml');
+add_action('wp_ajax_spiderVeideoPlayervideoonly'		, 'viewe_sp_video_only');
 
 
 
-
-
-
-
+////////////////////////////ajax for users
+add_action('wp_ajax_nopriv_spiderVeideoPlayervideoonly'		, 'viewe_sp_video_only');
+add_action('wp_ajax_nopriv_spiderVeideoPlayersettingsxml'		, 'generete_sp_video_settings_xml');
+add_action('wp_ajax_nopriv_spiderVeideoPlayerplaylistxml'		, 'generete_sp_video_playlist_xml');
 
 
 
@@ -209,16 +219,12 @@ function Spider_Video_Player_options_panel(){
   $page_theme=add_submenu_page( 'Spider_Video_Player', 'Themes', 'Themes', 'manage_options', 'Spider_Video_Player_Themes', 'Spider_Video_Player_Themes');
 
   add_submenu_page( 'Spider_Video_Player', 'Uninstall Spider_Video_Player ', 'Uninstall  Video Player', 'manage_options', 'Uninstall_Spider_Video_Player', 'Uninstall_Spider_Video_Player');
- add_action('admin_print_styles-' . $page_theme, 'sp_video_player_admin_styles_scripts');
- 
-  
-  
+	add_action('admin_print_styles-' . $page_theme, 'sp_video_player_admin_styles_scripts');
   }
-  
-  
-  function sp_video_player_admin_styles_scripts()
+   function sp_video_player_admin_styles_scripts()
   {
 	if(get_bloginfo('version')>3.3){
+	
 	wp_enqueue_script("jquery");
 	wp_enqueue_script('jquery-ui-core');
 	wp_enqueue_script("jquery-ui-widget");
@@ -251,7 +257,7 @@ add_filter('admin_head','ShowTinyMCE');
 function ShowTinyMCE() {
 	// conditions here
 	wp_enqueue_script( 'common' );
-	//wp_enqueue_script( 'jquery-color' );
+	wp_enqueue_script( 'jquery-color' );
 	wp_print_scripts('editor');
 	if (function_exists('add_thickbox')) add_thickbox();
 	wp_print_scripts('media-upload');
@@ -830,14 +836,8 @@ function Spider_Video_Player_Themes(){
 
 
 function Uninstall_Spider_Video_Player(){
-
-
-
-
-
-
-	global $wpdb;
 	
+global $wpdb;
 $base_name = plugin_basename('Spider_Video_Player');
 $base_page = 'admin.php?page='.$base_name;
 $mode = trim($_GET['mode']);
@@ -961,7 +961,6 @@ function Spider_Video_Player_activate()
 
 
 
-
 global $wpdb;
 $sql_playlist="CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."Spider_Video_Player_playlist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1060,12 +1059,12 @@ $sql_Spider_Video_Player="CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."Spider_Vi
 
 $table_name=$wpdb->prefix."Spider_Video_Player_theme";
 $sql_theme1="INSERT INTO `".$table_name."` VALUES(1, 1, 'Theme 1', 540, 350, 100, 0, 1, 0, 0, 50, 'repeatOff', 'ShuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playlist:1,playPrev:1,playPause:1,playNext:1,lib:1,stop:0,time:1,vol:1,+:1,hd:1,repeat:1,shuffle:1,play:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 12, 3, 3, 16, 20, '001326', '001326', '3665A3', 'C0B8F2', '000000', '00A2FF', 'DAE858', '0C8A58', 'DEDEDE', '000000', 'FFFFFF', 50, 79, 50, 1)";
-$sql_theme2="INSERT INTO `".$table_name."` VALUES(2, 0, 'Theme 2', 300, 220, 60, 0, 0, 0, 0, 50, 'repeatOff', 'ShuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPrev:1,playPause:1,playNext:1,stop:0,playlist:1,lib:1,play:0,vol:1,+:1,time:1,hd:1,repeat:1,shuffle:1,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 0, 1, 6, 3, 3, 6, 8, 'FFBB00', '001326', 'FFA200', '030000', '595959', 'FF0000', 'E8E84D', 'FF5500', 'EBEBEB', '000000', 'FFFFFF', 82, 79, 82, 1)";
-$sql_theme3="INSERT INTO `".$table_name."` VALUES(3, 0, 'Theme 3', 540, 350, 100, 0, 0, 0, 0, 50, 'repeatOff', 'ShuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,play:0,playlist:1,lib:1,playPrev:1,playNext:1,stop:0,vol:1,+:1,time:1,hd:1,repeat:1,shuffle:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 0, 12, 3, 3, 16, 20, 'FF0000', '070801', 'D10000', 'FFFFFF', '00A2FF', '00A2FF', 'F0FF61', '00A2FF', 'DEDEDE', '000000', 'FFFFFF', 65, 99, 65, 1)";
-$sql_theme4="INSERT INTO `".$table_name."` VALUES(4, 0, 'Theme 4', 300, 220, 60, 0, 0, 0, 0, 50, 'repeatOff', 'ShuffleOff', 5, 60, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,vol:1,playPrev:0,playNext:0,stop:0,+:1,hd:1,repeat:1,shuffle:0,play:0,pause:0,share:1,time:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 6, 4, 4, 6, 8, '239DC2', '000000', '2E6DFF', 'F5DA51', 'FFA64D', 'BFBA73', 'FF8800', 'FFF700', 'FFFFFF', 'FFFFFF', '000000', 71, 82, 71, 1)";
-$sql_theme5="INSERT INTO `".$table_name."` VALUES(5, 0, 'Theme 5', 540, 350, 100, 1, 0, 0, 0, 50, 'repeatOff', 'ShuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPrev:0,playPause:1,playlist:1,lib:1,playNext:0,stop:0,time:1,vol:1,+:1,hd:1,repeat:1,shuffle:1,play:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 14, 4, 4, 14, 16, '878787', '001326', 'FFFFFF', '000000', '525252', '14B1FF', 'CCCCCC', '14B1FF', '030303', '000000', 'FFFFFF', 100, 75, 100, 1)";
-$sql_theme6="INSERT INTO `".$table_name."` VALUES(6, 0, 'Theme 6', 540, 350, 100, 0, 0, 0, 0, 50, 'repeatOff', 'ShuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,vol:1,playPrev:0,playNext:0,stop:0,+:1,repeat:0,shuffle:0,play:0,pause:0,hd:1,share:1,time:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 14, 3, 3, 16, 16, '080808', '000000', '1C1C1C', 'FFFFFF', '40C6FF', '00A2FF', 'E8E8E8', '40C6FF', 'DEDEDE', '2E2E2E', 'FFFFFF', 61, 79, 61, 1)";
-$sql_theme7="INSERT INTO `".$table_name."` VALUES(7, 0, 'Theme  7', 540, 350, 100, 0, 0, 0, 0, 50, 'repeatOff', 'ShuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,playPrev:0,playNext:0,stop:0,vol:1,+:1,hd:0,repeat:0,shuffle:0,play:0,pause:0,share:1,fullScreen:1,time:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 12, 3, 3, 16, 16, '212121', '000000', '222424', 'FFCC00', 'FFFFFF', 'ABABAB', 'B8B8B8', 'EEFF00', 'DEDEDE', '000000', '000000', 90, 78, 90, 1)";
+$sql_theme2="INSERT INTO `".$table_name."` VALUES(2, 0, 'Theme 2', 300, 220, 60, 0, 0, 0, 0, 50, 'repeatOff', 'ShuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPrev:1,playPause:1,playNext:1,stop:0,playlist:1,lib:1,play:0,vol:1,+:1,time:1,hd:1,repeat:1,shuffle:1,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 0, 1, 6, 3, 3, 6, 8, 'FFBB00', '001326', 'FFA200', '030000', '595959', 'FF0000', 'E8E84D', 'FF5500', 'EBEBEB', '000000', 'FFFFFF', 82, 79, 0, 1)";
+$sql_theme3="INSERT INTO `".$table_name."` VALUES(3, 0, 'Theme 3', 540, 350, 100, 0, 0, 0, 0, 50, 'repeatOff', 'ShuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,play:0,playlist:1,lib:1,playPrev:1,playNext:1,stop:0,vol:1,+:1,time:1,hd:1,repeat:1,shuffle:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 0, 12, 3, 3, 16, 20, 'FF0000', '070801', 'D10000', 'FFFFFF', '00A2FF', '00A2FF', 'F0FF61', '00A2FF', 'DEDEDE', '000000', 'FFFFFF', 65, 99, 0, 1)";
+$sql_theme4="INSERT INTO `".$table_name."` VALUES(4, 0, 'Theme 4', 300, 220, 60, 0, 0, 0, 0, 50, 'repeatOff', 'ShuffleOff', 5, 60, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,vol:1,playPrev:0,playNext:0,stop:0,+:1,hd:1,repeat:1,shuffle:0,play:0,pause:0,share:1,time:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 6, 4, 4, 6, 8, '239DC2', '000000', '2E6DFF', 'F5DA51', 'FFA64D', 'BFBA73', 'FF8800', 'FFF700', 'FFFFFF', 'FFFFFF', '000000', 71, 82, 0, 1)";
+$sql_theme5="INSERT INTO `".$table_name."` VALUES(5, 0, 'Theme 5', 540, 350, 100, 1, 0, 0, 0, 50, 'repeatOff', 'ShuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPrev:0,playPause:1,playlist:1,lib:1,playNext:0,stop:0,time:1,vol:1,+:1,hd:1,repeat:1,shuffle:1,play:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 14, 4, 4, 14, 16, '878787', '001326', 'FFFFFF', '000000', '525252', '14B1FF', 'CCCCCC', '14B1FF', '030303', '000000', 'FFFFFF', 100, 75, 0, 1)";
+$sql_theme6="INSERT INTO `".$table_name."` VALUES(6, 0, 'Theme 6', 540, 350, 100, 0, 0, 0, 0, 50, 'repeatOff', 'ShuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,vol:1,playPrev:0,playNext:0,stop:0,+:1,repeat:0,shuffle:0,play:0,pause:0,hd:1,share:1,time:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 14, 3, 3, 16, 16, '080808', '000000', '1C1C1C', 'FFFFFF', '40C6FF', '00A2FF', 'E8E8E8', '40C6FF', 'DEDEDE', '2E2E2E', 'FFFFFF', 61, 79, 0, 1)";
+$sql_theme7="INSERT INTO `".$table_name."` VALUES(7, 0, 'Theme  7', 540, 350, 100, 0, 0, 0, 0, 50, 'repeatOff', 'ShuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,playPrev:0,playNext:0,stop:0,vol:1,+:1,hd:0,repeat:0,shuffle:0,play:0,pause:0,share:1,fullScreen:1,time:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 12, 3, 3, 16, 16, '212121', '000000', '222424', 'FFCC00', 'FFFFFF', 'ABABAB', 'B8B8B8', 'EEFF00', 'DEDEDE', '000000', '000000', 90, 78, 0, 1)";
 
 $table_name=$wpdb->prefix."Spider_Video_Player_video";
 
@@ -1126,6 +1125,7 @@ $wpdb->query($sql_tag_insert_row2);
 
 ////// insert playlist rows
 $wpdb->query($sql_playlist_insert_row1);
+
 
 }
 

@@ -223,14 +223,12 @@ jQuery(function() {
 </script>
 
 <style type="text/css">
-.admintable
-{
-border-right:1px solid #cccccc;
-border-top:1px solid #cccccc;
-}
+
 .admintable td
 {
 padding:15px;
+border-right:1px solid #cccccc;
+border-top:1px solid #cccccc;
 border-left:1px solid #cccccc;
 border-bottom:1px solid #cccccc;
 }
@@ -239,27 +237,25 @@ border-bottom:1px solid #cccccc;
 <?php ?>
 <table width="95%">
   <tbody>
-  <tr> 
-  
-   <td colspan="7" align="right" style="font-size:16px;">
+  <tr>      
+  <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
 		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
+        </td>
         </tr>
   <tr>
   <td width="100%"><h2>Add Video</h2></td>
-
-  </td>
   <td align="right"><input type="button" onclick="submitbutton('Save')" value="Save" class="button-secondary action"> </td>  
   <td align="right"><input type="button" onclick="submitbutton('Apply')" value="Apply" class="button-secondary action"> </td> 
   <td align="right"><input type="button" onclick="window.location.href='admin.php?page=Spider_Video_Player_Videos'" value="Cancel" class="button-secondary action"> </td> 
   </tr>
   </tbody></table>
 <form action="admin.php?page=Spider_Video_Player_Videos" method="post" name="adminForm" id="adminForm">
-<table class="admintable" cellspacing="0">
+<table style="width:95%" class="admintable"  cellspacing="0">
 				<tr>
-					<td class="key">
+					<td class="key" style="width:200px">
 						<label for="title">
 							<?php echo 'Title'; ?>:
 						</label>
@@ -417,6 +413,7 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
 	</script>
     <form method="post" onkeypress="doNothing()" action="admin.php?page=Spider_Video_Player_Videos" id="admin_form" name="admin_form">
 	<table cellspacing="10" width="100%">
+   
     <tr>
     <td style="width:80px">
     <?php $Forms_title='Form Maker'; echo "<h2>".'Videos'. "</h2>"; ?>
@@ -425,14 +422,14 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
 <td style="text-align:right;font-size:16px;padding:20px; padding-right:50px">
 
 	</td>
-   
-  
-   <td colspan="7" align="right" style="font-size:16px;">
+     
+  <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
 		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
-  
+        </td>
+
     </tr>
     </table>
     
@@ -695,15 +692,26 @@ jQuery(function() {
 });
 
 </script>   
+<style type="text/css">
+
+.admintable td
+{
+padding:15px;
+border-right:1px solid #cccccc;
+border-top:1px solid #cccccc;
+border-left:1px solid #cccccc;
+border-bottom:1px solid #cccccc;
+}
+</style>
 <table width="95%">
   <tbody>
-    <tr> 
-  
-   <td colspan="7" align="right" style="font-size:16px;">
+  <tr>      
+  <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
 		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
+        </td>
         </tr>
   <tr>
   <td width="100%"><h2>Video - <?php echo $row->title; ?></h2></td>
@@ -713,9 +721,9 @@ jQuery(function() {
   </tr>
   </tbody></table>    
 <form action="admin.php?page=Spider_Video_Player_Videos" method="post" name="adminForm" id="adminForm">
-<table class="admintable">
+<table class="admintable" style="width:95%">
 				<tr>
-					<td class="key">
+					<td class="key" style="width:200px">
 						<label for="title">
 							<?php echo 'Title'; ?>:
 						</label>
@@ -783,7 +791,7 @@ jQuery(function() {
 						</label>
 					</td>
                 	<td>
-					<input type="text" value="<?php if($row->thumb )echo htmlspecialchars($row->thumb); ?>" name="post_image" id="post_image" class="text_input" style="width:137px"/><a class="button lu_upload_button" href="#" />Select</a>
+					<input type="text" value="<?php if($row->thumb )echo htmlspecialchars($row->thumb); ?>" name="post_image" id="post_image" class="text_input" style="width:137px"/><a class="button lu_upload_button" href="#" />Select</a><br>
 
 <a href="javascript:removeImage();">Remove Image</a><br />
 <div style=" position:absolute; width:1px; height:1px; top:0px; overflow:hidden">

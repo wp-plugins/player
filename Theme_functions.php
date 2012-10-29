@@ -4,6 +4,9 @@ function add_theme(){
 	global $wpdb;
 
 
+
+
+
 $row=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE `default`=1");
 	html_add_theme($row);
 }
@@ -314,7 +317,6 @@ function edit_theme($id){
 	{
 		$id=$wpdb->get_var("SELECT MAX( id ) FROM ".$wpdb->prefix."Spider_Video_Player_theme");
 	}
-
 	
 	$query="SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE `id`=".$id;
 	

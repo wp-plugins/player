@@ -343,12 +343,14 @@ border-bottom:1px solid #cccccc;
 <form action="admin.php?page=Spider_Video_Player<?php if($id) echo "&id=".$id; ?>" onkeypress="doNothing()" method="post" name="adminForm" id="adminForm">
 <input type="hidden" name="params" id="playlists" value="<?php echo $value; ?>">
 <table width="90%">
-<tr>       <td colspan="7" align="right" style="font-size:16px;">
+<tr>      
+  <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
 		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
-        </td></tr>
+        </td>
+        </tr>
     <tr>
   <td width="100%"><h2><?php if($title) echo $title; else echo "Add Spider Video Player"; ?></h2></td>
   <td align="right"><input type="button" onclick="submitbutton('Save')" value="Save" class="button-secondary action"> </td>  
@@ -378,7 +380,7 @@ border-bottom:1px solid #cccccc;
 <tr>
 <td>Playlist</td>
 <td>
-<a href="<?php echo plugins_url("select_playlist.php",__FILE__) ?>?post_id=270&amp;TB_iframe=1&amp;width=1024&amp;height=394" class="thickbox thickbox-preview" id="content-add_media" title="Add Media" onclick="return false;"><img src="<?php echo plugins_url("images/add_but.png",__FILE__) ?>" ></a>
+<a href="<?php echo admin_url('admin-ajax.php?action=spiderVeideoPlayerselectplaylist') ?>&post_id=270&amp;TB_iframe=1&amp;width=1024&amp;height=394" class="thickbox thickbox-preview" id="content-add_media" title="Add Media" onclick="return false;"><img src="<?php echo plugins_url("images/add_but.png",__FILE__) ?>" ></a>
 </td>
 </tr>
 </table>
@@ -468,12 +470,14 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
     </td>
     <td  style="width:90px; text-align:right;"><p class="submit" style="padding:0px; text-align:left"><input type="button" value="Add a player" name="custom_parametrs" onclick="window.location.href='admin.php?page=Spider_Video_Player&task=add_Spider_Video_Player'" /></p></td>
 <td style="text-align:right;font-size:16px;padding:20px; padding-right:50px">
-       <td colspan="7" align="right" style="font-size:16px;">
+      
+  <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
 		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
         </td>
+      
 	</td>
     </tr>
     </table>
