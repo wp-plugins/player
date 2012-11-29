@@ -45,10 +45,14 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
 }
 }
 </script>
-<table>
- <tr>
-<td width="100%"><h2>Add Tag</h2></td>
-      
+<table width="100%">
+ <tr>   
+<td style="font-size:14px; font-weight:bold">
+<a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
+This section allows you to create tags.<br />
+The Tag is a custom parameter of videos by which you can search videos while creating playlists. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">More...</a><br /> Tag examples: Year, Date, Artist, Album, Genre.
+
+</td>   
   <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
@@ -166,21 +170,28 @@ border-bottom:1px solid #cccccc;
 
     <form method="post"  onkeypress="doNothing()" action="admin.php?page=Tags_Spider_Video_Player" id="admin_form" name="admin_form">
 	<table cellspacing="10" width="100%">
-    <tr>
-    <td style="width:80px">
-    <?php $Forms_title='Form Maker'; echo "<h2>".'Tags'. "</h2>"; ?>
-    </td>
-    <td  style="width:90px; text-align:right;"><p class="submit" style="padding:0px; text-align:left"><input type="button" value="Add a Tag" name="custom_parametrs" onclick="window.location.href='admin.php?page=Tags_Spider_Video_Player&task=add_tag'" /></p></td>
-<td style="text-align:right;font-size:16px;padding:20px; padding-right:50px">
-
-	</td>
-     
-  <td colspan="7" align="right" style="font-size:16px;">
+    <thead>
+    
+        <tr>   
+<td width="100%" style="font-size:14px; font-weight:bold"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
+This section allows you to create tags.<br />
+The Tag is a custom parameter of videos by which you can search videos while creating playlists. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">More...</a><br /> Tag examples: Year, Date, Artist, Album, Genre.
+</td> <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
 		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
         </td>
+        </tr>
+    </thead>
+    <tr>
+    <td  style="width:80px">
+    <?php $Forms_title='Form Maker'; echo "<h2 style=\"float:left\">".'Tags'. "</h2>"; ?>
+    <input type="button" value="Add a Tag" style="float:left; position:relative; top:10px; margin-left:20px" class="button-secondary action" name="custom_parametrs" onclick="window.location.href='admin.php?page=Tags_Spider_Video_Player&task=add_tag'" />
+    </td>
+	</td>
+     
+
         
     </tr>
     </table>
@@ -283,15 +294,23 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
 }
 }
 </script>
-<table><tr><td width="100%">
-<h2>Edit Tag - <?php  echo $row->name; ?></h2></td>
-      
+<table>
+<tr>   
+<td style="font-size:14px; font-weight:bold">
+<a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
+This section allows you to create tags.<br />
+The Tag is a custom parameter of videos by which you can search videos while creating playlists. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">More...</a><br /> Tag examples: Year, Date, Artist, Album, Genre.
+
+</td>   
   <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
 		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
         </td>
+        </tr>
+<tr><td width="100%">
+<h2>Edit Tag - <?php  echo $row->name; ?></h2></td>
         </tr>
         </table>
 <form action="admin.php?page=Tags_Spider_Video_Player" onkeypress="doNothing()" method="post" name="adminForm" id="adminForm">

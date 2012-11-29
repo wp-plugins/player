@@ -3,7 +3,7 @@
 /*
 Plugin Name: Spider Video Player
 Plugin URI: http://web-dorado.com/
-Version: 1.3.1
+Version: 1.3.2
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -196,7 +196,29 @@ add_action('wp_ajax_nopriv_spiderVeideoPlayerplaylistxml'		, 'generete_sp_video_
 
 
 
+function Spider_Video_Player_Licensing(){
+	?>
+    
+   <div style="width:95%"> <p>
+This plugin is the non-commercial version of the Spider Video Player. Use of the player and themes is free.The only limitation is our watermark on it. If you want to remove the watermark, you are required to purchase a license.
+Purchasing a license will remove the Spider Video Player watermark. </p>
+<br /><br />
+<a href="http://webdorado.org/files/fromSVP.php" class="button-primary" target="_blank">Purchase a License</a>
+<br /><br /><br />
+<p>After the purchasing the commercial version follow this steps:</p>
+<ol>
+	<li>Deactivate Spider Video Player Plugin</li>
+	<li>Delete Spider Video Player Plugin</li>
+	<li>Install the downloaded commercial version of the plugin</li>
+</ol>
+</div>
 
+    
+    
+    <?php
+	
+	
+	}
 
 
 
@@ -217,6 +239,7 @@ function Spider_Video_Player_options_panel(){
   add_submenu_page( 'Spider_Video_Player', 'Videos', 'Videos', 'manage_options', 'Spider_Video_Player_Videos', 'Spider_Video_Player_Videos');
   add_submenu_page( 'Spider_Video_Player', 'Playlists', 'Playlists', 'manage_options', 'Spider_Video_Player_Playlists', 'Spider_Video_Player_Playlists');
   $page_theme=add_submenu_page( 'Spider_Video_Player', 'Themes', 'Themes', 'manage_options', 'Spider_Video_Player_Themes', 'Spider_Video_Player_Themes');
+  add_submenu_page( 'Spider_Video_Player', 'Licensing', 'Licensing', 'manage_options', 'Spider_Video_Player_Licensing', 'Spider_Video_Player_Licensing');
 
   add_submenu_page( 'Spider_Video_Player', 'Uninstall Spider_Video_Player ', 'Uninstall  Video Player', 'manage_options', 'Uninstall_Spider_Video_Player', 'Uninstall_Spider_Video_Player');
 	add_action('admin_print_styles-' . $page_theme, 'sp_video_player_admin_styles_scripts');

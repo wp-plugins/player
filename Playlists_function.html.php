@@ -237,7 +237,9 @@ border-top:1px solid #cccccc;
 
 <form action="admin.php?page=Spider_Video_Player_Playlists" method="post" name="adminForm" id="adminForm">
  <table width="90%">
- <tr>      
+      <tr>   
+<td width="100%" style="font-size:14px; font-weight:bold"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-4.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
+This section allows you to create plalist of videos.<a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-4.html" target="_blank" style="color:blue; text-decoration:none;">More...</a></td>   
   <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
@@ -245,7 +247,6 @@ border-top:1px solid #cccccc;
 		</a>
         </td>
         </tr>
-    <tr>
   <td width="100%"><h2>Add Playlist</h2></td>
   <td align="right"><input type="button" onclick="submitbutton('Save')" value="Save" class="button-secondary action"> </td>  
   <td align="right"><input type="button" onclick="submitbutton('Apply')" value="Apply" class="button-secondary action"> </td> 
@@ -358,21 +359,21 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
 	</script>
     <form method="post" onkeypress="doNothing()" action="admin.php?page=Spider_Video_Player_Playlists" id="admin_form" name="admin_form">
 	<table cellspacing="10" width="100%">
-    <tr>
-    <td style="width:80px">
-    <?php echo "<h2>".'Playlists'. "</h2>"; ?>
-    </td>
-    <td  style="width:90px; text-align:right;"><p class="submit" style="padding:0px; text-align:left"><input type="button" value="Add a Playlist" name="custom_parametrs" onclick="window.location.href='admin.php?page=Spider_Video_Player_Playlists&task=add_playlist'" /></p></td>
-<td style="text-align:right;font-size:16px;padding:20px; padding-right:50px">
-
-	</td>
-      
+          <tr>   
+<td width="100%" style="font-size:14px; font-weight:bold"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-4.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
+This section allows you to create plalist of videos.<a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-4.html" target="_blank" style="color:blue; text-decoration:none;">More...</a></td>   
   <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
 		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
         </td>
+        </tr>
+    <tr>
+    <td style="width:80px">
+    <?php echo "<h2 style=\"float:left\">".'Playlists'. "</h2>"; ?>
+    <input type="button" value="Add a Playlist" style="float:left; position:relative; top:10px; margin-left:20px" class="button-secondary action" name="custom_parametrs" onclick="window.location.href='admin.php?page=Spider_Video_Player_Playlists&task=add_playlist'" /> 
+    </td>      
         </tr>
 
     </table>
@@ -754,7 +755,9 @@ border-top:1px solid #cccccc;
 
 <form action="admin.php?page=Spider_Video_Player_Playlists<?php echo "&id=".$row->id?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
  <table width="90%">
- <tr>      
+      <tr>   
+<td width="100%" style="font-size:14px; font-weight:bold"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-4.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
+This section allows you to create plalist of videos.<a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-4.html" target="_blank" style="color:blue; text-decoration:none;">More...</a></td>   
   <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://webdorado.org/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://webdorado.org/files/fromSVP.php" width="215"><br>
@@ -762,7 +765,6 @@ border-top:1px solid #cccccc;
 		</a>
         </td>
         </tr>
-    <tr>
   <td width="100%"><h2>Edit Playlist - <?php echo $row->title ?></h2></td>
   <td align="right"><input type="button" onclick="submitbutton('Save')" value="Save" class="button-secondary action"> </td>  
   <td align="right"><input type="button" onclick="submitbutton('Apply')" value="Apply" class="button-secondary action"> </td> 
