@@ -1,4 +1,4 @@
-=== Spider Video Player ===
+=== WordPress Video Player ===
 Contributors: webdorado
 Donate link: http://web-dorado.com/products/wordpress-player.html
 Tags: player, video, video player, flash player
