@@ -141,7 +141,6 @@ jQuery(function() {
 }
 ?>
 
-$.noConflict();
 jQuery(document).ready(function($) {	
 	$(document).ready(function(){
 	for (var i = 0; i < <?php echo $n ?>; i++)
