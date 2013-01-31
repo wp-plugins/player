@@ -3,7 +3,7 @@
 /*
 Plugin Name: Spider Video Player
 Plugin URI: http://web-dorado.com/
-Version: 1.3.6
+Version: 1.3.7
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -75,8 +75,7 @@ add_shortcode('Spider_Video_Player', 'Spider_Video_Player_shotrcode');
 			<script type=\"text/javascript\">
 function flashShare(type,b,c)	
 {
-
-	u=location.href;
+u=location.href;
 	u=u.replace('/?','/index.php?');
 	if(u.search('&AlbumId')!=-1)
 	{
@@ -91,8 +90,7 @@ function flashShare(type,b,c)
 	if(!location.search)
 			u=u+'?';
 		else
-
-			u=u+'&';
+u=u+'&';
 	t=document.title;
 	switch (type)
 	{
@@ -102,16 +100,13 @@ function flashShare(type,b,c)
 	case 'g':
 		window.open('http://plus.google.com/share?url='+encodeURIComponent(u+'AlbumId='+b+'&TrackId='+c)+'&t='+encodeURIComponent(t), \"Google\",\"menubar=1,resizable=1,width=350,height=250\");
 		break;
-		
 	case 'tw':
 		window.open('http://twitter.com/home/?status='+encodeURIComponent(u+'AlbumId='+b+'&TrackId='+c), \"Twitter\",\"menubar=1,resizable=1,width=350,height=250\");
 		break;
 	}
 }		
-  
-		   var so = new SWFObject(\"".plugins_url("videoSpider_Video_Player.swf",__FILE__)."?wdrand=".mt_rand() ."\", \"Spider_Video_Player\", \"100%\", \"100%\", \"8\", \"#000000\");
-	
-		   so.addParam(\"FlashVars\", \"settingsUrl=".str_replace("&","@",  str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml')."&playlist=".$playlist."&theme=".$theme."&s_v_player_id=".$id))."&playlistUrl=".str_replace("&","@",str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml')."&playlist=".$playlist."&show_trackid=".$show_trackid))."&defaultAlbumId=".$_GET['AlbumId']."&defaultTrackId=".$_GET['TrackId']."\");
+    var so = new SWFObject(\"".plugins_url("videoSpider_Video_Player.swf",__FILE__)."?wdrand=".mt_rand() ."\", \"Spider_Video_Player\", \"100%\", \"100%\", \"8\", \"#000000\");
+	 so.addParam(\"FlashVars\", \"settingsUrl=".str_replace("&","@",  str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml')."&playlist=".$playlist."&theme=".$theme."&s_v_player_id=".$id))."&playlistUrl=".str_replace("&","@",str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml')."&playlist=".$playlist."&show_trackid=".$show_trackid))."&defaultAlbumId=".$_GET['AlbumId']."&defaultTrackId=".$_GET['TrackId']."\");
 		   so.addParam(\"quality\", \"high\");
 		   so.addParam(\"menu\", \"false\");
 		   so.addParam(\"wmode\", \"transparent\");
@@ -121,8 +116,7 @@ function flashShare(type,b,c)
 			</script>";
 			$many_players++;
 			return $Spider_Video_Player_front_end;
-			 
- }
+}
 
 
 
