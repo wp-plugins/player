@@ -2,9 +2,9 @@
 
 /*
 Plugin Name: Spider Video Player
-Plugin URI: http://webdorado.org/
+Plugin URI: http://web-dorado.com/
 Version: 1.3.9
-Author: http://webdorado.org/
+Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
 
@@ -197,7 +197,7 @@ function Spider_Video_Player_Licensing(){
 This plugin is the non-commercial version of the Spider Video Player. Use of the player and themes is free.The only limitation is our watermark on it. If you want to remove the watermark, you are required to purchase a license.
 Purchasing a license will remove the Spider Video Player watermark. </p>
 <br /><br />
-<a href="http://webdorado.org/files/fromSVP.php" class="button-primary" target="_blank">Purchase a License</a>
+<a href="http://web-dorado.com/files/fromSVP.php" class="button-primary" target="_blank">Purchase a License</a>
 <br /><br /><br />
 <p>After the purchasing the commercial version follow this steps:</p>
 <ol>
