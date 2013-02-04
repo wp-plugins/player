@@ -1,6 +1,6 @@
 === WordPress Video Player ===
 Contributors: webdorado
-Donate link: http://web-dorado.com/products/wordpress-player.html
+Donate link: http://webdorado.org/products/wordpress-player.html
 Tags: player, video, video player, flash player
 Requires at least: 3.0
 Tested up to: 3.5
@@ -12,11 +12,11 @@ Spider Video Player for WordPress is a video player plugin that allows you to ea
 
 == Description ==
 
-###Spider Video [WordPress  Player](http://web-dorado.com/products/wordpress-player.html)
+###Spider Video [WordPress  Player](http://webdorado.org/products/wordpress-player.html)
 
 Spider Video Player is a WordPress video plugin that allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player. Spider Video Player is one of the best WordPress video players available in WordPress plugin directory. This WordPress Video Player provides a convenient user interface, incorporating all the common features for video players including video quality selection, sharing, full screen, shuffle etc. Moreover, you have the option of designing different themes for the video player by customizing each feature available. This is an optimal video player solution for your WordPress website, providing effective integration and high level of customization.  
 
-Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordpress-player.html):  
+Features of Spider [WordPress Video Player](http://webdorado.org/products/wordpress-player.html):  
 
 * You can add the listed types of videos into Spider Video Player:  
     - Http: You can provide the URL of the video and its HD version (UrlHD) in the video player or select it from the uploaded videos.  
@@ -38,7 +38,7 @@ Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordp
 * Possibility to shuffle and repeat videos in playlist on the video player.  
   
   
-Spider video [WordPress  Player](http://web-dorado.com/products/wordpress-player.html)  has wonderful flash effects. You can add several video players in one page with different parameters and playlists. With Spider video player you can have unlimited playlists with unlimited number of videos.
+Spider video [WordPress  Player](http://webdorado.org/products/wordpress-player.html)  has wonderful flash effects. You can add several video players in one page with different parameters and playlists. With Spider video player you can have unlimited playlists with unlimited number of videos.
 
 
  
@@ -96,7 +96,7 @@ Vietnamese (vi)
 
 == Installation ==
 
-####Thank you for your interest in Spider Video [WordPress Player](http://web-dorado.com/products/wordpress-player.html).
+####Thank you for your interest in Spider Video [WordPress Player](http://webdorado.org/products/wordpress-player.html).
 
 Minimum requirements:  
 
@@ -113,12 +113,12 @@ After downloading the ZIP file
 6.  Once it is complete, activate the plugin.  
 
 Once the plugin is activated, you'll notice a menu on the left called "Video Player".  
-If any problem occurs with Spider [WordPress Video Plugin](http://wordpress.org/extend/plugins/player/), please contact us info@web-dorado.com.  
+If any problem occurs with Spider [WordPress Video Plugin](http://wordpress.org/extend/plugins/player/), please contact us info@webdorado.org.  
 
 == Spider Video Player Step by step guide Step 1 ==    
 = Installing Spider Video Player =    
   
-1.1 Minimum requirements of Spider Video [WordPress  Player](http://web-dorado.com/products/wordpress-player.html)  .  
+1.1 Minimum requirements of Spider Video [WordPress  Player](http://webdorado.org/products/wordpress-player.html)  .  
   
 * Wordpress 3.0+  
 * PHP 5.x  
@@ -134,10 +134,10 @@ If any problem occurs with Spider [WordPress Video Plugin](http://wordpress.org/
 6.  Once it is complete, activate the plugin.  
   
 Once the plugin is activated, you'll notice a menu on the left called "Video Player".  
-If any problem occurs with Spider Video Player, please contact us at info@web-dorado.com.  
+If any problem occurs with Spider Video Player, please contact us at info@webdorado.org.  
   
 == Spider Video Player Step by step guide Step 2 ==    
-= Adding Tags to Spider  [WordPress Video Player](http://web-dorado.com/products/wordpress-player.html)  =    
+= Adding Tags to Spider  [WordPress Video Player](http://webdorado.org/products/wordpress-player.html)  =    
   
 The Tag is a custom parameter of videos by which you can search videos while creating playlists. Here are some examples of Tags: Year, Date, Artist, Album, Genre, Location, Country, Section etc.  
   
@@ -190,7 +190,7 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 5.1.13 Watermark margin. Select the distance between the watermark image and the edge of the player window.  
 5.1.14 Watermark transparency. Select the transparency level for the watermark image for Spider Video Player.  
   
-= 5.2 Style Parameters of Spider Video [WordPress Player](http://web-dorado.com/products/wordpress-player.html) =  
+= 5.2 Style Parameters of Spider Video [WordPress Player](http://webdorado.org/products/wordpress-player.html) =  
   
 5.2.1 Center button transparency. Define the transparency level of the play/pause button at the center of the screen ('0' for complete transparency).  
 5.2.2 Background color. Choose the main background color of the Spider Video Player.  
@@ -257,7 +257,7 @@ Alternatively, you can use Spider Video Player without the button on the toolbar
 3.  Spider Video Player  - Add a video item  
 4.  [WordPress Video Plugin](http://wordpress.org/extend/plugins/player/)  - Add a playlist  
 5.  Spider Video Player  - Red player
-6.  [WordPress Video Player](http://web-dorado.com/products/wordpress-player.html)  - Black player  
+6.  [WordPress Video Player](http://webdorado.org/products/wordpress-player.html)  - Black player  
 7.  Spider Video Player  - Album view
 8.  Spider Video Player  - Album view
  

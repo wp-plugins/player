@@ -2,9 +2,9 @@
 
 /*
 Plugin Name: Spider Video Player
-Plugin URI: http://web-dorado.com/
-Version: 1.3.8
-Author: http://web-dorado.com/
+Plugin URI: http://webdorado.org/
+Version: 1.3.9
+Author: http://webdorado.org/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
 
