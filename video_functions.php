@@ -132,10 +132,14 @@ function save_video(){
  function save_type_http($s)
  {
 	 global $wpdb;
-	 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_video', array(
+	 
+	
+		$save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_video', array(
 		'id'	=> NULL,
         'url'     => $_POST["http_post_video"],
+		'urlHtml5'     => $_POST["http_post_video_html5"],
         'urlHD'    => $_POST["http_post_video_UrlHD"],
+		'urlHDHtml5'    => $_POST["http_post_video_UrlHD_html5"],
         'published'  =>$_POST["published"],
         'type'   => "http",
 		'params' =>$s,
@@ -146,6 +150,8 @@ function save_video(){
 				'%d',
 				'%s',
 				'%s',
+				'%s',
+				'%s',
 				'%d',
 				'%s',	
 				'%s',
@@ -153,6 +159,8 @@ function save_video(){
 				'%s'					
 				)
                 );
+		
+		
 					if(!$save_or_no)
 	{
 		?>
@@ -172,13 +180,15 @@ function save_video(){
 	 	 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_video', array(
 		'id'	=> NULL,
 		'urlHD'    => $_POST["fmsUrl"],
-        'url'     => $_POST["http_post_video"],
-        'urlHD'    => $_POST["http_post_video_UrlHD"],
+        'url'     => $_POST["url_rtmp"],
+        'urlHD'    => $_POST["urlHD_rtmp"],
         'published'  =>$_POST["published"],
         'type'   => "http",
 		'params' =>$s,
 		'title'=>$_POST["title"],
-		'thumb'=>$_POST["post_image"]
+		'thumb'=>$_POST["post_image"],
+		'urlHtml5'     => '',
+		'urlHDHtml5'     => ''
                 ),
 				array(
 				'%d',
@@ -187,6 +197,8 @@ function save_video(){
 				'%s',
 				'%d',
 				'%s',	
+				'%s',
+				'%s',
 				'%s',
 				'%s',
 				'%s'					
@@ -210,18 +222,22 @@ function save_video(){
 		 global $wpdb;
 		 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_video', array(
 		'id'	=> NULL,
-        'url'     => $_POST["url"],
+        'url'     => $_POST["url_youtube"],
         'published'  =>$_POST["published"],
         'type'   => "youtube",
 		'params' =>$s,
 		'title'=>$_POST["title"],
-		'thumb'=>$_POST["post_image"]
+		'thumb'=>$_POST["post_image"],
+		'urlHtml5'     => '',
+		'urlHDHtml5'     => ''
                 ),
 				array(
 				'%d',
 				'%s',
 				'%d',
 				'%s',	
+				'%s',
+				'%s',
 				'%s',
 				'%s',
 				'%s'					
@@ -376,11 +392,14 @@ global $wpdb;
 function apply_type_http($s,$id)
  {
 	 global $wpdb;
+	  
 	 $save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_video', array(
 	 
 	    'fmsUrl'     =>"",
         'url'     => $_POST["http_post_video"],
+		'urlHtml5'     => $_POST["http_post_video_html5"],
         'urlHD'    => $_POST["http_post_video_UrlHD"],
+		'urlHDHtml5'    => $_POST["http_post_video_UrlHD_html5"],
         'published'  =>$_POST["published"],
         'type'   => "http",
 		'params' =>$s,
@@ -392,13 +411,16 @@ function apply_type_http($s,$id)
 				'%s',
 				'%s',
 				'%s',
-				'%d',
+				'%s',
 				'%s',	
+				'%d',
+				'%s',
 				'%s',
 				'%s',
 				'%s'					
 				)
                 );
+	 
 				?>
 				<div class="updated"><p><strong><?php _e('Item Saved'); ?></strong></p></div>
 
@@ -411,13 +433,15 @@ function apply_type_http($s,$id)
 		 global $wpdb;
 	 	 $save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_video', array(
 		'fmsUrl'    => $_POST["fmsUrl"],
-        'url'     => $_POST["http_post_video"],
-        'urlHD'    => $_POST["http_post_video_UrlHD"],
+        'url'     => $_POST["url_rtmp"],
+        'urlHD'    => $_POST["urlHD_rtmp"],
         'published'  =>$_POST["published"],
         'type'   => "rtmp",
 		'params' =>$s,
 		'title'=>$_POST["title"],
-		'thumb'=>$_POST["post_image"]
+		'thumb'=>$_POST["post_image"],
+		'urlHtml5'     => '',
+		'urlHDHtml5'     => ''
                 ),
 				array('id'=>$id),
 				array(	
@@ -428,7 +452,9 @@ function apply_type_http($s,$id)
 				'%s',	
 				'%s',
 				'%s',
-				'%s'					
+				'%s',
+				'%s',
+				'%s'				
 				)
 				
                 );
@@ -443,14 +469,16 @@ function apply_type_http($s,$id)
  {
 		 global $wpdb;
 		 $save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_video', array(
-        'url'     => $_POST["url"],
+        'url'     => $_POST["url_youtube"],
 		'urlHD'     => $_POST["urlHD"],
 		'fmsUrl'     => $_POST["fmsUrl"],
         'published'  =>$_POST["published"],
         'type'   => "youtube",
 		'params' =>$s,
 		'title'=>$_POST["title"],
-		'thumb'=>$_POST["post_image"]
+		'thumb'=>$_POST["post_image"],
+		'urlHtml5'     => '',
+		'urlHDHtml5'     => ''
                 ),
 				array('id'=>$id),
 				array(
@@ -459,6 +487,8 @@ function apply_type_http($s,$id)
 				'%s',
 				'%d',
 				'%s',	
+				'%s',
+				'%s',
 				'%s',
 				'%s',
 				'%s'					

@@ -17,7 +17,6 @@ function print_html_nav($count_items,$page_number,$serch_fields=""){
 					{
 					case 1:
 					if(x>=items_county) document.getElementById('page_number').value=items_county;
-					
 					else 
 					  document.getElementById('page_number').value=x+1
 					  break;
@@ -26,7 +25,6 @@ function print_html_nav($count_items,$page_number,$serch_fields=""){
 					  break;
 					case -1:
 					if(x==1) document.getElementById('page_number').value=1;
-					
 					else 
 					  document.getElementById('page_number').value=x-1;
 					  break;
@@ -37,9 +35,7 @@ function print_html_nav($count_items,$page_number,$serch_fields=""){
 					  document.getElementById('page_number').value=1;
 					}	
 					document.getElementById('admin_form').submit();	
-								 
 				 }
-				 		 
 				 </script>
     <div class="tablenav top" style="width:95%">
     <?php if($serch_fields!="")

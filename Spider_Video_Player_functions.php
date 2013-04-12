@@ -81,12 +81,14 @@ function save_Spider_Video_Player(){
        'title'     => $_POST["title"],
         'playlist'    => $_POST["params"],
         'theme'  =>$_POST["params_theme"],
+		'priority' => $_POST["priority"]
                 ),
 				array(
 				'%d',
 				'%s',
 				'%s',
-				'%d'				
+				'%d',
+				'%s'				
 				)
                 );
 					if(!$save_or_no)
@@ -113,12 +115,14 @@ function Apply_Spider_Video_Player($id)
         'title'     => $_POST["title"],
         'playlist'    => $_POST["params"],
         'theme'  =>$_POST["params_theme"],
+		'priority' => $_POST["priority"]
                 ),
 				array('id'	=> $id),
 				array(
 				'%s',
 				'%s',
-				'%d'			
+				'%d',
+				'%s'			
 				)
                 );
 	

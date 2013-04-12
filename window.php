@@ -1,4 +1,5 @@
 <?php
+
 $path  = ''; // It should be end with a trailing slash  
 if ( !defined('WP_LOAD_PATH') ) {
 
@@ -49,7 +50,8 @@ require_once( WP_LOAD_PATH . 'wp-load.php')
                 	<td style="vertical-align:top">
 <select name="Spider_Video_Playername" id="Spider_Video_Playername" style="width:200px;" >
 <option value="- Select Spider_Video_Player -" selected="selected">- Select -</option>
-<?php    $ids_Spider_Video_Player=$wpdb->get_results("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player order by title",0);
+<?php 
+ $ids_Spider_Video_Player=$wpdb->get_results("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player order by title",0);
 	   foreach($ids_Spider_Video_Player as $arr_Spider_Video_Player)
 	   {
 		   ?>
@@ -88,6 +90,7 @@ function insert_Spider_Video_Player() {
 }
 
 </script>
-</body></html>
-<?php
+<?php 
+$player_Spider_Video_Player++;
 ?>
+</body></html>

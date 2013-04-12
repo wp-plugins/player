@@ -31,13 +31,9 @@ function submit_form(apply_or_save)
 				 	function doNothing() {  
 var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
     if( keyCode == 13 ) {
-
-
         if(!e) var e = window.event;
-
         e.cancelBubble = true;
         e.returnValue = false;
-
         if (e.stopPropagation) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -53,15 +49,10 @@ This section allows you to create tags. <br />
 A tag is a keyword or term that is assigned to the video, helping to describe it and making it easier to find it by browsing or searching.<br />
 Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">More...</a>
 
-</td>   
-  <td colspan="7" align="right" style="font-size:16px;">
-  		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
-		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
-		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
-		</a>
-        </td>
-        </tr>
-        </table>
+</td> 
+</tr>
+</table>
+<h2>Add Tag</h2>
 <form action="admin.php?page=Tags_Spider_Video_Player" onkeypress="doNothing()" method="post" name="adminForm" id="adminForm">
 <table class="form-table" style="width:inherit">
 				<tr>
@@ -130,7 +121,6 @@ function html_show_tag($rows, $pageNav, $sort){
 	{
 		document.getElementById('saveorder').value="save";
 		document.getElementById('admin_form').submit();
-		
 	}
 	function listItemTask(this_id,replace_id)
 	{
@@ -140,13 +130,9 @@ function html_show_tag($rows, $pageNav, $sort){
 				 	function doNothing() {  
 var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
     if( keyCode == 13 ) {
-
-
         if(!e) var e = window.event;
-
         e.cancelBubble = true;
         e.returnValue = false;
-
         if (e.stopPropagation) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -178,21 +164,21 @@ border-bottom:1px solid #cccccc;
 This section allows you to create tags. <br />
 A tag is a keyword or term that is assigned to the video, helping to describe it and making it easier to find it by browsing or searching.<br />
 Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">More...</a>
-</td> <td colspan="7" align="right" style="font-size:16px;">
+</td> 
+        </tr>
+    </thead>
+    <tr>
+    <td  style="width:80px">
+    <?php echo "<h2 style=\"float:left\">".'Tags'. "</h2>"; ?>
+    <input type="button" value="Add a Tag" style="float:left; position:relative; top:10px; margin-left:20px" class="button-secondary action" name="custom_parametrs" onclick="window.location.href='admin.php?page=Tags_Spider_Video_Player&task=add_tag'" />
+    </td>
+	</td>
+     <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
 		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
         </td>
-        </tr>
-    </thead>
-    <tr>
-    <td  style="width:80px">
-    <?php $Forms_title='Form Maker'; echo "<h2 style=\"float:left\">".'Tags'. "</h2>"; ?>
-    <input type="button" value="Add a Tag" style="float:left; position:relative; top:10px; margin-left:20px" class="button-secondary action" name="custom_parametrs" onclick="window.location.href='admin.php?page=Tags_Spider_Video_Player&task=add_tag'" />
-    </td>
-	</td>
-     
 
         
     </tr>
@@ -216,7 +202,7 @@ Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="http://web-dor
  <TR>
  <th scope="col" id="id" class="<?php if($sort["sortid_by"]=="id") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style=" width:120px" ><a href="javascript:ordering('id',<?php if($sort["sortid_by"]=="id") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>ID</span><span class="sorting-indicator"></span></a></th>
  <th scope="col" id="title" class="<?php if($sort["sortid_by"]=="name") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="" ><a href="javascript:ordering('name',<?php if($sort["sortid_by"]=="name") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Name</span><span class="sorting-indicator"></span></a></th>
- <th scope="col" id="ordering" class="<?php if($sort["sortid_by"]=="ordering") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:95px" ><a style="display:inline" href="javascript:ordering('ordering',<?php if($sort["sortid_by"]=="ordering") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Order</span><span class="sorting-indicator"></span></a><div><a style="display:inline" href="javascript:saveorder(1, 'saveorder')" title="Save Order"><img onclick="saveorder(1, 'saveorder')" src="<?php echo plugins_url("images/filesave.png",__FILE__) ?>" alt="Save Order"></a></div></th>
+ <th scope="col" id="ordering" class="<?php if($sort["sortid_by"]=="ordering") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:95px" ><a style="display:inline" href="javascript:ordering('ordering',<?php if($sort["sortid_by"]=="ordering") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Order</span><span class="sorting-indicator"></span></a><div><a style="display:inline" href="javascript:saveorder(1, 'saveorder')" title="Save Order"><img onclick="saveorder(1, 'saveorder')" src="<?php echo plugins_url("images/filesave.png",__FILE__) ?>" style="border:none;" alt="Save Order"></a></div></th>
   <th scope="col" id="required" class="<?php if($sort["sortid_by"]=="required") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="" ><a href="javascript:ordering('required',<?php if($sort["sortid_by"]=="required") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Required</span><span class="sorting-indicator"></span></a></th>
   <th scope="col" id="published" class="<?php if($sort["sortid_by"]=="published") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="" ><a href="javascript:ordering('published',<?php if($sort["sortid_by"]=="published") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Published</span><span class="sorting-indicator"></span></a></th>
  <th style="width:80px">Edit</th>
@@ -228,14 +214,14 @@ Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="http://web-dor
   for($i=0; $i<count($rows);$i++){ 
 	  if(isset($rows[$i-1]->id))
 		  {
-		  $move_up='<span><a href="#reorder" onclick="return listItemTask(\''.$rows[$i]->id.'\',\''.$rows[$i-1]->id.'\')" title="Move Up">   <img src="'.plugins_url('images/uparrow.png',__FILE__).'" width="16" height="16" border="0" alt="Move Up"></a></span>';
+		  $move_up='<span><a href="#reorder" onclick="return listItemTask(\''.$rows[$i]->id.'\',\''.$rows[$i-1]->id.'\')" title="Move Up">   <img src="'.plugins_url('images/uparrow.png',__FILE__).'" width="16" height="16" border="0" alt="Move Up" style="border:none;"></a></span>';
 		  }
 	  else
 	  	{
 			$move_up="";
 	  	}
 		if(isset($rows[$i+1]->id))
-  		$move_down='<span><a href="#reorder" onclick="return listItemTask(\''.$rows[$i]->id.'\',\''.$rows[$i+1]->id.'\')" title="Move Down">  <img src="'.plugins_url('images/downarrow.png',__FILE__).'" width="16" height="16" border="0" alt="Move Down"></a></span>';
+  		$move_down='<span><a href="#reorder" onclick="return listItemTask(\''.$rows[$i]->id.'\',\''.$rows[$i+1]->id.'\')" title="Move Down">  <img src="'.plugins_url('images/downarrow.png',__FILE__).'" width="16" height="16" border="0" alt="Move Down" style="border:none;"></a></span>';
   		else
   		$move_down="";
   		
@@ -282,13 +268,9 @@ function submit_form(apply_or_save)
 				 	function doNothing() {  
 var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
     if( keyCode == 13 ) {
-
-
         if(!e) var e = window.event;
-
         e.cancelBubble = true;
         e.returnValue = false;
-
         if (e.stopPropagation) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -296,26 +278,18 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
 }
 }
 </script>
-<table>
-<tr>   
+<table width="100%">
+ <tr>   
 <td style="font-size:14px; font-weight:bold">
 <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
 This section allows you to create tags. <br />
 A tag is a keyword or term that is assigned to the video, helping to describe it and making it easier to find it by browsing or searching.<br />
 Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">More...</a>
 
-</td>   
-  <td colspan="7" align="right" style="font-size:16px;">
-  		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
-		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
-		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
-		</a>
-        </td>
-        </tr>
-<tr><td width="100%">
-<h2>Edit Tag - <?php  echo $row->name; ?></h2></td>
-        </tr>
-        </table>
+</td> 
+</tr>
+</table>
+<h2>Edit Tag</h2>
 <form action="admin.php?page=Tags_Spider_Video_Player" onkeypress="doNothing()" method="post" name="adminForm" id="adminForm">
 <table class="form-table" style="width:inherit">
 				<tr>

@@ -17,24 +17,19 @@ jQuery(function() {
 	window.original_send_to_editor = window.send_to_editor;
 	window.send_to_editor = function(html){
 		if (formfield) {
-			
 			var fileurl = jQuery('img',html).attr('src');
 			if(fileurl)
-	
 			{
 							window.parent.document.getElementById('imagebox').src=fileurl;
 							window.parent.document.getElementById('imagebox').style.display="block";
 			}
-
 			formfield.val(fileurl);
-			
 			tb_remove();
 		} else {
 			window.original_send_to_editor(html);
 		}
 		formfield=null;
 	};
- 
 	jQuery('.lu_upload_button').click(function() {
  		formfield = jQuery(this).parent().parent().find(".text_input");
  		tb_show('', 'media-upload.php?type=image&TB_iframe=true');
@@ -50,7 +45,6 @@ jQuery(function() {
 <script language="javascript" type="text/javascript">
 SqueezeBox.presets.onClose=function (){document.getElementById('sbox-content').innerHTML=""};
 SqueezeBox.presets.onOpen=function (){refresh_ctrl();};
-
 function get_radio_value(name)
 {
 	for (var i=0; i < document.getElementsByName(name).length; i++)   
@@ -62,7 +56,6 @@ function get_radio_value(name)
 		}   
 	}
 }
-
 function refresh_()
 {	
 	appWidth			=parseInt(document.getElementById('appWidth').value);
@@ -70,7 +63,6 @@ function refresh_()
 	refresh_ctrl();
 	document.getElementById('priview_td').childNodes[0].href='<?php echo admin_url('admin-ajax.php?action=spiderVeideoPlayerPrewieve')?>&post_id=270&appWidth='+appWidth+'&appHeight='+appHeight+'&amp;TB_iframe=1';
 }
-
 function submitbutton(pressbutton) {
 	var form = document.adminForm;
 	if (pressbutton == 'cancel_theme') 
@@ -78,23 +70,18 @@ function submitbutton(pressbutton) {
 		submitform( pressbutton );
 		return;
 	}
-	
 	if(form.title.value=="")
 	{
 		alert('Set Theme title');
 		return;
 	}
-	
 	refresh_ctrl();
-
 	submitform( pressbutton );
 }
-
 function IsNumeric(input){
     var RE = /^-{0,1}\d*\.{0,1}\d+$/;
     return (RE.test(input));
 }
-
 function refresh_ctrl(){
 	ctrlStack="";
 	w=document.getElementById('tr_arr').childNodes;
@@ -109,15 +96,12 @@ function refresh_ctrl(){
 			}
 	document.getElementById('ctrlsStack').value=ctrlStack;
 }
-
 function check_isnum(e){
-	
    	var chCode1 = e.which || e.keyCode;
     	if (chCode1 > 31 && (chCode1 < 48 || chCode1 > 57))
         return false;
 	return true;
 }
-
 <?php 
 $sliders=array("defaultVol", "centerBtnAlpha", "watermarkAlpha", "framesBgAlpha", "ctrlsMainAlpha", "itemBgAlpha" );
 foreach( $sliders as $slider)
@@ -142,10 +126,10 @@ jQuery(function() {
 ?>
 
 jQuery(document).ready(function($) {	
-	$(document).ready(function(){
+	jQuery(document).ready(function(){
 	for (var i = 0; i < <?php echo $n ?>; i++)
 	{
-		$("#arr_" + i).bind('click',{i:i},function(event){
+		jQuery("#arr_" + i).bind('click',{i:i},function(event){
 			i=event.data.i;
 			image=document.getElementById("arr_" + i).getAttribute('image');
 			if(document.getElementById("td_arr_" + i).getAttribute('active') == 0)
@@ -160,7 +144,6 @@ jQuery(document).ready(function($) {
 			}
 		});	
 	}	  
-	
 	});
 });
 function submitform(pressbutton)
@@ -767,16 +750,10 @@ a img.calendar {
 
 
     <table width="90%">
-    <tr>   
+        <tr>   
 <td width="100%" style="font-size:14px; font-weight:bold"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-5/spider-video-player-wordpress-guide-step-5-1.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
 This section allows you to create themes to customize the design of the player. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-5/spider-video-player-wordpress-guide-step-5-1.html" target="_blank" style="color:blue; text-decoration:none;">More...</a></td>   
-  <td colspan="7" align="right" style="font-size:16px;">
-  		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
-		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
-		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
-		</a>
-        </td>
-        </tr>
+</tr>
     <tr>
   <td width="100%"><h2>Adding New Theme</h2></td>
 <td id="priview_td" onclick="refresh_ctrl();"><a href="<?php echo admin_url('admin-ajax.php?action=spiderVeideoPlayerPrewieve') ?>&post_id=270&appWidth=640&appHeight=480&amp;TB_iframe=1&amp;width=640&amp;height=218" class="thickbox thickbox-preview" id="content-add_media" title="Spider Video Player" onclick="return false;"><input type="button"  value="preview" class="button-primary"></a></td>
@@ -907,7 +884,7 @@ This section allows you to create themes to customize the design of the player. 
                                     <input type="text" value="<?php if($row->watermarkUrl )echo htmlspecialchars($row->watermarkUrl); ?>" name="watermarkUrl" id="post_image" class="text_input" style="width:137px"/><a class="button lu_upload_button" href="#" />Select</a><br />
                                     <a href="javascript:removeImage();">Remove Image</a><br />
                                                  <div style="height:150px;">
-                                                           <img style=" display:<?php if($row->watermarkUrl=='') echo 'none'; else echo 'block' ?>" height="150" id="imagebox" src="<?php echo $row->watermarkUrl ?>" />     
+                                                           <img style=" display:<?php if($row->watermarkUrl=='') echo 'none'; else echo 'block' ?>; border:none;" height="150" id="imagebox" src="<?php echo $row->watermarkUrl ?>" />     
                                                  </div>     
                                     <script type="text/javascript">    
                                     function removeImage()
@@ -1042,7 +1019,7 @@ This section allows you to create themes to customize the design of the player. 
                           <tr>
                             <td  class="paramlist_key">
                                 <span class="editlinktip">
-                                    <label>Control buttons hover color:	</label>
+                                    <label>Control buttons hover color (only for flash):	</label>
                             </span>
                             </td>
                             <td class="paramlist_value">
@@ -1226,7 +1203,7 @@ This section allows you to create themes to customize the design of the player. 
                                     </td>
                                     <td class="paramlist_value">
                                         
-                                            <input type="radio" name="ctrlsSlideOut" id="ctrlsSlideOut0" value="0" <?php cheched($row->ctrlsSlideOut,1) ?> class="inputbox">
+                                            <input type="radio" name="ctrlsSlideOut" id="ctrlsSlideOut0" value="0" <?php cheched($row->ctrlsSlideOut,0) ?> class="inputbox">
                                             <label for="ctrlsSlideOut0">No</label>
                                             <input type="radio" name="ctrlsSlideOut" id="ctrlsSlideOut1" value="1" <?php cheched($row->ctrlsSlideOut,1) ?> class="inputbox">
                                             <label for="ctrlsSlideOut1">Yes</label>
@@ -1420,7 +1397,7 @@ This section allows you to create themes to customize the design of the player. 
                                                 $ctrl	=$y[0];
                                                 $active	=$y[1];
                                                     echo '<td id="td_arr_'.$key.'"  active="'.$active.'" value="'.$ctrl.'" width="40" align="center" style="padding:4px">
-                                                                <img src="'.$path.$ctrl.'_'.$active.'.png" id="arr_'.$key.'" image="'.$ctrl.'" style=" cursor:pointer"/>
+                                                                <img src="'.$path.$ctrl.'_'.$active.'.png" id="arr_'.$key.'" image="'.$ctrl.'" style=" cursor:pointer; border:none;"/>
                                                             </td>';
                                         }
                                          echo '</tr>';
@@ -1495,13 +1472,9 @@ function html_show_theme($rows, $pageNav, $sort){
 function doNothing() {  
 var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
     if( keyCode == 13 ) {
-
-
         if(!e) var e = window.event;
-
         e.cancelBubble = true;
         e.returnValue = false;
-
         if (e.stopPropagation) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -1517,20 +1490,19 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
         <tr>   
 <td width="100%" style="font-size:14px; font-weight:bold"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-5/spider-video-player-wordpress-guide-step-5-1.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
 This section allows you to create themes to customize the design of the player. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-5/spider-video-player-wordpress-guide-step-5-1.html" target="_blank" style="color:blue; text-decoration:none;">More...</a></td>   
-  <td colspan="7" align="right" style="font-size:16px;">
-  		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
-		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
-		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
-		</a>
-        </td>
-        </tr>
+      </tr>
     <tr>
     <td style="width:80px">
     <?php echo "<h2 style=\"float:left\">".'Themes'. "</h2>"; ?>
     <input type="button" style="float:left; position:relative; top:10px; margin-left:20px" class="button-secondary action" value="Add a Theme" name="custom_parametrs" onclick="window.location.href='admin.php?page=Spider_Video_Player_Themes&task=add_theme'" />
     </td>
    
-
+	<td colspan="7" align="right" style="font-size:16px;">
+  		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
+		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
+		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
+		</a>
+        </td>
     </tr>
     </table>
     <?php
@@ -1594,30 +1566,24 @@ function html_edit_theme($row, $id){
 		
 		?>
         <script type="text/javascript">
-
 jQuery(function() {
 	var formfield=null;
 	window.original_send_to_editor = window.send_to_editor;
 	window.send_to_editor = function(html){
 		if (formfield) {
-			
 			var fileurl = jQuery('img',html).attr('src');
 			if(fileurl)
-	
 			{
 							window.parent.document.getElementById('imagebox').src=fileurl;
 							window.parent.document.getElementById('imagebox').style.display="block";
 			}
-
 			formfield.val(fileurl);
-			
 			tb_remove();
 		} else {
 			window.original_send_to_editor(html);
 		}
 		formfield=null;
 	};
- 
 	jQuery('.lu_upload_button').click(function() {
  		formfield = jQuery(this).parent().parent().find(".text_input");
  		tb_show('', 'media-upload.php?type=image&TB_iframe=true');
@@ -1633,7 +1599,6 @@ jQuery(function() {
 <script language="javascript" type="text/javascript">
 SqueezeBox.presets.onClose=function (){document.getElementById('sbox-content').innerHTML=""};
 SqueezeBox.presets.onOpen=function (){refresh_ctrl();};
-
 function get_radio_value(name)
 {
 	for (var i=0; i < document.getElementsByName(name).length; i++)   
@@ -1645,7 +1610,6 @@ function get_radio_value(name)
 		}   
 	}
 }
-
 function refresh_()
 {	
 	appWidth			=parseInt(document.getElementById('appWidth').value);
@@ -1653,7 +1617,6 @@ function refresh_()
 	refresh_ctrl();
 	document.getElementById('priview_td').childNodes[0].href='<?php echo admin_url('admin-ajax.php?action=spiderVeideoPlayerPrewieve') ?>&post_id=270&appWidth='+appWidth+'&appHeight='+appHeight+'&amp;TB_iframe=1';
 }
-
 function submitbutton(pressbutton) {
 	var form = document.adminForm;
 	if (pressbutton == 'cancel_theme') 
@@ -1661,23 +1624,18 @@ function submitbutton(pressbutton) {
 		submitform( pressbutton );
 		return;
 	}
-	
 	if(form.title.value=="")
 	{
 		alert('Set Theme title');
 		return;
 	}
-	
 	refresh_ctrl();
-
 	submitform( pressbutton );
 }
-
 function IsNumeric(input){
     var RE = /^-{0,1}\d*\.{0,1}\d+$/;
     return (RE.test(input));
 }
-
 function refresh_ctrl(){
 	ctrlStack="";
 	w=document.getElementById('tr_arr').childNodes;
@@ -1692,9 +1650,7 @@ function refresh_ctrl(){
 			}
 	document.getElementById('ctrlsStack').value=ctrlStack;
 }
-
 function check_isnum(e){
-	
    	var chCode1 = e.which || e.keyCode;
     	if (chCode1 > 31 && (chCode1 < 48 || chCode1 > 57))
         return false;
@@ -1705,7 +1661,6 @@ function submitform(pressbutton)
 	document.getElementById("adminForm").action=document.getElementById("adminForm").action+"&task="+pressbutton;
 	document.getElementById("adminForm").submit();
 }
-
 <?php 
 $sliders=array("defaultVol", "centerBtnAlpha", "watermarkAlpha", "framesBgAlpha", "ctrlsMainAlpha", "itemBgAlpha" );
 foreach( $sliders as $slider)
@@ -1733,7 +1688,7 @@ jQuery(document).ready(function($) {
 	jQuery(document).ready(function(){
 	for (var i = 0; i < <?php echo $n ?>; i++)
 	{
-		$("#arr_" + i).bind('click',{i:i},function(event){
+		jQuery("#arr_" + i).bind('click',{i:i},function(event){
 			i=event.data.i;
 			image=document.getElementById("arr_" + i).getAttribute('image');
 			if(document.getElementById("td_arr_" + i).getAttribute('active') == 0)
@@ -1748,15 +1703,12 @@ jQuery(document).ready(function($) {
 			}
 		});	
 	}	  
-	
 	});
 });
-
 jQuery(function() {
 	jQuery( "#tr_arr" ).sortable();
 	jQuery( "#tr_arr" ).disableSelection();
 });
-
 	</script>
     
     
@@ -2372,18 +2324,11 @@ a img.calendar {
     
     
     <table width="90%">
-   <tr>   
+        <tr>   
 <td width="100%" style="font-size:14px; font-weight:bold"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-5/spider-video-player-wordpress-guide-step-5-1.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
-This section allows you to create themes to customize the design of the player. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-5/spider-video-player-wordpress-guide-step-5-1.html" target="_blank" style="color:blue; text-decoration:none;">More...</a></td>   
-  <td colspan="7" align="right" style="font-size:16px;">
-  		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
-		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
-		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
-		</a>
-        </td>
-        </tr>
+This section allows you to create themes to customize the design of the player. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-5/spider-video-player-wordpress-guide-step-5-1.html" target="_blank" style="color:blue; text-decoration:none;">More...</a></td>           </tr>
     <tr>
-  <td width="100%"><h2>Theme <?php echo htmlspecialchars($row->title)?></h2></td>
+  <td width="100%"><h2><?php echo htmlspecialchars($row->title)?></h2></td>
 <td id="priview_td" onclick="refresh_ctrl();"><a href="<?php echo admin_url('admin-ajax.php?action=spiderVeideoPlayerPrewieve') ?>&post_id=270&appWidth=640&appHeight=480&amp;TB_iframe=1&amp;width=640&amp;height=218" class="thickbox thickbox-preview" id="content-add_media" title="Spider Video Player" onclick="return false;"><input type="button"  value="preview" class="button-primary"></a></td>
   <td align="right"><input type="button" onclick="submitbutton('Save')" value="Save" class="button-secondary action"> </td>  
   <td align="right"><input type="button" onclick="submitbutton('Apply')" value="Apply" class="button-secondary action"> </td> 
@@ -2507,7 +2452,7 @@ This section allows you to create themes to customize the design of the player. 
                                     <input type="text" value="<?php if($row->watermarkUrl )echo htmlspecialchars($row->watermarkUrl); ?>" name="watermarkUrl" id="post_image" class="text_input" style="width:137px"/><a class="button lu_upload_button" href="#" />Select</a><br />
                                     <a href="javascript:removeImage();">Remove Image</a><br />
                                                  <div style="height:150px;">
-                                                           <img style=" display:<?php if($row->watermarkUrl=='') echo 'none'; else echo 'block' ?>" height="150" id="imagebox" src="<?php echo $row->watermarkUrl ?>" />     
+                                                           <img style=" display:<?php if($row->watermarkUrl=='') echo 'none'; else echo 'block' ?>; border:none;" height="150" id="imagebox" src="<?php echo $row->watermarkUrl ?>" />     
                                                  </div>     
                                     <script type="text/javascript">    
                                     function removeImage()
@@ -2642,7 +2587,7 @@ This section allows you to create themes to customize the design of the player. 
                           <tr>
                             <td  class="paramlist_key">
                                 <span class="editlinktip">
-                                    <label>Control buttons hover color:	</label>
+                                    <label>Control buttons hover color (only for flash):	</label>
                             </span>
                             </td>
                             <td class="paramlist_value">
@@ -2826,7 +2771,7 @@ This section allows you to create themes to customize the design of the player. 
                                     </td>
                                     <td class="paramlist_value">
                                         
-                                            <input type="radio" name="ctrlsSlideOut" id="ctrlsSlideOut0" value="0" <?php cheched($row->ctrlsSlideOut,1) ?> class="inputbox">
+                                            <input type="radio" name="ctrlsSlideOut" id="ctrlsSlideOut0" value="0" <?php cheched($row->ctrlsSlideOut,0) ?> class="inputbox">
                                             <label for="ctrlsSlideOut0">No</label>
                                             <input type="radio" name="ctrlsSlideOut" id="ctrlsSlideOut1" value="1" <?php cheched($row->ctrlsSlideOut,1) ?> class="inputbox">
                                             <label for="ctrlsSlideOut1">Yes</label>
@@ -3020,7 +2965,7 @@ This section allows you to create themes to customize the design of the player. 
                                                 $ctrl	=$y[0];
                                                 $active	=$y[1];
                                                     echo '<td id="td_arr_'.$key.'"  active="'.$active.'" value="'.$ctrl.'" width="40" align="center" style="padding:4px">
-                                                                <img src="'.$path.$ctrl.'_'.$active.'.png" id="arr_'.$key.'" image="'.$ctrl.'" style=" cursor:pointer"/>
+                                                                <img src="'.$path.$ctrl.'_'.$active.'.png" id="arr_'.$key.'" image="'.$ctrl.'" style=" cursor:pointer; border:none;"/>
                                                             </td>';
                                         }
                                          echo '</tr>';

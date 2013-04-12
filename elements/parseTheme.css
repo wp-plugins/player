@@ -4,25 +4,25 @@
 ----------------------------------*/
 .ui-widget { font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif; font-size: 1.1em; }
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif; font-size: 1em; }
-.ui-widget-content { border: 1px solid #dddddd; background: #eeeeee url(../images/?new=eeeeee&w=1&h=100&f=png&q=100&fltr[]=over|textures/03_highlight_soft.png|0|0|100) 50% top repeat-x; color: #333333; }
+.ui-widget-content { border: 1px solid #dddddd; background: #eeeeee; color: #333333; }
 .ui-widget-content a { color: #333333; }
-.ui-widget-header { border: 1px solid #e78f08; background: #f6a828 url(../images/?new=f6a828&w=500&h=100&f=png&q=100&fltr[]=over|textures/12_gloss_wave.png|0|0|35) 50% 50% repeat-x; color: #ffffff; font-weight: bold; }
+.ui-widget-header { border: 1px solid #e78f08; background: #f6a828; color: #ffffff; font-weight: bold; }
 .ui-widget-header a { color: #ffffff; }
 
 /* Interaction states
 ----------------------------------*/
-.ui-state-default, .ui-widget-content .ui-state-default { border: 1px solid #cccccc; background: #f6f6f6 url(../images/?new=f6f6f6&w=1&h=400&f=png&q=100&fltr[]=over|textures/02_glass.png|0|0|100) 50% 50% repeat-x; font-weight: bold; color: #1c94c4; outline: none; }
+.ui-state-default, .ui-widget-content .ui-state-default { border: 1px solid #cccccc; background: #f6f6f6; color: #1c94c4; outline: none; }
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: #1c94c4; text-decoration: none; outline: none; }
-.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus { border: 1px solid #fbcb09; background: #fdf5ce url(../images/?new=fdf5ce&w=1&h=400&f=png&q=100&fltr[]=over|textures/02_glass.png|0|0|100) 50% 50% repeat-x; font-weight: bold; color: #c77405; outline: none; }
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus { border: 1px solid #fbcb09; background: #fdf5ce; font-weight: bold; color: #c77405; outline: none; }
 .ui-state-hover a, .ui-state-hover a:hover { color: #c77405; text-decoration: none; outline: none; }
-.ui-state-active, .ui-widget-content .ui-state-active { border: 1px solid #fbd850; background: #ffffff url(../images/?new=ffffff&w=1&h=400&f=png&q=100&fltr[]=over|textures/02_glass.png|0|0|65) 50% 50% repeat-x; font-weight: bold; color: #eb8f00; outline: none; }
+.ui-state-active, .ui-widget-content .ui-state-active { border: 1px solid #fbd850; background: #ffffff; color: #eb8f00; outline: none; }
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited { color: #eb8f00; outline: none; text-decoration: none; }
 
 /* Interaction Cues
 ----------------------------------*/
-.ui-state-highlight, .ui-widget-content .ui-state-highlight {border: 1px solid #fed22f; background: #ffe45c url(../images/?new=ffe45c&w=1&h=100&f=png&q=100&fltr[]=over|textures/03_highlight_soft.png|0|0|75) 50% top repeat-x; color: #363636; }
+.ui-state-highlight, .ui-widget-content .ui-state-highlight {border: 1px solid #fed22f; background: #ffe45c; }
 .ui-state-highlight a, .ui-widget-content .ui-state-highlight a { color: #363636; }
-.ui-state-error, .ui-widget-content .ui-state-error {border: 1px solid #cd0a0a; background: #b81900 url(../images/?new=b81900&w=40&h=40&f=png&q=100&fltr[]=over|textures/08_diagonals_thick.png|0|0|18) 50% 50% repeat; color: #ffffff; }
+.ui-state-error, .ui-widget-content .ui-state-error {border: 1px solid #cd0a0a; background: #b81900; color: #ffffff; }
 .ui-state-error a, .ui-widget-content .ui-state-error a { color: #ffffff; }
 .ui-state-error-text, .ui-widget-content .ui-state-error-text { color: #ffffff; }
 .ui-state-disabled, .ui-widget-content .ui-state-disabled { opacity: .35; filter:Alpha(Opacity=35); background-image: none; }
@@ -33,14 +33,7 @@
 ----------------------------------*/
 
 /* states and images */
-.ui-icon { width: 16px; height: 16px; background-image: url(../images/?new=222222&w=256&h=240&f=png&fltr[]=rcd|256&fltr[]=mask|icons/icons.png); }
-.ui-widget-content .ui-icon {background-image: url(../images/?new=222222&w=256&h=240&f=png&fltr[]=rcd|256&fltr[]=mask|icons/icons.png); }
-.ui-widget-header .ui-icon {background-image: url(../images/?new=ffffff&w=256&h=240&f=png&fltr[]=rcd|256&fltr[]=mask|icons/icons.png); }
-.ui-state-default .ui-icon { background-image: url(../images/?new=ef8c08&w=256&h=240&f=png&fltr[]=rcd|256&fltr[]=mask|icons/icons.png); }
-.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(../images/?new=ef8c08&w=256&h=240&f=png&fltr[]=rcd|256&fltr[]=mask|icons/icons.png); }
-.ui-state-active .ui-icon {background-image: url(../images/?new=ef8c08&w=256&h=240&f=png&fltr[]=rcd|256&fltr[]=mask|icons/icons.png); }
-.ui-state-highlight .ui-icon {background-image: url(../images/?new=228ef1&w=256&h=240&f=png&fltr[]=rcd|256&fltr[]=mask|icons/icons.png); }
-.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {background-image: url(../images/?new=ffd27a&w=256&h=240&f=png&fltr[]=rcd|256&fltr[]=mask|icons/icons.png); }
+.ui-icon { width: 16px; height: 16px; }
 
 /* positioning */
 .ui-icon-carat-1-n { background-position: 0 0; }
@@ -233,5 +226,5 @@
 .ui-corner-all { -moz-border-radius: 4px; -webkit-border-radius: 4px; }
 
 /* Overlays */
-.ui-widget-overlay { background: #666666 url(../images/?new=666666&w=40&h=40&f=png&q=100&fltr[]=over|textures/08_diagonals_thick.png|0|0|20) 50% 50% repeat; opacity: .50;filter:Alpha(Opacity=50); }
-.ui-widget-shadow { margin: -5px 0 0 -5px; padding: 5px; background: #000000 url(../images/?new=000000&w=40&h=100&f=png&q=100&fltr[]=over|textures/01_flat.png|0|0|10) 50% 50% repeat-x; opacity: .20;filter:Alpha(Opacity=20); -moz-border-radius: 5px; -webkit-border-radius: 5px; }
+.ui-widget-overlay { background: #666666; }
+.ui-widget-shadow { margin: -5px 0 0 -5px; padding: 5px; background: #000000; -moz-border-radius: 5px; -webkit-border-radius: 5px; }

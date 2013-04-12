@@ -28,7 +28,6 @@ else
 
 
 <script>
-
 function get_radio_value(name)
 {
 	for (var i=0; i < window.parent.document.getElementsByName(name).length; i++)   
@@ -40,14 +39,11 @@ function get_radio_value(name)
 		}   
 	}
 }
-
-
 	appWidth			=parseInt(window.parent.document.getElementById('appWidth').value);
 	appHeight			=parseInt(window.parent.document.getElementById('appHeight').value);
 	playlistWidth		=window.parent.document.getElementById('playlistWidth').value;
 	startWithLib		=get_radio_value('startWithLib');
 	show_trackid		=get_radio_value('show_trackid');
-
 	autoPlay			=get_radio_value('autoPlay');
 	autoNext			=get_radio_value('autoNext');
 	autoNextAlbum		=get_radio_value('autoNextAlbum');
@@ -91,7 +87,6 @@ function get_radio_value(name)
 	textSelectedColor	=window.parent.document.getElementById('textSelectedColor').value;
 	framesBgAlpha		=window.parent.document.getElementById('framesBgAlpha').value;
 	ctrlsMainAlpha		=window.parent.document.getElementById('ctrlsMainAlpha').value;
-	
 	str='@appWidth='+appWidth
 	+'@appHeight='+appHeight
 	+'@playlistWidth='+playlistWidth
@@ -410,23 +405,14 @@ function html_select_video($rows, $pageNav, $sort)
 {
 	?>
 <script type="text/javascript">
-
 function submitbutton(pressbutton) {
-
 var form = document.adminForm;
-
 if (pressbutton == 'cancel') 
-
 {
-
 submitform( pressbutton );
-
 return;
-
 }
-
 submitform( pressbutton );
-
 }
 function xxx()
 {
@@ -505,8 +491,8 @@ function checkAll( n, fldName ) {
             </th>
            <th scope="col" id="id" class="<?php if($sort["sortid_by"]=="id") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:110px" ><a href="javascript:ordering('id',<?php if($sort["sortid_by"]=="id") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>ID</span><span class="sorting-indicator"></span></a></th>
  <th scope="col" id="title" class="<?php if($sort["sortid_by"]=="title") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="" ><a href="javascript:ordering('title',<?php if($sort["sortid_by"]=="title") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Title</span><span class="sorting-indicator"></span></a></th>
- <th scope="col" id="videos" class="<?php if($sort["sortid_by"]=="videos") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:110px" ><a href="javascript:ordering('videos',<?php if($sort["sortid_by"]=="videos") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>The number of Videos</span><span class="sorting-indicator"></span></a></th>
-  <th scope="col" id="published" class="<?php if($sort["sortid_by"]=="published") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:80px" ><a href="javascript:ordering('published',<?php if($sort["sortid_by"]=="published") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Published</span><span class="sorting-indicator"></span></a></th>
+ <th scope="col" id="videos" class="<?php if($sort["sortid_by"]=="videos") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:161px" ><a href="javascript:ordering('videos',<?php if($sort["sortid_by"]=="videos") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>The number of Videos</span><span class="sorting-indicator"></span></a></th>
+  <th scope="col" id="published" class="<?php if($sort["sortid_by"]=="published") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:87px" ><a href="javascript:ordering('published',<?php if($sort["sortid_by"]=="published") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Published</span><span class="sorting-indicator"></span></a></th>
        </tr>
     </thead>
                 
@@ -714,44 +700,27 @@ function html_select_video_admin($rows, $pageNav, $sort,$tags)
 {
 	?>
 <script type="text/javascript">
-
 	function ordering(name,as_or_desc)
 	{
 		document.getElementById('asc_or_desc').value=as_or_desc;		
 		document.getElementById('order_by').value=name;
 		document.getElementById('admin_form').submit();
 	}
-	
 function submitbutton(pressbutton) {
-
 var form = document.admin_form;
-
 if (pressbutton == 'cancel') 
-
 {
-
 submitform( pressbutton );
-
 return;
-
 }
-
 submitform( pressbutton );
-
 }
-
 function tableOrdering( order, dir, task ) {
-
     var form = document.admin_form;
-
     form.filter_order_video.value     = order;
-
     form.filter_order_Dir_video.value = dir;
-
     submitform( task );
-
 }
-
 function xxx()
 {
 	var VIDS =[];
@@ -1133,13 +1102,11 @@ function viewe_sp_video_only(){
 			<script type=\"text/javascript\">
 function flashShare(type,b,c)	
 {
-
 	u=location.href;
 	u=u.replace('/?','/index.php?');
 	if(!location.search)
 			u=u+'?';
 		else
-
 			u=u+'&';
 	t=document.title;
 	switch (type)
@@ -1150,15 +1117,12 @@ function flashShare(type,b,c)
 	case 'g':
 		window.open('http://plus.google.com/share?url='+encodeURIComponent(u+'AlbumId='+b+'&TrackId='+c)+'&t='+encodeURIComponent(t), \"Google\",\"menubar=1,resizable=1,width=350,height=250\");
 		break;
-		
 	case 'tw':
 		window.open('http://twitter.com/home/?status='+encodeURIComponent(u+'&AlbumId='+b+'&TrackId='+c), \"Twitter\",\"menubar=1,resizable=1,width=350,height=250\");
 		break;
 	}
 }		
-  
 		   var so = new SWFObject(\"".plugins_url("videoSpider_Video_Player.swf",__FILE__)."?wdrand=".mt_rand() ."\", \"Spider_Video_Player\", \"100%\", \"100%\", \"8\", \"#000000\");
-	
 		   so.addParam(\"FlashVars\", \"settingsUrl=".str_replace("&","@",  str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml')."&playlist=".$playlist."&theme=".$theme."&s_v_player_id=".$id))."&playlistUrl=".str_replace("&","@",str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml')."&playlist=".$playlist."&show_trackid=".$show_trackid))."&defaultAlbumId=".$_GET['AlbumId']."&defaultTrackId=".$_GET['TrackId']."\");
 		   so.addParam(\"quality\", \"high\");
 		   so.addParam(\"menu\", \"false\");

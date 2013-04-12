@@ -9,6 +9,7 @@ function html_add_Spider_Video_Player(){
 		$value=$row->playlist;
 		$title=$row->title;
 		$id_for_team=$row->theme;
+		$priority=$row->priority;
 		$id=$_GET["id"];
 	}
 	else
@@ -52,17 +53,12 @@ function html_add_Spider_Video_Player(){
 	
 	<script type="text/javascript">
 var next=0;
-
 				 	function doNothing() {  
 var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
     if( keyCode == 13 ) {
-
-
         if(!e) var e = window.event;
-
         e.cancelBubble = true;
         e.returnValue = false;
-
         if (e.stopPropagation) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -70,189 +66,137 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
 }
 }
 function jSelectVideo(VIDS, title, thumb, number_of_vids) {
-	
-
 		playlist_ids =document.getElementById('playlists').value;
 		tbody = document.getElementById('playlist');
-		
 		for(i=0; i<VIDS.length; i++)
 		{
 			tr = document.createElement('tr');
 				tr.setAttribute('playlist_id', VIDS[i]);
 				tr.setAttribute('id', next);
-				
 			var td_info = document.createElement('td');
 				td_info.setAttribute('id','info_'+next);
-			//	td_info.setAttribute('width','60%');
-				
 			b = document.createElement('b');
 				b.innerHTML = title[i];
 				b.style.width='50px';
 				b.style.position="inherit";
-			
 			p_info = document.createElement('p');
 				p_info.style.fontStyle="normal";
 				p_info.style.color="#666";
 				p_info.innerHTML ='Number of videos: '+number_of_vids[i];
-			
 			img = document.createElement('img');
 			img.setAttribute('align','left');
 			img.setAttribute('height','100');
 			img.src = thumb[i];
 			img.style.marginRight="10px";
-
 			td_info.appendChild(img);
 			td_info.appendChild(b);
 			td_info.appendChild(p_info);
-			//td.appendChild(p_url);
-			
 			var img_X = document.createElement("img");
 					img_X.setAttribute("src", "<?php echo plugins_url("images/delete_el.png",__FILE__); ?>");
-//					img_X.setAttribute("height", "17");
 					img_X.style.cssText = "cursor:pointer; margin-left:30px";
 					img_X.setAttribute("onclick", 'remove_row("'+next+'")');
-					
 			var td_X = document.createElement("td");
 					td_X.setAttribute("id", "X_"+next);
 					td_X.setAttribute("valign", "middle");
-//					td_X.setAttribute("align", "right");
 					td_X.style.width='50px';
 					td_X.appendChild(img_X);
-					
 			var img_UP = document.createElement("img");
 					img_UP.setAttribute("src", "<?php echo plugins_url("images/up.png",__FILE__); ?>");
-//					img_UP.setAttribute("height", "17");
 					img_UP.style.cssText = "cursor:pointer";
 					img_UP.setAttribute("onclick", 'up_row("'+next+'")');
-					
 			var td_UP = document.createElement("td");
 					td_UP.setAttribute("id", "up_"+next);
 					td_UP.setAttribute("valign", "middle");
 					td_UP.style.width='20px';
 					td_UP.appendChild(img_UP);
-					
 			var img_DOWN = document.createElement("img");
 					img_DOWN.setAttribute("src", "<?php echo plugins_url("images/down.png",__FILE__); ?>");
-//					img_DOWN.setAttribute("height", "17");
 					img_DOWN.style.cssText = "margin:2px;cursor:pointer";
 					img_DOWN.setAttribute("onclick", 'down_row("'+next+'")');
-					
 			var td_DOWN = document.createElement("td");
 					td_DOWN.setAttribute("id", "down_"+next);
 					td_DOWN.setAttribute("valign", "middle");
 					td_DOWN.style.width='20px';
 					td_DOWN.appendChild(img_DOWN);
-				
 			tr.appendChild(td_info);
 			tr.appendChild(td_X);
 			tr.appendChild(td_UP);
 			tr.appendChild(td_DOWN);
 			tbody.appendChild(tr);
-
-//refresh
 			next++;
 		}
-		
 		document.getElementById('playlists').value=playlist_ids;
 		refresh_();
 	}
-	
 function jSelectVideoS(VIDS, title, thumb, number_of_vids) {
-	
-
 		playlist_ids =document.getElementById('playlists').value;
 		tbody = document.getElementById('playlist');
-		
 		for(i=0; i<VIDS.length; i++)
 		{
 			tr = document.createElement('tr');
 				tr.setAttribute('playlist_id', VIDS[i]);
 				tr.setAttribute('id', next);
-				
 			var td_info = document.createElement('td');
 				td_info.setAttribute('id','info_'+next);
-			//	td_info.setAttribute('width','60%');
-				
 			b = document.createElement('b');
 				b.innerHTML = title[i];
 				b.style.width='50px';
 				b.style.position="inherit";
-			
 			p_info = document.createElement('p');
 				p_info.style.fontStyle="normal";
 				p_info.style.color="#666";
 				p_info.innerHTML ='Number of videos: '+number_of_vids[i];
-			
 			img = document.createElement('img');
 			img.setAttribute('align','left');
 			img.setAttribute('height','100');
 			img.src = thumb[i];
 			img.style.marginRight="10px";
-
 			td_info.appendChild(img);
 			td_info.appendChild(b);
 			td_info.appendChild(p_info);
-			//td.appendChild(p_url);
-			
 			var img_X = document.createElement("img");
 					img_X.setAttribute("src", "<?php echo plugins_url("images/delete_el.png",__FILE__); ?>");
-//					img_X.setAttribute("height", "17");
 					img_X.style.cssText = "cursor:pointer; margin-left:30px";
 					img_X.setAttribute("onclick", 'remove_row("'+next+'")');
-					
 			var td_X = document.createElement("td");
 					td_X.setAttribute("id", "X_"+next);
 					td_X.setAttribute("valign", "middle");
-//					td_X.setAttribute("align", "right");
 					td_X.style.width='50px';
 					td_X.appendChild(img_X);
-					
 			var img_UP = document.createElement("img");
 					img_UP.setAttribute("src", "<?php echo plugins_url("images/up.png",__FILE__); ?>");
-//					img_UP.setAttribute("height", "17");
 					img_UP.style.cssText = "cursor:pointer";
 					img_UP.setAttribute("onclick", 'up_row("'+next+'")');
-					
 			var td_UP = document.createElement("td");
 					td_UP.setAttribute("id", "up_"+next);
 					td_UP.setAttribute("valign", "middle");
 					td_UP.style.width='20px';
 					td_UP.appendChild(img_UP);
-					
 			var img_DOWN = document.createElement("img");
 					img_DOWN.setAttribute("src", "<?php echo plugins_url("images/down.png",__FILE__); ?>");
-//					img_DOWN.setAttribute("height", "17");
 					img_DOWN.style.cssText = "margin:2px;cursor:pointer";
 					img_DOWN.setAttribute("onclick", 'down_row("'+next+'")');
-					
 			var td_DOWN = document.createElement("td");
 					td_DOWN.setAttribute("id", "down_"+next);
 					td_DOWN.setAttribute("valign", "middle");
 					td_DOWN.style.width='20px';
 					td_DOWN.appendChild(img_DOWN);
-				
 			tr.appendChild(td_info);
 			tr.appendChild(td_X);
 			tr.appendChild(td_UP);
 			tr.appendChild(td_DOWN);
 			tbody.appendChild(tr);
-
-//refresh
 			next++;
 		}
-		
 		document.getElementById('playlists').value=playlist_ids;
 		tb_remove();
 		refresh_();
 	}
-	
 function remove_row(id){
-
 	tr=document.getElementById(id);
 	tr.parentNode.removeChild(tr);
 	refresh_();
 }
-
 function refresh_(){
 	playlist=document.getElementById('playlist');
 	GLOBAL_tbody=playlist;
@@ -262,10 +206,8 @@ function refresh_(){
 		tr=GLOBAL_tbody.childNodes[x];
 		tox=tox+tr.getAttribute('playlist_id')+',';
 	}
-
 	document.getElementById('playlists').value=tox;
 }
-
 function up_row(id){
 	form=document.getElementById(id).parentNode;
 	k=0;
@@ -285,7 +227,6 @@ function up_row(id){
 		refresh_();
 	}
 }
-
 function down_row(id){
 	form=document.getElementById(id).parentNode;
 	l=form.childNodes.length;
@@ -296,7 +237,6 @@ function down_row(id){
 		break;
 	k++;
 	}
-
 	if(k!=l-1)
 	{
 		up=form.childNodes[k];
@@ -315,7 +255,6 @@ function submitbutton(pressbutton) {
 		alert('Set Playlist title');
 		return;
 	}
-	
 	submitform( pressbutton );
 }
 function submitform(pressbutton)
@@ -346,12 +285,7 @@ border-bottom:1px solid #cccccc;
 <tr>   
 <td style="font-size:14px; font-weight:bold;"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a></a><br />
 This section allows you to create players, providing them with playlist(s) and a distinct visual theme. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">More...</a></td>   
-  <td colspan="7" align="right" style="font-size:16px;">
-  		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
-		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
-		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
-		</a>
-        </td>
+
         </tr>
     <tr>
   <td width="100%"><h2><?php if($title) echo $title; else echo "Add Spider Video Player"; ?></h2></td>
@@ -362,6 +296,15 @@ This section allows you to create players, providing them with playlist(s) and a
   </table>
 <table class="admintable" cellspacing="0">
 </tr>
+<tr>
+<td>Priority</td>
+<td>
+
+<input type="radio" name="priority" value="0" <?php if($priority == 0) echo 'checked="checked"';?> <?php if($priority=="") echo 'checked="checked"';?>>Flash</input>
+<input type="radio" name="priority" value="1" <?php if($priority == 1) echo 'checked="checked"';?>>HTML5</input>
+</td>
+</tr>
+<tr>
 <tr>
 <td>Title</td>
 <td>
@@ -382,7 +325,7 @@ This section allows you to create players, providing them with playlist(s) and a
 <tr>
 <td>Playlist</td>
 <td>
-<a href="<?php echo admin_url('admin-ajax.php?action=spiderVeideoPlayerselectplaylist') ?>&post_id=270&amp;TB_iframe=1&amp;width=1024&amp;height=394" class="thickbox thickbox-preview" id="content-add_media" title="Add Media" onclick="return false;"><img src="<?php echo plugins_url("images/add_but.png",__FILE__) ?>" ></a>
+<a href="<?php echo admin_url('admin-ajax.php?action=spiderVeideoPlayerselectplaylist') ?>&post_id=270&amp;TB_iframe=1&amp;width=1024&amp;height=394" class="thickbox thickbox-preview" id="content-add_media" title="Add Media" onclick="return false;"><img src="<?php echo plugins_url("images/add_but.png",__FILE__) ?>" style="border:none;" " ></a>
 </td>
 </tr>
 </table>
@@ -450,13 +393,9 @@ function html_show_Spider_Video_Player( $rows, $pageNav, $sort){
 	function doNothing() {  
 var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
     if( keyCode == 13 ) {
-
-
         if(!e) var e = window.event;
-
         e.cancelBubble = true;
         e.returnValue = false;
-
         if (e.stopPropagation) {
                 e.stopPropagation();
                 e.preventDefault();
@@ -466,22 +405,22 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
 	</script>
     <form method="post" action="admin.php?page=Spider_Video_Player" onkeypress="doNothing()" id="admin_form" name="admin_form" >
 	<table cellspacing="10" width="100%">
-    <tr>   
+   <tr>   
 <td width="100%" style="font-size:14px; font-weight:bold"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
 This section allows you to create players, providing them with playlist(s) and a distinct visual theme. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">More...</a></td>   
-  <td colspan="7" align="right" style="font-size:16px;">
-  		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
-		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
-		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
-		</a>
-        </td>
+
         </tr>
     <tr>
     <td style="width:210px">
     <?php echo "<h2 style=\"float:left\">".'Spider Video Players'. "</h2>"; ?>
     <input type="button" style="float:left; position:relative; top:10px; margin-left:20px" class="button-secondary action" value="Add a player" name="custom_parametrs" onclick="window.location.href='admin.php?page=Spider_Video_Player&task=add_Spider_Video_Player'" />
     </td>
- 
+ 	<td colspan="7" align="right" style="font-size:16px;">
+  		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
+		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
+		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
+		</a>
+        </td>
     </tr>
     </table>
     <?php
