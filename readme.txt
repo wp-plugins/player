@@ -1,14 +1,14 @@
 === WordPress Video Player–Flash & HTML5 Video Player===
 Contributors: webdorado
 Donate link: http://web-dorado.com/products/wordpress-player.html
-Tags: player, video, video player, flash player
+Tags: player, video, video player, flash player, html5 player
 Requires at least: 3.0
 Tested up to: 3.5
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Spider Video Player for WordPress is a video player plugin that allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player.
+Spider Video Player for WordPress is a Flash & HTML5 video player plugin that allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player.
 
 == Description ==
 
