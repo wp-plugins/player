@@ -877,7 +877,7 @@ This section allows you to create themes to customize the design of the player. 
                          <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Watermark image:</label>
+                                        <label>Watermark image (only for flash):</label>
                                 </span>
                                 </td>
                                 <td>
@@ -899,7 +899,7 @@ This section allows you to create themes to customize the design of the player. 
                             <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Watermark Position:</label>
+                                        <label>Watermark Position (only for flash):</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -912,7 +912,7 @@ This section allows you to create themes to customize the design of the player. 
                           <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Watermark size:</label>
+                                        <label>Watermark size (only for flash):</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -922,7 +922,7 @@ This section allows you to create themes to customize the design of the player. 
                              <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Watermark Margin:</label>
+                                        <label>Watermark Margin (only for flash):</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -932,7 +932,7 @@ This section allows you to create themes to customize the design of the player. 
                              <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Watermark transparency:</label>
+                                        <label>Watermark transparency (only for flash):</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -1190,9 +1190,9 @@ This section allows you to create themes to customize the design of the player. 
                                     </span>
                                     </td>
                                     <td class="paramlist_value">
-                                        <input type="radio" id="defaultShuffle1" name="defaultShuffle" value="ShuffleOff" <?php cheched($row->defaultShuffle,"ShuffleOff") ?>><label for="defaultShuffle1">Off</label> 
+                                        <input type="radio" id="defaultShuffle1" name="defaultShuffle" value="shuffleOff" <?php cheched(str_replace ('Shuffle', 'shuffle', $row->defaultShuffle),"shuffleOff") ?>><label for="defaultShuffle1">Off</label> 
                 
-                                        <input type="radio" id="defaultShuffle2" name="defaultShuffle" value="ShuffleOn" <?php cheched($row->defaultShuffle,"ShuffleOn") ?>><label for="defaultShuffle2">On</label> 
+                                        <input type="radio" id="defaultShuffle2" name="defaultShuffle" value="shuffleOn" <?php cheched(str_replace ('Shuffle', 'shuffle', $row->defaultShuffle),"shuffleOn") ?>><label for="defaultShuffle2">On</label> 
                                     </td>
                                 </tr>
                                  <tr>
@@ -1497,12 +1497,7 @@ This section allows you to create themes to customize the design of the player. 
     <input type="button" style="float:left; position:relative; top:10px; margin-left:20px" class="button-secondary action" value="Add a Theme" name="custom_parametrs" onclick="window.location.href='admin.php?page=Spider_Video_Player_Themes&task=add_theme'" />
     </td>
    
-	<td colspan="7" align="right" style="font-size:16px;">
-  		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
-		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
-		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
-		</a>
-        </td>
+
     </tr>
     </table>
     <?php
@@ -2758,9 +2753,9 @@ This section allows you to create themes to customize the design of the player. 
                                     </span>
                                     </td>
                                     <td class="paramlist_value">
-                                        <input type="radio" id="defaultShuffle1" name="defaultShuffle" value="ShuffleOff" <?php cheched($row->defaultShuffle,"ShuffleOff") ?>><label for="defaultShuffle1">Off</label> 
+                                        <input type="radio" id="defaultShuffle1" name="defaultShuffle" value="shuffleOff" <?php cheched(str_replace ('Shuffle', 'shuffle', $row->defaultShuffle),"shuffleOff") ?>><label for="defaultShuffle1">Off</label> 
                 
-                                        <input type="radio" id="defaultShuffle2"  name="defaultShuffle" value="ShuffleOn" <?php cheched($row->defaultShuffle,"ShuffleOn") ?>><label for="defaultShuffle2">On</label> 
+                                        <input type="radio" id="defaultShuffle2"  name="defaultShuffle" value="shuffleOn" <?php cheched(str_replace ('Shuffle', 'shuffle', $row->defaultShuffle),"shuffleOn") ?>><label for="defaultShuffle2">On</label> 
                                     </td>
                                 </tr>
                                  <tr>

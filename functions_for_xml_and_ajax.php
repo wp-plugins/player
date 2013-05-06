@@ -997,7 +997,7 @@ $theme=$_GET["theme"];
 	<autoNextAlbum>'.change_to_str($params->autoNextAlbum).'</autoNextAlbum>
 	<defaultVol>'.(($params->defaultVol+0)/100).'</defaultVol>
 	<defaultRepeat>'.$params->defaultRepeat.'</defaultRepeat>
-	<defaultShuffle>'.$params->defaultShuffle.'</defaultShuffle>
+	<defaultShuffle>'.str_replace ('Shuffle', 'shuffle',$params->defaultShuffle).'</defaultShuffle>
 	<autohideTime>'.$params->autohideTime.'</autohideTime>
 	<centerBtnAlpha>'.(($params->centerBtnAlpha+0)/100).'</centerBtnAlpha>
 	<loadinAnimType>'.$params->loadinAnimType.'</loadinAnimType>
