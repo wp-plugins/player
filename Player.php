@@ -64,7 +64,6 @@ else{
 html5_'.$id.'.parentNode.removeChild(html5_'.$id.');
 spidervideoplayerflash_'.$id.'.style.display=\'\';
 }
-  
 </script>';
    
 	}
@@ -929,8 +928,6 @@ function embed_url_<?php echo $id;?>(a,b)
 	{
 	jQuery('#embed_Url_<?php  echo $id?>').html('<iframe allowFullScreen allowTransparency="true" frameborder="0" width="<?php echo $theme->appWidth ?>" height="<?php echo $theme->appHeight ?>" src="'+location.href+'&AlbumId='+a+'&TrackId='+b+'&tmpl=component" type="text/html" ></iframe>')
 	jQuery('#embed_Url_<?php  echo $id?>').focus(); jQuery('#embed_Url_<?php  echo $id?>').select();	
-	
-
 	}
 jQuery('#global_body_<?php echo $id;?> .share_<?php echo $id;?>, #global_body_<?php echo $id;?> #share_buttons_<?php echo $id;?>').on('mouseenter',function(){
 left=jQuery('#global_body_<?php echo $id;?> .share_<?php echo $id;?>').position().left
