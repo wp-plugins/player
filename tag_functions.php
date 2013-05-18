@@ -2,6 +2,7 @@
 
 
 function add_tag(){
+	global $wpdb;
 	$lists['published'] =  '<input type="radio" name="published" id="published0" value="0" class="inputbox">
 							<label for="published0">No</label>
 							<input type="radio" name="published" id="published1" value="1" checked="checked" class="inputbox">

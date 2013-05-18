@@ -3,11 +3,10 @@
 /*
 Plugin Name: Spider Video Player 
 Plugin URI: http://web-dorado.com/
-Version: 1.4.2
+Version: 1.4.3
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
-
 $many_players=0;
 add_action('wp_head','askofen_1',0);
 function askofen_1($id)
@@ -19,7 +18,7 @@ function askofen_1($id)
 	wp_enqueue_script("flsh_detect",plugins_url('js/flash_detect.js', __FILE__));
 }
 add_action( 'init', 'Player_language_load' );
-
+$ident=1;
 function Player_language_load() {
 	 load_plugin_textdomain('Player', false, basename( dirname( __FILE__ ) ) . '/Languages' );
 	
@@ -34,65 +33,57 @@ function Spider_Video_Player_shotrcode($atts) {
 add_shortcode('Spider_Video_Player', 'Spider_Video_Player_shotrcode');
 
 
+function Spider_Single_Video_shotrcode($atts) {
+     extract(shortcode_atts(array(
+	      'track' => '',
+		  'theme_id' => '1',
+		  'priority' => '1'
+     ), $atts));
+     return front_end_Spider_Single_Video($atts['track'],$atts['theme_id'],$atts['priority']);
+}
 
-
-
-
-
-
+add_shortcode('Spider_Single_Video', 'Spider_Single_Video_shotrcode');
 
 ////
- function   front_end_Spider_Video_Player($id){
-	  global $wpdb;
-	 $find_priority=$wpdb->get_row("SELECT priority FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
-	$priority=$find_priority->priority;
-	
-	
+function   front_end_Spider_Single_Video($track, $theme_id, $priority){
+	  global $wpdb;	
+      global $ident;
+    $row=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=".$track);
+	$params=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$theme_id);
 
-	  
-	 $row=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
-	$params=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$row->theme);
 	if($priority==0){ 
 	 $scripttt='    <script type="text/javascript"> 
-var html5_'.$id.' = document.getElementById("spidervideoplayerhtml5_'.$id.'");
-var flash_'.$id.' = document.getElementById("spidervideoplayerflash_'.$id.'");
+var html5_'.$ident.' = document.getElementById("spidervideoplayerhtml5_'.$ident.'");
+var flash_'.$ident.' = document.getElementById("spidervideoplayerflash_'.$ident.'");
 if(!FlashDetect.installed){
-flash_'.$id.'.parentNode.removeChild(flash_'.$id.');
-spidervideoplayerhtml5_'.$id.'.style.display=\'\';
+flash_'.$ident.'.parentNode.removeChild(flash_'.$ident.');
+spidervideoplayerhtml5_'.$ident.'.style.display=\'\';
 }
 else{
-html5_'.$id.'.parentNode.removeChild(html5_'.$id.');
-spidervideoplayerflash_'.$id.'.style.display=\'\';
+html5_'.$ident.'.parentNode.removeChild(html5_'.$ident.');
+spidervideoplayerflash_'.$ident.'.style.display=\'\';
 }
-</script>';
-   
+</script>';  
 	}
 	else
 	{
 		 $scripttt='';
 	}
-
 	 if($priority ==0){
 	 global $post;
-	 $id_for_posts = $post->ID;
-	 $all_player_ids=$wpdb->get_col("SELECT id FROM ".$wpdb->prefix."Spider_Video_Player_player");
+	 $track_for_posts = $post->ID;
+	 $all_player_ids=$wpdb->get_col("SELECT id FROM ".$wpdb->prefix."Spider_Video_Player_video");
 				$b=false;
 				foreach($all_player_ids as $all_player_id)
 				{
-					if($all_player_id==$id)
+					if($all_player_id==$track)
 					$b=true;
 				}
 				if(!$b)
-				return "";	
-				
-				$Spider_Video_Player_front_end="";
-		
-		
-		$row=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
-		
-		$params=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$row->theme);
-		$theme=$row->theme;
-		$playlist=$row->id;
+				return "";					
+				$Spider_Single_Video_front_end="";
+	     $params=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$theme_id);
+		$playlist='';
 		if($params->appWidth!="")
 			$width=$params->appWidth;
 		else
@@ -101,21 +92,14 @@ spidervideoplayerflash_'.$id.'.style.display=\'\';
 		if($params->appHeight!="")
 			$height=$params->appHeight;
 		else
-			$height='400';
-			
-			$show_trackid=$params->show_trackid;
-			
-		global $many_players;
-		
-		
-		
+			$height='400';			
+			$show_trackid=$params->show_trackid;			
+		global $many_players;		
 				?>
-		
-
         <?php		
-        $Spider_Video_Player_front_end="<script type=\"text/javascript\" src=\"".plugins_url("swfobject.js",__FILE__)."\"></script>
-		<div id=\"spidervideoplayerflash_".$id."\" style=\"display:none\">		
-		  <div id=\"".$id_for_posts."_".$many_players."_flashcontent\"  style=\"width: ".$width."px; height:".$height."px\"></div>
+        $Spider_Single_Video_front_end="<script type=\"text/javascript\" src=\"".plugins_url("swfobject.js",__FILE__)."\"></script>
+		<div id=\"spidervideoplayerflash_".$ident."\" style=\"display:none\">		
+		  <div id=\"".$track_for_posts."_".$many_players."_flashcontent\"  style=\"width: ".$width."px; height:".$height."px\"></div>
 			<script type=\"text/javascript\">
 function flashShare(type,b,c)	
 {
@@ -150,181 +134,132 @@ u=location.href;
 	}
 }		
      var so = new SWFObject(\"".plugins_url("videoSpider_Video_Player.swf",__FILE__)."?wdrand=".mt_rand() ."\", \"Spider_Video_Player\", \"100%\", \"100%\", \"8\", \"#000000\");
-	 so.addParam(\"FlashVars\", \"settingsUrl=".str_replace("&","@",  str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml')."&playlist=".$playlist."&theme=".$theme."&s_v_player_id=".$id))."&playlistUrl=".str_replace("&","@",str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml')."&playlist=".$playlist."&show_trackid=".$show_trackid))."&defaultAlbumId=".$_GET['AlbumId']."&defaultTrackId=".$_GET['TrackId']."\");
+	 so.addParam(\"FlashVars\", \"settingsUrl=".str_replace("&","@",  str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml')."&playlist=".$playlist."&theme=".$theme_id."&s_v_player_id=".$track."&single=1"))."&playlistUrl=".str_replace("&","@",str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml')."&priority=".$priority."&trackID=".$track."&single=1&show_trackid=".$show_trackid))."&defaultAlbumId=".$_GET['AlbumId']."&defaultTrackId=".$_GET['TrackId']."\");
 		   so.addParam(\"quality\", \"high\");
 		   so.addParam(\"menu\", \"false\");
 		   so.addParam(\"wmode\", \"transparent\");
 		   so.addParam(\"loop\", \"false\");
 		   so.addParam(\"allowfullscreen\", \"true\");
-		   so.write(\"".$id_for_posts."_".$many_players."_flashcontent\");
+		   so.write(\"".$track_for_posts."_".$many_players."_flashcontent\");
 			</script>
 			</div>
-			";
-			
+			";			
 			$many_players++;
-			?>
-            
-         
-     
-            
-            
-            <?php
-			return $Spider_Video_Player_front_end.Spider_Video_Player_front_end($id).$scripttt;
 			
+			?>
+            <?php
+			return $Spider_Single_Video_front_end.Spider_Single_Video_front_end($track, $theme_id, $priority).$scripttt;	
+           			
 	 }
 	 else
 	 {
-		 return Spider_Video_Player_front_end($id).'<script>document.getElementById("spidervideoplayerhtml5_'.$id.'").style.display=\'\'</script>';
-	 }
-	 
-	 
-}
+	       $identt=$ident;
+		 return Spider_Single_Video_front_end($track, $theme_id, $priority).'<script>document.getElementById("spidervideoplayerhtml5_'.$identt.'").style.display=\'\'</script>';
 
-function Spider_Video_Player_front_end($id){
+	 }	 
+}
+function Spider_Single_Video_front_end($track, $theme_id, $priority){
 ob_start();
+global $ident;
 ?>	
-<div id="spidervideoplayerhtml5_<?php echo $id?>" style="display:none">	
+<div id="spidervideoplayerhtml5_<?php echo $ident?>" style="display:none">	
 <?php	
 	
 	global $wpdb; 
-	$theme_id=$wpdb->get_row("SELECT theme FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
-	$playlist=$wpdb->get_row("SELECT playlist FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
-	$playlist_array=explode(',',$playlist->playlist);
-	
-	
+
+	$playlist_array='';
+	$trackk=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=".$track);
+
 	global $many_players;
-
-	if(isset($_POST['playlist_id'])){
-	$playlistID	= $_POST['playlist_id'];
+    $track_URL='';
+	if($trackk->urlHtml5==""){
+	$track_URL=$trackk->url;
 	}
-	else $playlistID = 1;
-	$key=$playlistID-1;
+	else
+	$track_URL=$trackk->urlHtml5;
+
+
+$theme=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$theme_id);
 	
 
-
-if(isset($playlist->playlist)){
-$playlistID	= $playlist->playlist;
-}
-else $playlistID=1;
-$key=$playlistID-1;
-$row=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist WHERE id=".$playlist_array[$key]);
-
-$theme=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$theme_id->theme);
-	
-	$row1=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
-	$params1=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$row1->theme);
-	$themeid=$row1->theme;
-
+	$params1=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$theme_id);
 $display=$_POST['display'];
-
-$video_ids=substr($row->videos,0,-1);
-
-
-	$videos = $wpdb->get_results("SELECT urlHtml5,type,title FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id IN ($video_ids)");
-
-	
+	$videos = $wpdb->get_results("SELECT urlHtml5,type,title FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=".$track."");	
 	$video_urls='';
 	for($i=0;$i<count($videos);$i++)
 	{
-		if($videos[$i]->urlHtml5 !=""){
-		
+		if($videos[$i]->urlHtml5 !=""){		
 	$video_urls.="'".$videos[$i]->urlHtml5."'".',';
 		}
 		else $video_urls.="'".$videos[$i]->url."'".',';
-	}
-	
-	 $video_urls=substr($video_urls,0,-1);
-	 
-	$playlists = $wpdb->get_results("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist");
-	
-	$libRows=$theme->libRows;
-	$libCols=$theme->libCols;
-	
-	$cellWidth=($theme->appWidth)/$libCols.'px';
-	$cellHeight=($theme->appHeight)/$libRows.'px';
-	
-	$play = $wpdb->get_results("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist");
-				// load the row from the db table
-	$k=$libRows*$libCols;
-	
+	}	
+	 $video_urls=substr($video_urls,0,-1);	 
+	$playlists = $wpdb->get_results("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist");	
 	if(isset($_POST['play'])){	
 $p=$_POST['play'];
-	}
-	
+	}	
 	else $p=0;
 $display='style="width:100%;height:100% !important;border-collapse: collapse; margin-left:8px !important;"';
 $table_count=1;
 $itemBgHoverColor ='#'.$theme->itemBgHoverColor;
-
-
-$vds=$wpdb->get_results("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video");
-	
+$vds=$wpdb->get_results("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video");	
 $ctrlsStack=$theme->ctrlsStack;
-if($theme->ctrlsPos==2)
-$ctrl_top='-35px';
-else
-$ctrl_top='-'.$theme->appHeight.'px';
-
+if($theme->ctrlsPos==2){
+$ctrl_top=$theme->appHeight-35 .'px';
+$share_top='-148px';
+}
+else{
+$ctrl_top='5px';
+$share_top='-'.$theme->appHeight+25 .'px';
+}
 $AlbumId=$_POST['AlbumId'];
 $TrackId=$_POST['TrackId'];
 ?>
-
 <style>
-
-#album_table_<?php  echo $id?> td, 
-#album_table_<?php  echo $id?> tr,
-#album_table_<?php  echo $id?> img{
+a#dorado_mark_<?php echo $ident;?>:hover{
+ background:none !important;
+}
+#album_table_<?php  echo $ident?> td, 
+#album_table_<?php  echo $ident?> tr,
+#album_table_<?php  echo $ident?> img{
 	padding: 3px 9px 0px 0px !important;
 	line-height: 1em !important;
 	}
-
-
-#share_buttons_<?php echo $id;?> img{	
+#share_buttons_<?php echo $ident;?> img{	
 	display:inline !important;
 }
-
-#album_div_<?php  echo $id?> table{
-	margin:0px !important;}
-	
-#album_table_<?php  echo $id?>{	
+#album_div_<?php  echo $ident?> table{
+	margin:0px !important;}	
+#album_table_<?php  echo $ident?>{	
 margin: -1 0 1.625em !important;
 }
-
-
 table
-{
-	
+{	
 margin:0em;	
 }
-#global_body_<?php echo $id;?> .control_<?php  echo $id?>
+#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>
 {
-position:relative;
-
+position:absolute;
 background-color: rgba(<?php echo HEXDEC(SUBSTR($theme->framesBgColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
-
-top:<?php echo $ctrl_top?>;
+top:<?php echo $ctrl_top?> !important;
 width:<?php echo $theme->appWidth; ?>px;
 height:40px;
 z-index:7;
 margin-top: -5px;
-
 }
-
-#global_body_<?php echo $id;?> .control_<?php  echo $id?> td
+#global_body_<?php echo $ident;?> img{
+	background: none !important;
+	}
+#global_body_<?php echo $ident;?> .control_<?php  echo $ident?> td
 {
 	padding: 0px !important;
 	margin: 0px !important;
-
 }
-
-
-#global_body_<?php echo $id;?> .control_<?php  echo $id?> td img{
+#global_body_<?php echo $ident;?> .control_<?php  echo $ident?> td img{
 	padding: 0px !important;
-	margin: 0px !important;
-	
+	margin: 0px !important;	
 	}
-
-#global_body_<?php echo $id;?> .progressBar_<?php  echo $id?>
+#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>
 {
    position: relative;
    width: 100%;
@@ -332,10 +267,9 @@ margin-top: -5px;
    z-index:5;
    cursor:pointer;
    border-top:1px solid rgba(<?php echo HEXDEC(SUBSTR($theme->slideColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
-   border-bottom:1px solid rgba(<?php echo HEXDEC(SUBSTR($theme->slideColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
-   
+   border-bottom:1px solid rgba(<?php echo HEXDEC(SUBSTR($theme->slideColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);  
 }
-#global_body_<?php echo $id;?> .timeBar_<?php  echo $id?>
+#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>
 {
    position: absolute;
    top: 0;
@@ -343,22 +277,18 @@ margin-top: -5px;
    width: 0;
    height: 100%;
    background-color: <?php echo '#'.$theme->slideColor; ?>;
-   z-index:5;
-   
+   z-index:5;   
 }
-
-#global_body_<?php echo $id;?>  .bufferBar_<?php  echo $id?> {
+#global_body_<?php echo $ident;?>  .bufferBar_<?php  echo $ident?> {
    position: absolute;
    top: 0;
    left: 0;
    width: 0;
    height: 100%;
    background-color: <?php echo '#'.$theme->slideColor; ?>;
-   opacity:0.3;
-  
-   }
-   
- #global_body_<?php echo $id;?> .volumeBar_<?php echo $id;?>
+   opacity:0.3;  
+   }   
+ #global_body_<?php echo $ident;?> .volumeBar_<?php echo $ident;?>
 	{
    position: relative;
    overflow: hidden;
@@ -366,10 +296,8 @@ margin-top: -5px;
    height:4px;
    background-color: rgba(<?php echo HEXDEC(SUBSTR($theme->framesBgColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
    border:1px solid rgba(<?php echo HEXDEC(SUBSTR($theme->slideColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
-   
-
 	}
-#global_body_<?php echo $id;?> .volume_<?php echo $id;?>
+#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>
 	{
    position: absolute;
    top: 0;
@@ -377,103 +305,80 @@ margin-top: -5px;
    width: 0;
    height: 100%;
    background-color: <?php echo '#'.$theme->slideColor; ?>;
-
-	}
-	
-	
-	
-	#kukla_<?php  echo $id?>
+	}	
+	#play_list_<?php  echo $ident?>
 	{
 	height:<?php echo $theme->appHeight; ?>px;
 	width:0px;
-	float:left;
-	position:absolute; 
+	<?php
+	if ($theme->playlistPos==1)
+	echo 'position:absolute;float:left !important;';
+	else
+	echo 'position:relative;float:right !important;';
+	?> ;  
+     position:absolute; 
 	background-color: rgba(<?php echo HEXDEC(SUBSTR($theme->framesBgColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
 	color:white;
 	z-index:100;
 	padding: 0px !important;
 	margin: 0px !important;
-	}
-   
-   #kukla_<?php  echo $id?> img, 
-   #kukla_<?php  echo $id?> td{
+	}   
+   #play_list_<?php  echo $ident?> img, 
+   #play_list_<?php  echo $ident?> td{
 	background-color:transparent !important;
 	color:white;
 	padding: 0px !important;
-	margin: 0px !important;
-	
-	
-	   }
-  
-   .control_btns_<?php  echo $id?>
+	margin: 0px !important;	
+	   } 
+   .control_btns_<?php  echo $ident?>
    {
-   opacity:<?php echo $theme->ctrlsMainAlpha/100; ?>;
-   
-   }
-	
-	#control_btns_<?php  echo $id?>,
-	#volumeTD_<?php echo $id;?>
+   opacity:<?php echo $theme->ctrlsMainAlpha/100; ?>;  
+   }	
+	#control_btns_<?php  echo $ident?>,
+	#volumeTD_<?php echo $ident;?>
    {
 	margin: 0px;
-	  }
-  
-  img{
-	  box-shadow:none !important;  
-	 
 	  } 
-	  
-	#td_ik_<?php echo $id;?>{
-			border:0px;
-			
-			
-		}
-	 
+  img{
+	  box-shadow:none !important;  	 
+	  }   
+	#td_ik_<?php echo $ident;?>{
+			border:0px;			
+	}	 
 </style>
 <?php 
-$player_id=$wpdb->get_var("SELECT id FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
-
+$player_id=$wpdb->get_var("SELECT id FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$track);
 ?>
-<div id="global_body_<?php echo $id;?>" style="width:<?php echo $theme->appWidth; ?>px;height:<?php echo $theme->appHeight; ?>px; position:relative;">
-
+<div id="global_body_<?php echo $ident;?>" style="width:<?php echo $theme->appWidth; ?>px;height:<?php echo $theme->appHeight; ?>px; position:relative;">
 <?php
-$row1=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$id);
+$row1=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$theme_id);
 $start_lib = $row1->startWithLib; 
 ?>
-<div id="video_div_<?php echo $id;?>"  style="display:<?php if($start_lib == 1) echo 'none'; else echo 'block'?>;width:<?php echo $theme->appWidth; ?>px;height:<?php echo $theme->appHeight; ?>px;background-color:<?php echo "#".$theme->vidBgColor;  ?>">
-
-
-<div id="kukla_<?php  echo $id?>" >
-
-<input type='hidden' value='0' id="track_list_<?php echo $id;?>" />
-<div style="height:90%" id="divulya_<?php echo $id;?>">
-<div id="dvvv_<?php echo $id?>" onmousedown="scrolltp2=setInterval('scrollTop2_<?php echo $id;?>()', 30)" onmouseup="clearInterval(scrolltp2)" style="overflow:hidden; text-align:center;width:<?php echo $theme->playlistWidth; ?>px; height:20px"><img  src="<?php echo plugins_url('',__FILE__)?>/images/top.png" style="cursor:pointer;  border:none;" id="button20_<?php  echo $id?>" />
+<div id="video_div_<?php echo $ident;?>"  style="display:block;width:<?php echo $theme->appWidth; ?>px;height:<?php echo $theme->appHeight; ?>px;background-color:<?php echo "#".$theme->vidBgColor;  ?>">
+<div id="play_list_<?php  echo $ident?>" >
+<input type='hidden' value='0' id="track_list_<?php echo $ident;?>" />
+<div style="height:90%" id="play_list1_<?php echo $ident;?>">
+<div id="arrow_up_<?php echo $ident?>" onmousedown="scrolltp2=setInterval('scrollTop2_<?php echo $ident;?>()', 30)" onmouseup="clearInterval(scrolltp2)" style="overflow:hidden; text-align:center;width:<?php echo $theme->playlistWidth; ?>px; height:20px"><img  src="<?php echo plugins_url('',__FILE__)?>/images/top.png" style="cursor:pointer;  border:none;" id="button20_<?php  echo $ident?>" />
 </div>
-<div style="height:<?php echo $theme->appHeight-40; ?>px;overflow:hidden;" id="divikya_<?php echo $id;?>">
+<div style="height:<?php echo $theme->appHeight-40; ?>px;overflow:hidden;" id="video_list_<?php echo $ident;?>">
 <?php
 //echo '<p onclick="document.getElementById("videoID").src="'.$videos[$i]["url"].'" ">'.$videos[$i]['title'].'</p>';
-
 for($i=0;$i<count($playlist_array)-1;$i++)
 {
-
 $playy = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist WHERE id=".$playlist_array[$i]);
-
 $v_ids=explode(',',$playy->videos);
 $vi_ids=substr($playy->videos,0,-1);
-
 	if($i!=0)
-		echo '<table id="track_list_'.$id.'_'.$i.'"  style="display:none;height:100%;width:100%;border-spacing:0px;border:none;border-collapse: inherit;" >';
+		echo '<table id="track_list_'.$ident.'_'.$i.'"  style="display:none;height:100%;width:100%;border-spacing:0px;border:none;border-collapse: inherit;" >';
 	else
-		echo '<table id="track_list_'.$id.'_'.$i.'"  style="display:block;height:100%;width:100%;border-spacing:0px;border:none;border-collapse: inherit;" > ';
-
+		echo '<table id="track_list_'.$ident.'_'.$i.'"  style="display:block;height:100%;width:100%;border-spacing:0px;border:none;border-collapse: inherit;" > ';
 echo '<tr style="background:transparent ">
-<td id="td_ik_'.$id.'" style="text-align:left;border:0px solid grey;width:100%;vertical-align:top;">
-<div id="scroll_div2_'.$i.'_'.$id.'" class="playlist_values_'.$id.'" style="position:relative">';
+<td id="td_ik_'.$ident.'" style="text-align:left;border:0px solid grey;width:100%;vertical-align:top;">
+<div id="scroll_div2_'.$i.'_'.$ident.'" class="playlist_values_'.$ident.'" style="position:relative">';
 $jj=0;
 for($j=0;$j<count($v_ids)-1;$j++)
 {
 $vdss=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=".$v_ids[$j]);
-
-
 	if($vdss->type=="http")
 		{
 		if($vdss->urlHtml5!=""){	
@@ -485,80 +390,56 @@ $vdss=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video W
 		$html5UrlHD=$vdss->urlHDHtml5;
 		}
 		else $html5UrlHD=$vdss->urlHD;
-			echo '<div id="thumb_'.$jj.'_'.$id.'"  onclick="jQuery(\'#HD_on_'.$id.'\').val(0);document.getElementById(\'videoID_'.$id.'\').src=\''.$html5Url.'\';play_'.$id.'();vid_select_'.$id.'(this);vid_num='.$jj.';jQuery(\'#current_track_'.$id.'\').val('.$jj.');" class="vid_thumb_'.$id.'" style="color:#'.$theme->textColor .';cursor:pointer;width:'.$theme->playlistWidth.'px;text-align:center; "  >';
+			echo '<div id="thumb_'.$jj.'_'.$ident.'"  onclick="jQuery(\'#HD_on_'.$ident.'\').val(0);document.getElementById(\'videoID_'.$ident.'\').src=\''.$html5Url.'\';play_'.$ident.'();vid_select_'.$ident.'(this);vid_num='.$jj.';jQuery(\'#current_track_'.$ident.'\').val('.$jj.');" class="vid_thumb_'.$ident.'" style="color:#'.$theme->textColor .';cursor:pointer;width:'.$theme->playlistWidth.'px;text-align:center; "  >';
 			if($vdss->thumb)
 			echo '<img   src="'.$vidsTHUMB.'" width="90px" style="display:none;  border:none;"  />';
-			echo '<p style="font-size:14px;line-height:30px;cursor:pointer;" >'.($jj+1).'-'.$vdss->title.'</p></div>';
-
-			echo '<input type="hidden" id="urlHD_'.$jj.'_'.$id.'" value="'.$html5UrlHD.'" />';
-			echo '<input type="hidden" id="vid_type_'.$jj.'_'.$id.'" value="'.$vdss->type.'" />';
+			echo '<p style="font-size:'.$theme->playlistTextSize.'px !important;line-height:30px;cursor:pointer;" >'.($jj+1).'-'.$vdss->title.'</p></div>';
+			echo '<input type="hidden" id="urlHD_'.$jj.'_'.$ident.'" value="'.$html5UrlHD.'" />';
+			echo '<input type="hidden" id="vid_type_'.$jj.'_'.$ident.'" value="'.$vdss->type.'" />';
 			$jj=$jj+1;
 		}
 }
 echo '</div></td>
 </tr></table>';
-
-
-
 }
-
-
-
 ?> 
-
-
 </div>
-
-<div onmousedown="scrollBot2=setInterval('scrollBottom2_<?php echo $id;?>()', 30)" onmouseup="clearInterval(scrollBot2)" style="position:absolute;overflow:hidden; text-align:center;width:<?php echo $theme->playlistWidth; ?>px; height:20px" id="divulushka_<?php echo $id;?>"><img  src="<?php echo plugins_url('',__FILE__)?>/images/bot.png" style="cursor:pointer;  border:none;" id="button21_<?php  echo $id?>" /></div>
-
+<div onmousedown="scrollBot2=setInterval('scrollBottom2_<?php echo $ident;?>()', 30)" onmouseup="clearInterval(scrollBot2)" style="position:absolute;overflow:hidden; text-align:center;width:<?php echo $theme->playlistWidth; ?>px; height:20px" id="divulushka_<?php echo $ident;?>"><img  src="<?php echo plugins_url('',__FILE__)?>/images/bot.png" style="cursor:pointer;  border:none;" id="button21_<?php  echo $ident?>" /></div>
 </div>
 </div>
-
-<video  ontimeupdate="timeUpdate_<?php  echo $id?>()"  ondurationchange="durationChange_<?php  echo $id?>();" id="videoID_<?php  echo $id?>" src="<?php echo $videos[0]->urlHtml5; ?>"   style="width:100%; height:100% !important;margin:0px !important;" >
-
- 
-  
-<p>Your browser does not support the video tag.</p>
-   
+<video  ontimeupdate="timeUpdate_<?php  echo $ident?>()"  ondurationchange="durationChange_<?php  echo $ident?>();" id="videoID_<?php  echo $ident?>" src="<?php echo $track_URL ?>"   style="width:100%; height:100% !important;margin:0px !important;position: absolute;" > 
+<p>Your browser does not support the video tag.</p>  
 </video>
-
-
-<a href="http://web-dorado.com/" target="_blank" id="dorado_mark_<?php echo $id;?>" style="bottom: 105px;position: relative;">
-<img src="<?php echo plugins_url('',__FILE__)?>/images/wd_logo.png" style="width: 140px;height: 73px;"/></a>  
-
-<div class="control_<?php echo $id;?>" id="control_<?php echo $id;?>" style="overflow:hidden;top: -122px;">
-
-
-
-
-<div class="progressBar_<?php echo $id;?>">
-   <div class="timeBar_<?php echo $id;?>"></div>
-   <div class="bufferBar_<?php echo $id;?>"></div>
+<a href="http://web-dorado.com/" target="_blank" id="dorado_mark_<?php echo $ident;?>" style="bottom: 30px;position: absolute;text-decoration: none;border: 0px !important;">
+<img src="<?php echo plugins_url('',__FILE__)?>/images/wd_logo.png" style="width: 140px;height: 73px; border: 0px !important;"/></a> 
+<div class="control_<?php echo $ident;?>" id="control_<?php echo $ident;?>" style="overflow:hidden;top: 5px;">
+<?php if($theme->ctrlsPos==2){ ?>
+<div class="progressBar_<?php echo $ident;?>">
+   <div class="timeBar_<?php echo $ident;?>"></div>
+   <div class="bufferBar_<?php echo $ident;?>"></div>
 </div>
-
-
-
 <?php
-
+}
 $ctrls=explode(',',$ctrlsStack);
 $y=1;
-echo '<table id="control_btns_'.$id.'" style="width: 100%; border:none;border-collapse: inherit; background: transparent; margin-top: -0.5px;"><tr style="background: transparent;">';
+echo '<table id="control_btns_'.$ident.'" style="width: 100%; border:none;border-collapse: inherit; background: transparent; margin-top: 4px;padding: 0px !important;"><tr style="background: transparent;">';
 for($i=0;$i<count($ctrls);$i++)
 {
 	$ctrl=explode(':',$ctrls[$i]);
+	if($ctrl[0]=='playlist')	$ctrl[1]=0;	
+	if($ctrl[0]=='lib')	$ctrl[1]=0;
 	if($ctrl[1]==1)
 		{
 			echo '<td style="border:none;background: transparent;">';
 			if($ctrl[0]=='playPause')
 				{
 					if($theme->appWidth > 400){
-						echo '<img id="button'.$y.'_'.$id.'"  class="btnPlay" width="16" style="top:6px;position: relative;vertical-align: middle;cursor:pointer;  border:none;background: transparent; height:19px"   src="'.plugins_url('',__FILE__).'/images/play.png" />';
-						echo '<img id="button'.($y+1).'_'.$id.'" width="16"  class="btnPause" style="top:6px;position: relative;vertical-align: middle;display:none;cursor:pointer;  border:none;background: transparent;height:18px"  src="'.plugins_url('',__FILE__).'/images/pause.png" />';	
-					}
-					
+						echo '<img id="button'.$y.'_'.$ident.'"  class="btnPlay" width="16" style="position: relative;vertical-align: middle;cursor:pointer;  border:none;opacity:'.$theme->ctrlsMainAlpha/100 .'; height:19px"   src="'.plugins_url('',__FILE__).'/images/play.png" />';
+						echo '<img id="button'.($y+1).'_'.$ident.'" width="16"  class="btnPause" style="position: relative;vertical-align: middle;display:none;cursor:pointer;  border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';height:18px"  src="'.plugins_url('',__FILE__).'/images/pause.png" />';	
+					}					
 					else {
-						echo '<img id="button'.$y.'_'.$id.'"  class="btnPlay" style="vertical-align: middle;cursor:pointer;max-width:7px;  border:none;background: transparent;"   src="'.plugins_url('',__FILE__).'/images/play.png" />';
-						echo '<img id="button'.($y+1).'_'.$id.'" width="16"  class="btnPause" style="vertical-align: middle;height: 18px !important;display:none;cursor:pointer;max-width:7px;  border:none;background: transparent;"  src="'.plugins_url('',__FILE__).'/images/pause.png" />';	
+						echo '<img id="button'.$y.'_'.$ident.'"  class="btnPlay" style="vertical-align: middle;cursor:pointer;max-width:7px;  border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"   src="'.plugins_url('',__FILE__).'/images/play.png" />';
+						echo '<img id="button'.($y+1).'_'.$ident.'" width="16"  class="btnPause" style="vertical-align: middle;height: 18px !important;display:none;cursor:pointer;max-width:7px;  border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"  src="'.plugins_url('',__FILE__).'/images/pause.png" />';	
 					}
 			$y=$y+2;
 				}
@@ -569,55 +450,44 @@ for($i=0;$i<count($ctrls);$i++)
 					}
 			else
 				if($ctrl[0]=='time')
-					{
-						
-					echo '
-						
-						  <span style="color:#'.$theme->ctrlsMainColor.'; position:relative; vertical-align: middle; " id="time_'.$id.'">00:00 </span>
-						  <span style="color:#'.$theme->ctrlsMainColor.'; position:relative; vertical-align: middle;">/</span> 
-						  <span style="color:#'.$theme->ctrlsMainColor.';position:relative; vertical-align: middle;" id="duration_'.$id.'">00:00</span>
-						 
-				     ';
-						
-						
-						
+					{						
+					echo '						
+						  <span style="color:#'.$theme->ctrlsMainColor.';opacity:'.$theme->ctrlsMainAlpha/100 .'; position:relative; vertical-align: middle; " id="time_'.$ident.'">00:00</span>
+						  <span style="color:#'.$theme->ctrlsMainColor.'; opacity:'.$theme->ctrlsMainAlpha/100 .';position:relative; vertical-align: middle;">/</span> 
+						  <span style="color:#'.$theme->ctrlsMainColor.';opacity:'.$theme->ctrlsMainAlpha/100 .';position:relative; vertical-align: middle;" id="duration_'.$ident.'">00:00</span>';				
 					}
 			else
 				if($ctrl[0]=='vol')
 				{
 					if($theme->appWidth > 400){
-				$img_button='<img  style="position: relative;cursor:pointer; border:none;background: transparent;vertical-align: middle;"  id="button'.$y.'_'.$id.'"    src="'.plugins_url('',__FILE__).'/images/vol.png"  />';
+				$img_button='<img  style="position: relative;cursor:pointer; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';vertical-align: middle;"  id="button'.$y.'_'.$ident.'"    src="'.plugins_url('',__FILE__).'/images/vol.png"  />';
 					}
 					else {
-						$img_button='<img  style="vertical-align: middle;cursor:pointer;max-width:7px; border:none;background: transparent;"  id="button'.$y.'_'.$id.'"    src="'.plugins_url('',__FILE__).'/images/vol.png"  />';
+						$img_button='<img  style="vertical-align: middle;cursor:pointer;max-width:7px; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"  id="button'.$y.'_'.$ident.'"    src="'.plugins_url('',__FILE__).'/images/vol.png"  />';
 						}
-				echo '<table  id="volumeTD_'.$id.'" style="border:none;border-collapse: inherit; min-width: 0;background: transparent;" >
+				echo '<table  id="volumeTD_'.$ident.'" style="border:none;border-collapse: inherit; min-width: 0;background: transparent;padding: 0px !important;" >
 						<tr style="background: transparent;">
-							<td id="voulume_img_'.$id.'" style="top:5px;border:none;min-width:13px;  background: transparent; width:20px;" >'.$img_button.'
+							<td id="voulume_img_'.$ident.'" style="top:5px;border:none;min-width:13px;  background: transparent; width:20px;" >'.$img_button.'
 							</td>
-							<td id="volumeTD2_'.$id.'" style="width:0px; border:none; position:relative;background: transparent; ">
-									<span id="volumebar_player_'.$id.'" class="volumeBar_'.$id.'" style="vertical-align: middle;">
-								    <span class="volume_'.$id.'" style="vertical-align: middle;"></span>
+							<td id="volumeTD2_'.$ident.'" style="width:0px; border:none; position:relative;background: transparent; ">
+									<span id="volumebar_player_'.$ident.'" class="volumeBar_'.$ident.'" style="vertical-align: middle;">
+								    <span class="volume_'.$ident.'" style="vertical-align: middle;"></span>
 									</span>
 							 </td>
 						</tr>
-						</table> ';
-				
+						</table> ';				
 						$y=$y+1;
 				}
 			else
 				if($ctrl[0]=='shuffle')
 				{
 					if($theme->appWidth > 400){
-				echo '<img  id="button'.$y.'_'.$id.'" class="shuffle_'.$id.'" style="position: relative;vertical-align: middle;cursor:pointer; border:none;background: transparent;"   src="'.plugins_url('',__FILE__).'/images/shuffle.png" />';
-				echo '<img  id="button'.($y+1).'_'.$id.'"  class="shuffle_'.$id.'" style="position: relative;vertical-align: middle;display:none;cursor:pointer; border:none;background: transparent;"  src="'.plugins_url('',__FILE__).'/images/shuffleoff.png" />';
-					
-					}
-					
+				echo '<img  id="button'.$y.'_'.$ident.'" class="shuffle_'.$ident.'" style="position: relative;vertical-align: middle;cursor:pointer; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"   src="'.plugins_url('',__FILE__).'/images/shuffle.png" />';
+				echo '<img  id="button'.($y+1).'_'.$ident.'"  class="shuffle_'.$ident.'" style="position: relative;vertical-align: middle;display:none;cursor:pointer; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"  src="'.plugins_url('',__FILE__).'/images/shuffleoff.png" />';					
+					}					
 					else {
-						echo '<img  id="button'.$y.'_'.$id.'" class="shuffle_'.$id.'" style="vertical-align: middle;cursor:pointer;max-width:7px;  border:none;background: transparent;"   src="'.plugins_url('',__FILE__).'/images/shuffle.png" />';
-						echo '<img  id="button'.($y+1).'_'.$id.'"  class="shuffle_'.$id.'" style="vertical-align: middle;display:none;cursor:pointer;max-width:7px; border:none;background: transparent;"  src="'.plugins_url('',__FILE__).'/images/shuffleoff.png" />';
-					
+						echo '<img  id="button'.$y.'_'.$ident.'" class="shuffle_'.$ident.'" style="vertical-align: middle;cursor:pointer;max-width:7px;  border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"   src="'.plugins_url('',__FILE__).'/images/shuffle.png" />';
+						echo '<img  id="button'.($y+1).'_'.$ident.'"  class="shuffle_'.$ident.'" style="vertical-align: middle;display:none;cursor:pointer;max-width:7px; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"  src="'.plugins_url('',__FILE__).'/images/shuffleoff.png" />';					
 						}
 			$y=$y+2;
 				}
@@ -627,29 +497,26 @@ for($i=0;$i<count($ctrls);$i++)
 					
 				if($theme->appWidth > 400){	
 					echo '
-					<img  id="button'.$y.'_'.$id.'" class="repeat_'.$id.'" style="position: relative;vertical-align: middle;cursor:pointer; border:none;background: transparent;"   src="'.plugins_url('',__FILE__).'/images/repeat.png" />
-					<img  id="button'.($y+1).'_'.$id.'"  class="repeat_'.$id.'" style="position: relative;vertical-align: middle;display:none;cursor:pointer; border:none;background: transparent;"   src="'.plugins_url('',__FILE__).'/images/repeatOff.png" />
-					<img  id="button'.($y+2).'_'.$id.'"  class="repeat_'.$id.'" style="osition: relative;vertical-align: middle;display:none;cursor:pointer; border:none;background: transparent;"  src="'.plugins_url('',__FILE__).'/images/repeatOne.png" />
+					<img  id="button'.$y.'_'.$ident.'" class="repeat_'.$ident.'" style="position: relative;vertical-align: middle;cursor:pointer; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"   src="'.plugins_url('',__FILE__).'/images/repeat.png"/>
+					<img  id="button'.($y+1).'_'.$ident.'"  class="repeat_'.$ident.'" style="position: relative;vertical-align: middle;display:none;cursor:pointer; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"   src="'.plugins_url('',__FILE__).'/images/repeatOff.png"/>
+					<img  id="button'.($y+2).'_'.$ident.'"  class="repeat_'.$ident.'" style="osition: relative;vertical-align: middle;display:none;cursor:pointer; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"  src="'.plugins_url('',__FILE__).'/images/repeatOne.png"/>
 					';
 				}
 				else{
 					echo '
-				<img  id="button'.$y.'_'.$id.'" class="repeat_'.$id.'" style="vertical-align: middle;cursor:pointer;max-width:7px; border:none;background: transparent;"   src="'.plugins_url('',__FILE__).'/images/repeat.png" />
-				<img  id="button'.($y+1).'_'.$id.'"  class="repeat_'.$id.'" style="vertical-align: middle;display:none;cursor:pointer;max-width:7px; border:none;background: transparent;"   src="'.plugins_url('',__FILE__).'/images/repeatOff.png" />
-				<img  id="button'.($y+2).'_'.$id.'"  class="repeat_'.$id.'" style="vertical-align: middle;display:none;cursor:pointer;max-width:7px; border:none;background: transparent;"  src="'.plugins_url('',__FILE__).'/images/repeatOne.png" />
-				';					
-					}
-					
+				<img  id="button'.$y.'_'.$ident.'" class="repeat_'.$ident.'" style="vertical-align: middle;cursor:pointer;max-width:7px; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"   src="'.plugins_url('',__FILE__).'/images/repeat.png"/>
+				<img  id="button'.($y+1).'_'.$ident.'"  class="repeat_'.$ident.'" style="vertical-align: middle;display:none;cursor:pointer;max-width:7px; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"   src="'.plugins_url('',__FILE__).'/images/repeatOff.png"/>
+				<img  id="button'.($y+2).'_'.$ident.'"  class="repeat_'.$ident.'" style="vertical-align: middle;display:none;cursor:pointer;max-width:7px; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"  src="'.plugins_url('',__FILE__).'/images/repeatOne.png"/>
+				';	}					
 			$y=$y+3;
 				}
 				else
 				{
 					if($theme->appWidth > 400){
-						echo '<img  style="position: relative;vertical-align: middle;cursor:pointer; border:none;background: transparent;" id="button'.$y.'_'.$id.'" class="'.$ctrl[0].'_'.$id.'"  src="'.plugins_url('',__FILE__).'/images/'.$ctrl[0].'.png" />';
+						echo '<img  style="position: relative;vertical-align: middle;cursor:pointer; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';" id="button'.$y.'_'.$ident.'" class="'.$ctrl[0].'_'.$ident.'"  src="'.plugins_url('',__FILE__).'/images/'.$ctrl[0].'.png" />';
 					}
 					else{
-						echo '<img  style="vertical-align: middle;cursor:pointer;max-width:7px; border:none;background: transparent;" id="button'.$y.'_'.$id.'" class="'.$ctrl[0].'_'.$id.'"  src="'.plugins_url('',__FILE__).'/images/'.$ctrl[0].'.png" />';
-						
+						echo '<img  style="vertical-align: middle;cursor:pointer;max-width:7px; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';" id="button'.$y.'_'.$ident.'" class="'.$ctrl[0].'_'.$ident.'"  src="'.plugins_url('',__FILE__).'/images/'.$ctrl[0].'.png" />';						
 						}
 				$y=$y+1;
 				}
@@ -657,181 +524,59 @@ for($i=0;$i<count($ctrls);$i++)
 		}
 }
 echo '</tr></table>';
-
+if($theme->ctrlsPos==1){ ?>
+<div class="progressBar_<?php echo $ident;?>">
+   <div class="timeBar_<?php echo $ident;?>"></div>
+   <div class="bufferBar_<?php echo $ident;?>"></div>
+</div>
+<?php
+}
 ?>
-
    </div>
 </div>
-
-<div id="album_div_<?php echo $id;?>" style="display:<?php if($start_lib == 0) echo 'none' ?>;background-color:<?php echo "#".$theme->appBgColor;?>;height:100%; overflow:hidden;position:relative;">
-
-
-<table width="<?php echo $theme->appWidth ?>px " height="<?php echo $theme->appHeight ?>px" style="border:none;border-collapse: inherit;" id="album_table_<?php  echo $id?>">
-
-
-<tr id="tracklist_up_<?php  echo $id?>" style="display:none; background: transparent;">
+<div id="album_div_<?php echo $ident;?>" style="display:none;background-color:<?php echo "#".$theme->appBgColor;?>;height:100%; overflow:hidden;position:relative;">
+<table width="<?php echo $theme->appWidth ?>px " height="<?php echo $theme->appHeight ?>px" style="border:none;border-collapse: inherit;" id="album_table_<?php  echo $ident?>">
+<tr id="tracklist_up_<?php  echo $ident?>" style="display:none; background: transparent;">
 <td height="12px" colspan="2" style="text-align:right; border:none;background: transparent;">
-<div onmouseover="this.style.background='rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2))?>,0.4)'" onmouseout="this.style.background='none'" id="scroll" style="overflow:hidden;width:50%;height:100%;text-align:center;float:right;cursor:pointer;" onmousedown="scrolltp=setInterval('scrollTop_<?php echo $id;?>()', 30)" onmouseup="clearInterval(scrolltp)">
-<img   src="<?php echo plugins_url('',__FILE__)?>/images/top.png" style="cursor:pointer; margin: 0px !important; padding: 0px !important; border:none;background: transparent;" id="button25_<?php echo $id;?>" />
+<div onmouseover="this.style.background='rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2))?>,0.4)'" onmouseout="this.style.background='none'" id="scroll" style="overflow:hidden;width:50%;height:100%;text-align:center;float:right;cursor:pointer;" onmousedown="scrolltp=setInterval('scrollTop_<?php echo $ident;?>()', 30)" onmouseup="clearInterval(scrolltp)">
+<img   src="<?php echo plugins_url('',__FILE__)?>/images/top.png" style="cursor:pointer; margin: 0px !important; padding: 0px !important; border:none;background: transparent;" id="button25_<?php echo $ident;?>" />
 <div>
 </td>
 </tr>
-
-
 <tr>
 <td style="vertical-align:middle; border:none;background: transparent; ">
-<img src="<?php echo plugins_url('',__FILE__)?>/images/prev.png" style="cursor:pointer; margin: 0px !important; padding: 0px !important; background: transparent;border:none;min-width: 16px;" id="button28_<?php  echo $id?>" onclick="prevPage_<?php  echo $id?>();" />
+<img src="<?php echo plugins_url('',__FILE__)?>/images/prev.png" style="cursor:pointer; margin: 0px !important; padding: 0px !important; background: transparent;border:none;min-width: 16px;" id="button28_<?php  echo $ident?>" onclick="prevPage_<?php  echo $ident?>();" />
 </td>
-<td style="border:none;background: transparent;" id="lib_td_<?php echo $id;?>">
-
-<?php
-for($l=0;$l<$table_count;$l++)
-{
-echo '<table class="lib_tbl_'.$id.'" id="lib_table_'.$l.'_'.$id.'" '.$display.'> ';
-for($i=0;$i<$libRows;$i++)
-{
-
-
-	echo '<tr style="background: transparent;">';
-	for($j=0;$j<$libCols;$j++)
-	{
-			
-		if($p<count($playlist_array)-1)
-		{
-		$playyy= $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist WHERE id=".$playlist_array[$p]);
-		$playTHUMB=$playyy->thumb;
-if($playTHUMB!=""){
-			$image_nk == '<img src="'.$playTHUMB.'" style="border:none; width:35%;background: transparent;"/>';
-			}
-			else $image_nk == "";		
-
-
-echo '<td  class="playlist_td_'.$id.'" id="playlist_'.$p.'_'.$id.'"  onclick="openPlaylist_'.$id.'('.$p.','.$l.')" onmouseover="this.style.color=\'#'.$theme->textHoverColor .'\';this.style.background=\'rgba('.HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2)).','.HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2)).','.HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2)).',0.4)\'" onmouseout="this.style.color=\'#'.$theme->textColor .'\';this.style.background=\' none\'" onclick="" style="color:#'.$theme->textColor .';border:1px solid white;background: transparent;vertical-align:center; text-align:center;width:'.$cellWidth.';height:'.$cellHeight.';cursor:pointer; ">'.$image_nk.'
-
-		<p style="">'.$playyy->title.'</p>
-
-		</td>';
-		
-		
-		$p=$p+1;
-		
-		
-		}
-		else
-			{
-			echo '<td style="border:1px solid white;vertical-align:top;background: transparent; align:center;width:'.$cellWidth.';height:'.$cellHeight.'">
-			</td>';
-			}
-			
-		
-		
-		
-		}
-		
-	echo '</tr>';
-
-}
-
-
-if($p<count($playlist_array)-1)
-		{
-		$table_count=$table_count+1;
-		$display='style="display:none;width:100%;height:100%;border-collapse: collapse; margin-left: 8px !important;"';
-		}
-
-echo '</table>';
-}
-
-for($i=0;$i<$p;$i++)
-{
-
-$play1= $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist WHERE id=".$playlist_array[$i]);
-
-$v_ids=explode(',',$play1->videos);
-$vi_ids=substr($play1->videos,0,-1);
-
-		$playTHUMB=$play1->thumb;
-		
-		if($playTHUMB!=""){
-			$image_nkar == '<img src="'.$playTHUMB.'" width="50%" style="border:none;background: transparent;" /><br /><br />';
-			}
-			else $image_nkar == "";
-	
-	echo '<table playlist_id="'.$i.'" id="playlist_table_'.$i.'_'.$id.'"  style="border:none;border-collapse: inherit;display:none;height:100%;width:100%" >
-
-</tr>
-<tr style="background: transparent;">
-<td style="text-align:center;vertical-align:top;background: transparent;border:none;background: transparent;">';
-
-echo $image_nkar;
-echo '<p style="color:#'.$theme->textColor .'">'.$play->title.'</p>';
-echo '</td>
-<td style="width:50%;border:none; background: transparent;">
-
-<div style="width:100%;text-align:left;border:1px solid white;height:'.($theme->appHeight-55).'px;vertical-align:top;position:relative;overflow:hidden; min-width: 130px;">
-<div id="scroll_div_'.$i.'_'.$id.'" style="position:relative;">';
-
-$jj=0;
-for($j=0;$j<count($v_ids)-1;$j++)
-{
-	$vds1=$wpdb->get_results("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=".$v_ids[$j]);
-			if($vds1[0]->type=='http')
-			{
-				echo '<p class="vid_title_'.$id.'" ondblclick="jQuery(\'.show_vid_'.$id.'\').click()" onmouseover="this.style.color=\'#'.$theme->textHoverColor .'\';this.style.background=\'rgba('.HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2)).','.HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2)).','.HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2)).',0.4)\'" onmouseout="this.style.color=\'#'.$theme->textColor .'\';this.style.background=\' none\'" style="color:#'.$theme->textColor .';font-size:20px;line-height:30px;cursor:pointer; margin: 0px;" onclick="jQuery(\'#HD_on_'.$id.'\').val(0);jQuery(\'#track_list_'.$id.'_'.$i.'\').find(\'.vid_thumb_'.$id.'\')['.$jj.'].click();playBTN_'.$id.'();current_playlist_videos_'.$id.'();vid_num='.$jj.';jQuery(\'#current_track_'.$id.'\').val('.$jj.');vid_select2_'.$id.'(this);playlist_select_'.$id.'('.$i.') ">'.($jj+1).' - '.$vds1[0]->title.'</p>';
-				$jj=$jj+1;
-			}
-		
-}
-
-
-echo '</div></div>
-
-</td>
-</tr>
-
-</table>';
-
-
-
-}
-?>
-
+<td style="border:none;background: transparent;padding: 2px 0px 2px 0px !important;width: 100% !important;" id="lib_td_<?php echo $ident;?>">
 </td>
 <td style="vertical-align:bottom; border:none;background: transparent; top: -13px;position: relative;width: 6%;">
 <table style='height:<?php echo $theme->appHeight-46 ?>px; border:none;border-collapse: inherit;'>
 <tr style="background: transparent;">
 <td height='100%' style="border:none;background: transparent; vertical-align: middle;">
-
-<img  src="<?php echo plugins_url('',__FILE__)?>/images/next.png" style="cursor:pointer;border:none;background: transparent;display:inline !important; " id="button27_<?php  echo $id?>" onclick="nextPage_<?php  echo $id?>()" />
-
+<img  src="<?php echo plugins_url('',__FILE__)?>/images/next.png" style="cursor:pointer;border:none;background: transparent;display:inline !important; " id="button27_<?php  echo $ident?>" onclick="nextPage_<?php  echo $ident?>()" />
 </td>
 </tr>
 <tr style="background: transparent;">
 <td style="border:none;background: transparent;">
-  <img  src="<?php echo plugins_url('',__FILE__)?>/images/back.png" style="cursor:pointer; display:none; border:none;background: transparent;" id="button29_<?php  echo $id?>" onclick="openLibTable_<?php  echo $id?>()" />
+  <img  src="<?php echo plugins_url('',__FILE__)?>/images/back.png" style="cursor:pointer; display:none; border:none;background: transparent;" id="button29_<?php  echo $ident?>" onclick="openLibTable_<?php  echo $ident?>()" />
 </td>
 </tr>
 <tr style="background: transparent;">
 <td style="border:none;background: transparent;"> 
- <img style="cursor:pointer;border:none;background: transparent; position:relative; top:-5px;"  id="button19_<?php  echo $id?>"  class="show_vid_<?php  echo $id?>"  src="<?php echo plugins_url('',__FILE__)?>/images/lib.png"  />
+ <img style="cursor:pointer;border:none;background: transparent; position:relative; top:-5px;"  id="button19_<?php  echo $ident?>"  class="show_vid_<?php  echo $ident?>"  src="<?php echo plugins_url('',__FILE__)?>/images/lib.png"  />
 </td>
 </tr>
 </table>
  </td>
 </tr>
-
-
-<tr id="tracklist_down_<?php  echo $id?>" style="display:none;background: transparent" >
+<tr id="tracklist_down_<?php  echo $ident?>" style="display:none;background: transparent" >
 <td height="12px" colspan="2" style="text-align:right;border:none;background: transparent;">
-<div  onmouseover="this.style.background='rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2))?>,0.4)'" onmouseout="this.style.background='none'" id="scroll" style="overflow:hidden;width:50%;height:100%;text-align:center;float:right;cursor:pointer;" onmousedown="scrollBot=setInterval('scrollBottom_<?php echo $id;?>()', 30)" onmouseup="clearInterval(scrollBot)">
-<img src="<?php echo plugins_url('',__FILE__)?>/images/bot.png" style="cursor:pointer;border:none;background: transparent;" id="button26_<?php  echo $id?>"  />
+<div  onmouseover="this.style.background='rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2))?>,0.4)'" onmouseout="this.style.background='none'" id="scroll" style="overflow:hidden;width:50%;height:100%;text-align:center;float:right;cursor:pointer;" onmousedown="scrollBot=setInterval('scrollBottom_<?php echo $ident;?>()', 30)" onmouseup="clearInterval(scrollBot)">
+<img src="<?php echo plugins_url('',__FILE__)?>/images/bot.png" style="cursor:pointer;border:none;background: transparent;" id="button26_<?php  echo $ident?>"  />
 </div>
-
 </td>
 </tr>
-
 </table>
-
  </div>
 <script type="text/javascript">
 function flashShare(type,b,c)	
@@ -867,216 +612,194 @@ function flashShare(type,b,c)
 	}
 }		
 </script>
-
-<div id="embed_Url_div_<?php echo $id;?>" style="display:none;text-align:center;background-color:rgba(0,0,0,0.5); height:160px;width:300px;position:relative;left:<?php echo ($theme->appWidth/2)-150 ?>px;top:-<?php echo ($theme->appHeight/2)+75 ?>px">
-<textarea  onclick="jQuery('#embed_Url_<?php  echo $id?>').focus(); jQuery('#embed_Url_<?php  echo $id?>').select();"  id="embed_Url_<?php  echo $id?>" readonly="readonly" style="font-size:11px;width:285px;overflow-y:scroll;resize:none;height:100px;position:relative;top:5px;"></textarea>
-<span style="position:relative;top:10px;"><button onclick="jQuery('#embed_Url_div_<?php  echo $id?>').css('display','none')" style="border:0px">Close</button><p style="color:white">Press Ctrl+C to copy the embed code to clipboard</p></span>
+<div id="embed_Url_div_<?php echo $ident;?>" style="display:none;text-align:center;background-color:rgba(0,0,0,0.5); height:160px;width:300px;position:relative;left:<?php echo ($theme->appWidth/2)-150 ?>px;top:-<?php echo ($theme->appHeight/2)+75 ?>px">
+<textarea  onclick="jQuery('#embed_Url_<?php  echo $ident?>').focus(); jQuery('#embed_Url_<?php  echo $ident?>').select();"  id="embed_Url_<?php  echo $ident?>" readonly="readonly" style="font-size:11px;width:285px;overflow-y:scroll;resize:none;height:100px;position:relative;top:5px;"></textarea>
+<span style="position:relative;top:10px;"><button onclick="jQuery('#embed_Url_div_<?php  echo $ident?>').css('display','none')" style="border:0px">Close</button><p style="color:white">Press Ctrl+C to copy the embed code to clipboard</p></span>
 </div>
-
-
-<?php if($theme->ctrlsPos==2){ ?>
-<div id="share_buttons_<?php echo $id;?>" style="text-align:center;height:113px;width:30px;background-color:rgba(0,0,0,0.5);position:relative;z-index:20000;top:-140px;display:none;" >
-<img onclick="flashShare('fb',document.getElementById('current_playlist_table_<?php echo $id;?>').value,document.getElementById('current_track_<?php echo $id;?>').value)" style="cursor:pointer;  border:none;background: transparent;padding:0px;max-width: auto;"  src="<?php echo plugins_url('',__FILE__)?>/images/facebook.png" /><br>
-<img onclick="flashShare('tw',document.getElementById('current_playlist_table_<?php echo $id;?>').value,document.getElementById('current_track_<?php echo $id;?>').value)" style="cursor:pointer; border:none;background: transparent;padding:0px;max-width: auto;" src="<?php echo plugins_url('',__FILE__)?>/images/twitter.png" /><br>
-<img onclick="flashShare('g',document.getElementById('current_playlist_table_<?php echo $id;?>').value,document.getElementById('current_track_<?php echo $id;?>').value)" style="cursor:pointer; border:none;background: transparent;padding:0px;max-width: auto;" src="<?php echo plugins_url('',__FILE__)?>/images/googleplus.png" /><br>
-<img onclick="jQuery('#embed_Url_div_<?php echo $id;?>').css('display','');embed_url_<?php echo $id;?>(document.getElementById('current_playlist_table_<?php echo $id;?>').value,document.getElementById('current_track_<?php echo $id;?>').value)" style="cursor:pointer; border:none; background: transparent;padding:0px;max-width: auto;" src="<?php echo plugins_url('',__FILE__)?>/images/embed.png" />
+<div id="share_buttons_<?php echo $ident;?>" style="text-align:center;height:113px;width:30px;background-color:rgba(0,0,0,0.5);position:relative;z-index:20000;top:<?php echo $share_top; ?>;display:none;" >
+<img onclick="flashShare('fb',document.getElementById('current_playlist_table_<?php echo $ident;?>').value,document.getElementById('current_track_<?php echo $ident;?>').value)" style="cursor:pointer;  border:none;background: transparent;padding:0px;max-width: auto;"  src="<?php echo plugins_url('',__FILE__)?>/images/facebook.png" /><br>
+<img onclick="flashShare('tw',document.getElementById('current_playlist_table_<?php echo $ident;?>').value,document.getElementById('current_track_<?php echo $ident;?>').value)" style="cursor:pointer; border:none;background: transparent;padding:0px;max-width: auto;" src="<?php echo plugins_url('',__FILE__)?>/images/twitter.png" /><br>
+<img onclick="flashShare('g',document.getElementById('current_playlist_table_<?php echo $ident;?>').value,document.getElementById('current_track_<?php echo $ident;?>').value)" style="cursor:pointer; border:none;background: transparent;padding:0px;max-width: auto;" src="<?php echo plugins_url('',__FILE__)?>/images/googleplus.png" /><br>
+<img onclick="jQuery('#embed_Url_div_<?php echo $ident;?>').css('display','');embed_url_<?php echo $ident;?>(document.getElementById('current_playlist_table_<?php echo $ident;?>').value,document.getElementById('current_track_<?php echo $ident;?>').value)" style="cursor:pointer; border:none; background: transparent;padding:0px;max-width: auto;" src="<?php echo plugins_url('',__FILE__)?>/images/embed.png" />
 </div>
-<?php } else {?>
-<div id="share_buttons_<?php echo $id;?>" style="text-align:center;height:113px;width:30px;background-color:rgba(0,0,0,0.5);position:relative;z-index:200;top:-320px;display:none;" >
-<img onclick="jQuery('#embed_Url_div_<?php echo $id;?>').css('display','');embed_url_<?php echo $id;?>(document.getElementById('current_playlist_table_<?php echo $id;?>').value,document.getElementById('current_track_<?php echo $id;?>').value)" style="cursor:pointer; border:none;background: transparent;padding:0px;max-width: auto;" src="<?php echo plugins_url('',__FILE__)?>/images/embed.png" />
-<img onclick="flashShare('g',document.getElementById('current_playlist_table_<?php echo $id;?>').value,document.getElementById('current_track_<?php echo $id;?>').value)" style="cursor:pointer;  border:none;background: transparent;padding:0px;max-width: auto;" src="<?php echo plugins_url('',__FILE__)?>/images/googleplus.png" /><br>
-<img onclick="flashShare('tw',document.getElementById('current_playlist_table_<?php echo $id;?>').value,document.getElementById('current_track_<?php echo $id;?>').value)" style="cursor:pointer;  border:none;background: transparent;padding:0px;max-width: auto;" src="<?php echo plugins_url('',__FILE__)?>/images/twitter.png" /><br>
-<img onclick="flashShare('fb',document.getElementById('current_playlist_table_<?php echo $id;?>').value,document.getElementById('current_track_<?php echo $id;?>').value)" style="cursor:pointer;  border:none;background: transparent;padding:0px;max-width: auto;"  src="<?php echo plugins_url('',__FILE__)?>/images/facebook.png" /><br>
 </div>
-<?php } ?>
-
-
-
-</div>
-
-
-
 <?php 
 $sufffle=str_replace ('Shuffle', 'shuffle', $theme->defaultShuffle);
-
 if($sufffle=='shuffleOff')
 $shuffle=0;
 else
 $shuffle=1;
-
+$admin_url=admin_url('admin-ajax.php?action=spiderVeideoPlayervideoonly');
 ?>
-<input type="hidden" id="color_<?php echo $id;?>" value="<?php echo "#".$theme->ctrlsMainColor ?>" />
-<input type="hidden" id="support_<?php echo $id;?>" value="1" />
-<input type="hidden" id="event_type_<?php echo $id;?>" value="mouseenter" />
-<input type="hidden" id="current_track_<?php echo $id;?>" value="0" />
-<input type="hidden" id="shuffle_<?php echo $id;?>" value="<?php echo $shuffle ?>" />
-<input type="hidden" id="scroll_height_<?php  echo $id?>" value="0" />
-<input type="hidden" id="scroll_height2_<?php echo $id;?>" value="0" />
-<input type="hidden" value="<?php echo $l ?>" id="lib_table_count_<?php  echo $id?>"/>
-<input type="hidden" value="" id="current_lib_table_<?php  echo $id?>"/>
-<input type="hidden" value="0" id="current_playlist_table_<?php echo $id;?>"/>
-<input type="hidden" value="<?php echo $theme->defaultRepeat ?>" id="repeat_<?php  echo $id?>"/>
-<input type="hidden" value="0" id="HD_on_<?php  echo $id?>"/>
-<input type="hidden" value="" id="volumeBar_width_<?php  echo $id?>"/>
-
-
+<input type="hidden" id="color_<?php echo $ident;?>" value="<?php echo "#".$theme->ctrlsMainColor ?>" />
+<input type="hidden" id="support_<?php echo $ident;?>" value="1"/>
+<input type="hidden" id="event_type_<?php echo $ident;?>" value="mouseenter"/>
+<input type="hidden" id="current_track_<?php echo $ident;?>" value="0"/>
+<input type="hidden" id="shuffle_<?php echo $ident;?>" value="<?php echo $shuffle ?>"/>
+<input type="hidden" id="scroll_height_<?php  echo $ident?>" value="0"/>
+<input type="hidden" id="scroll_height2_<?php echo $ident;?>" value="0"/>
+<input type="hidden" value="<?php echo $l ?>" id="lib_table_count_<?php  echo $ident?>"/>
+<input type="hidden" value="" id="current_lib_table_<?php  echo $ident?>"/>
+<input type="hidden" value="0" id="current_playlist_table_<?php echo $ident;?>"/>
+<input type="hidden" value="<?php echo $theme->defaultRepeat ?>" id="repeat_<?php  echo $ident?>"/>
+<input type="hidden" value="0" id="HD_on_<?php  echo $ident?>"/>
+<input type="hidden" value="" id="volumeBar_width_<?php  echo $ident?>"/>
 <script>
-var video_<?php echo $id;?> = jQuery('#videoID_<?php  echo $id?>');
-var paly_<?php echo $id;?> = jQuery('#global_body_<?php echo $id;?> .btnPlay');
-var pause_<?php echo $id;?> = jQuery('#global_body_<?php echo $id;?> .btnPause');
-function embed_url_<?php echo $id;?>(a,b)
+var video_<?php echo $ident;?> = jQuery('#videoID_<?php  echo $ident?>');
+var paly_<?php echo $ident;?> = jQuery('#global_body_<?php echo $ident;?> .btnPlay');
+var pause_<?php echo $ident;?> = jQuery('#global_body_<?php echo $ident;?> .btnPause');
+function embed_url_<?php echo $ident;?>(a,b)
 	{
-	jQuery('#embed_Url_<?php  echo $id?>').html('<iframe allowFullScreen allowTransparency="true" frameborder="0" width="<?php echo $theme->appWidth ?>" height="<?php echo $theme->appHeight ?>" src="'+location.href+'&AlbumId='+a+'&TrackId='+b+'&tmpl=component" type="text/html" ></iframe>')
-	jQuery('#embed_Url_<?php  echo $id?>').focus(); jQuery('#embed_Url_<?php  echo $id?>').select();	
+	jQuery('#embed_Url_<?php  echo $ident?>').html('<iframe allowFullScreen allowTransparency="true" frameborder="0" width="<?php echo $theme->appWidth ?>" height="<?php echo $theme->appHeight ?>" src="<?php echo $admin_url?>&single=1&priority=<?php echo $priority?>&video=<?php echo $ident?>&theme=<?php echo $theme_id?>&AlbumId='+a+'&TrackId='+b+'" type="text/html" ></iframe>')
+	jQuery('#embed_Url_<?php  echo $ident?>').focus(); jQuery('#embed_Url_<?php  echo $ident?>').select();	
 	}
-jQuery('#global_body_<?php echo $id;?> .share_<?php echo $id;?>, #global_body_<?php echo $id;?> #share_buttons_<?php echo $id;?>').on('mouseenter',function(){
-left=jQuery('#global_body_<?php echo $id;?> .share_<?php echo $id;?>').position().left
-if(parseInt(jQuery('#global_body_<?php echo $id;?> #kukla_<?php  echo $id?>').css('width'))==0) 
-jQuery('#global_body_<?php echo $id;?> #share_buttons_<?php echo $id;?>').css('left',left)
+jQuery('#global_body_<?php echo $ident;?> .share_<?php echo $ident;?>, #global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').on('mouseenter',function(){
+left=jQuery('#global_body_<?php echo $ident;?> .share_<?php echo $ident;?>').position().left
+if(parseInt(jQuery('#global_body_<?php echo $ident;?> #play_list_<?php  echo $ident?>').css('width'))==0) 
+jQuery('#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').css('left',left)
 else
-jQuery('#global_body_<?php echo $id;?> #share_buttons_<?php echo $id;?>').css('left',left+<?php echo $theme->playlistWidth ?>)
-jQuery('#global_body_<?php echo $id;?> #share_buttons_<?php echo $id;?>').css('display','')
-
-
-
+ <?php if ($theme->playlistPos==1){ ?>
+jQuery('#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').css('left',left+<?php echo $theme->playlistWidth ?>)
+<?php } else {?>
+jQuery('#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').css('left',left)
+<?php }?>
+jQuery('#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').css('display','')
 })
-jQuery('#global_body_<?php echo $id;?> .share_<?php echo $id;?>,#global_body_<?php echo $id;?> #share_buttons_<?php echo $id;?>').on('mouseleave',function(){
-jQuery('#global_body_<?php echo $id;?> #share_buttons_<?php echo $id;?>').css('display','none')
+jQuery('#global_body_<?php echo $ident;?> .share_<?php echo $ident;?>,#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').on('mouseleave',function(){
+jQuery('#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').css('display','none')
 })
 	if(<?php echo $theme->autoPlay ?>==1)
 		{
-		setTimeout(function(){jQuery('#thumb_0_<?php echo $id?>').click()},500);
+		setTimeout(function(){jQuery('#thumb_0_<?php echo $ident?>').click()},500);
+		setTimeout(function(){video_<?php echo $ident;?>[0].click()},500);
 		}
 	<?php if($sufffle=='shuffleOff') {?>
-		if(jQuery('#global_body_<?php echo $id;?> .shuffle_<?php  echo $id?>')[0])
+		if(jQuery('#global_body_<?php echo $ident;?> .shuffle_<?php  echo $ident?>')[0])
 			{
-				jQuery('#global_body_<?php echo $id;?> .shuffle_<?php  echo $id?>')[0].style.display="none";
-				jQuery('#global_body_<?php echo $id;?> .shuffle_<?php  echo $id?>')[1].style.display="";
+				jQuery('#global_body_<?php echo $ident;?> .shuffle_<?php  echo $ident?>')[0].style.display="none";
+				jQuery('#global_body_<?php echo $ident;?> .shuffle_<?php  echo $ident?>')[1].style.display="";
 			}
 		<?php
 		}
 		else
 		{
 		?>
-	if(jQuery('#global_body_<?php echo $id;?> .shuffle_<?php  echo $id?>')[0])
+	if(jQuery('#global_body_<?php echo $ident;?> .shuffle_<?php  echo $ident?>')[0])
 		{
-			jQuery('#global_body_<?php echo $id;?> .shuffle_<?php  echo $id?>')[1].style.display="none";
-			jQuery('#global_body_<?php echo $id;?> .shuffle_<?php  echo $id?>')[0].style.display="";
+			jQuery('#global_body_<?php echo $ident;?> .shuffle_<?php  echo $ident?>')[1].style.display="none";
+			jQuery('#global_body_<?php echo $ident;?> .shuffle_<?php  echo $ident?>')[0].style.display="";
 		}
 		<?php } ?>
-jQuery('#global_body_<?php echo $id;?> .fullScreen_<?php echo $id;?>').on('click',function(){
-if(video_<?php echo $id;?>[0].mozRequestFullScreen)
-video_<?php echo $id;?>[0].mozRequestFullScreen();
-if(video_<?php echo $id;?>[0].webkitEnterFullscreen)
-video_<?php echo $id;?>[0].webkitEnterFullscreen()
+jQuery('#global_body_<?php echo $ident;?> .fullScreen_<?php echo $ident;?>').on('click',function(){
+if(video_<?php echo $ident;?>[0].mozRequestFullScreen)
+video_<?php echo $ident;?>[0].mozRequestFullScreen();
+if(video_<?php echo $ident;?>[0].webkitEnterFullscreen)
+video_<?php echo $ident;?>[0].webkitEnterFullscreen()
 })
-jQuery('#global_body_<?php echo $id;?> .stop').on('click',function(){
-video_<?php echo $id;?>[0].currentTime=0;
-video_<?php echo $id;?>[0].pause();
-paly_<?php echo $id;?>.css('display',"block");
-pause_<?php echo $id;?>.css('display',"none");
+jQuery('#global_body_<?php echo $ident;?> .stop').on('click',function(){
+video_<?php echo $ident;?>[0].currentTime=0;
+video_<?php echo $ident;?>[0].pause();
+paly_<?php echo $ident;?>.css('display',"");
+pause_<?php echo $ident;?>.css('display',"none");
 })
 <?php if($theme->defaultRepeat=='repeatOff'){ ?>
-if(jQuery('#global_body_<?php echo $id;?> .repeat_<?php  echo $id?>')[0])
+if(jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[0])
 {
-jQuery('#global_body_<?php echo $id;?> .repeat_<?php  echo $id?>')[0].style.display="none";
-jQuery('#global_body_<?php echo $id;?> .repeat_<?php  echo $id?>')[1].style.display="";
-jQuery('#global_body_<?php echo $id;?> .repeat_<?php  echo $id?>')[2].style.display="none";
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[0].style.display="none";
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[1].style.display="";
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[2].style.display="none";
 }
 <?php }?>
 <?php if($theme->defaultRepeat=='repeatOne'){ ?>
-if(jQuery('#global_body_<?php echo $id;?> .repeat_<?php  echo $id?>')[0])
+if(jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[0])
 {
-jQuery('#global_body_<?php echo $id;?> .repeat_<?php  echo $id?>')[0].style.display="none";
-jQuery('#global_body_<?php echo $id;?> .repeat_<?php  echo $id?>')[1].style.display="none";
-jQuery('#global_body_<?php echo $id;?> .repeat_<?php  echo $id?>')[2].style.display="";
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[0].style.display="none";
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[1].style.display="none";
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[2].style.display="";
 }
 <?php }?>
 <?php if($theme->defaultRepeat=='repeatAll'){ ?>
-if(jQuery('.repeat_<?php  echo $id?>')[0])
+if(jQuery('.repeat_<?php  echo $ident?>')[0])
 {
-jQuery('#global_body_<?php echo $id;?> .repeat_<?php  echo $id?>')[0].style.display="";
-jQuery('#global_body_<?php echo $id;?> .repeat_<?php  echo $id?>')[1].style.display="none";
-jQuery('#global_body_<?php echo $id;?> .repeat_<?php  echo $id?>')[2].style.display="none";
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[0].style.display="";
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[1].style.display="none";
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[2].style.display="none";
 }
 <?php }?>
-jQuery('.repeat_<?php  echo $id?>').on('click',function(){
-repeat_<?php  echo $id?>=jQuery('#repeat_<?php  echo $id?>').val();
-switch (repeat_<?php  echo $id?>)
+jQuery('.repeat_<?php  echo $ident?>').on('click',function(){
+repeat_<?php  echo $ident?>=jQuery('#repeat_<?php  echo $ident?>').val();
+switch (repeat_<?php  echo $ident?>)
 {
 case 'repeatOff':
-jQuery('#repeat_<?php  echo $id?>').val('repeatOne');
-jQuery('.repeat_<?php  echo $id?>')[0].style.display="none";
-jQuery('.repeat_<?php  echo $id?>')[1].style.display="none";
-jQuery('.repeat_<?php  echo $id?>')[2].style.display="";
+jQuery('#repeat_<?php  echo $ident?>').val('repeatOne');
+jQuery('.repeat_<?php  echo $ident?>')[0].style.display="none";
+jQuery('.repeat_<?php  echo $ident?>')[1].style.display="none";
+jQuery('.repeat_<?php  echo $ident?>')[2].style.display="";
 break;
 case 'repeatOne':
-jQuery('#repeat_<?php  echo $id?>').val('repeatAll');
-jQuery('.repeat_<?php  echo $id?>')[0].style.display="";
-jQuery('.repeat_<?php  echo $id?>')[1].style.display="none";
-jQuery('.repeat_<?php  echo $id?>')[2].style.display="none";
+jQuery('#repeat_<?php  echo $ident?>').val('repeatAll');
+jQuery('.repeat_<?php  echo $ident?>')[0].style.display="";
+jQuery('.repeat_<?php  echo $ident?>')[1].style.display="none";
+jQuery('.repeat_<?php  echo $ident?>')[2].style.display="none";
 break;
 case 'repeatAll':
-jQuery('#repeat_<?php  echo $id?>').val('repeatOff');
-jQuery('.repeat_<?php  echo $id?>')[0].style.display="none";
-jQuery('.repeat_<?php  echo $id?>')[1].style.display="";
-jQuery('.repeat_<?php  echo $id?>')[2].style.display="none";
+jQuery('#repeat_<?php  echo $ident?>').val('repeatOff');
+jQuery('.repeat_<?php  echo $ident?>')[0].style.display="none";
+jQuery('.repeat_<?php  echo $ident?>')[1].style.display="";
+jQuery('.repeat_<?php  echo $ident?>')[2].style.display="none";
 break;
 }
 })
-jQuery('#global_body_<?php echo $id;?> #voulume_img_<?php echo $id;?>').on('click',function(){
-if(jQuery('#global_body_<?php echo $id;?> .volume_<?php echo $id;?>')[0].style.width!='0%')
+jQuery('#global_body_<?php echo $ident;?> #voulume_img_<?php echo $ident;?>').on('click',function(){
+if(jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>')[0].style.width!='0%')
 {
-video_<?php echo $id;?>[0].volume=0;
-jQuery('#global_body_<?php echo $id;?> #volumeBar_width_<?php  echo $id?>').val(jQuery('#global_body_<?php echo $id;?> .volume_<?php echo $id;?>')[0].style.width)
-jQuery('#global_body_<?php echo $id;?> .volume_<?php echo $id;?>').css('width','0%')
+video_<?php echo $ident;?>[0].volume=0;
+jQuery('#global_body_<?php echo $ident;?> #volumeBar_width_<?php  echo $ident?>').val(jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>')[0].style.width)
+jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width','0%')
 }
 else
 {
-video_<?php echo $id;?>[0].volume=parseInt(jQuery('#global_body_<?php echo $id;?> #volumeBar_width_<?php  echo $id?>').val())/100;
-jQuery('#global_body_<?php echo $id;?> .volume_<?php echo $id;?>').css('width',jQuery('#global_body_<?php echo $id;?> #volumeBar_width_<?php  echo $id?>').val())
+video_<?php echo $ident;?>[0].volume=parseInt(jQuery('#global_body_<?php echo $ident;?> #volumeBar_width_<?php  echo $ident?>').val())/100;
+jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width',jQuery('#global_body_<?php echo $ident;?> #volumeBar_width_<?php  echo $ident?>').val())
 }
 })
-jQuery('.hd_<?php echo $id;?>').on('click',function(){
-current_time_<?php  echo $id?>=video_<?php echo $id;?>[0].currentTime;
-HD_on_<?php  echo $id?>=jQuery('#HD_on_<?php  echo $id?>').val();
-current_playlist_table_<?php echo $id;?>=jQuery('#current_playlist_table_<?php echo $id;?>').val();
-current_track_<?php echo $id;?>=jQuery('#current_track_<?php echo $id;?>').val();
-
-
-
-if(jQuery('#track_list_<?php  echo $id?>_'+current_playlist_table_<?php echo $id;?>).find('#urlHD_'+current_track_<?php echo $id?>+'_'+<?php echo $id?>).val() && HD_on_<?php  echo $id?>==0)
+jQuery('.hd_<?php echo $ident;?>').on('click',function(){
+current_time_<?php  echo $ident?>=video_<?php echo $ident;?>[0].currentTime;
+HD_on_<?php  echo $ident?>=jQuery('#HD_on_<?php  echo $ident?>').val();
+current_playlist_table_<?php echo $ident;?>=jQuery('#current_playlist_table_<?php echo $ident;?>').val();
+current_track_<?php echo $ident;?>=jQuery('#current_track_<?php echo $ident;?>').val();
+if(jQuery('#track_list_<?php  echo $ident?>_'+current_playlist_table_<?php echo $ident;?>).find('#urlHD_'+current_track_<?php echo $ident?>+'_'+<?php echo $ident?>).val() && HD_on_<?php  echo $ident?>==0)
 {
-document.getElementById('videoID_<?php  echo $id?>').src=jQuery('#track_list_<?php  echo $id?>_'+current_playlist_table_<?php  echo $id?>).find('#urlHD_'+current_track_<?php echo $id?>+'_'+<?php echo $id?>).val();
-play_<?php  echo $id?>();
-setTimeout('video_<?php echo $id;?>[0].currentTime=current_time_<?php echo $id?>',500)
-jQuery('#HD_on_<?php  echo $id?>').val(1);
+document.getElementById('videoID_<?php  echo $ident?>').src=jQuery('#track_list_<?php  echo $ident?>_'+current_playlist_table_<?php  echo $ident?>).find('#urlHD_'+current_track_<?php echo $ident?>+'_'+<?php echo $ident?>).val();
+play_<?php  echo $ident?>();
+setTimeout('video_<?php echo $ident;?>[0].currentTime=current_time_<?php echo $ident?>',500)
+jQuery('#HD_on_<?php  echo $ident?>').val(1);
 }
-if(jQuery('#track_list_<?php  echo $id?>_'+current_playlist_table_<?php  echo $id?>).find('#urlHD_'+current_track_<?php echo $id?>+'_'+<?php echo $id?>).val() && HD_on_<?php echo $id?>==1)
+if(jQuery('#track_list_<?php  echo $ident?>_'+current_playlist_table_<?php  echo $ident?>).find('#urlHD_'+current_track_<?php echo $ident?>+'_'+<?php echo $ident?>).val() && HD_on_<?php echo $ident?>==1)
 {
-jQuery('#track_list_<?php  echo $id?>_'+current_playlist_table_<?php  echo $id?>).find('#thumb_'+current_track_<?php echo $id?>+'_'+<?php echo $id?>).click();
-setTimeout('video_<?php echo $id;?>[0].currentTime=current_time_<?php echo $id?>',500)
-jQuery('#HD_on_<?php  echo $id?>').val(0);
+jQuery('#track_list_<?php  echo $ident?>_'+current_playlist_table_<?php  echo $ident?>).find('#thumb_'+current_track_<?php echo $ident?>+'_'+<?php echo $ident?>).click();
+setTimeout('video_<?php echo $ident;?>[0].currentTime=current_time_<?php echo $ident?>',500)
+jQuery('#HD_on_<?php  echo $ident?>').val(0);
 }
 })
-function support_<?php echo $id;?>(i,j)
+function support_<?php echo $ident;?>(i,j)
 {
-if(jQuery('#track_list_<?php  echo $id?>_'+i).find('#vid_type_'+j+'_<?php echo $id?>').val()!='http')
+if(jQuery('#track_list_<?php  echo $ident?>_'+i).find('#vid_type_'+j+'_<?php echo $ident?>').val()!='http')
 {
-jQuery('#not_supported_<?php  echo $id?>').css('display','');
-jQuery('#support_<?php echo $id;?>').val(0);
+jQuery('#not_supported_<?php  echo $ident?>').css('display','');
+jQuery('#support_<?php echo $ident;?>').val(0);
 }
 else
 {
-jQuery('#not_supported_<?php  echo $id?>').css('display','none');
-jQuery('#support_<?php echo $id;?>').val(1);
+jQuery('#not_supported_<?php  echo $ident?>').css('display','none');
+jQuery('#support_<?php echo $ident;?>').val(1);
 }
 }
-jQuery('.play_<?php echo $id;?>').on('click',function(){video_<?php echo $id;?>[0].play();})
-jQuery('.pause_<?php echo $id;?>').on('click',function(){video_<?php echo $id;?>[0].pause();})
-function vid_select_<?php echo $id?>(x)
+jQuery('.play_<?php echo $ident;?>').on('click',function(){video_<?php echo $ident;?>[0].play();})
+jQuery('.pause_<?php echo $ident;?>').on('click',function(){video_<?php echo $ident;?>[0].pause();})
+function vid_select_<?php echo $ident?>(x)
 {
-jQuery("div.vid_thumb_<?php echo $id?>").each(function(){
+jQuery("div.vid_thumb_<?php echo $ident?>").each(function(){
 if(jQuery(this).find("img"))
 {
 jQuery(this).find("img").hide(20);
@@ -1085,7 +808,7 @@ jQuery(this).find("img").hide(20);
 	}	
 		jQuery(this).css('background','none');
   }) 
-  jQuery("div.vid_thumb_<?php echo $id?>").each(function(){
+  jQuery("div.vid_thumb_<?php echo $ident?>").each(function(){
         jQuery(this).mouseenter(function() {
 if(jQuery(this).find("img"))
 jQuery(this).find("img").slideDown(100);
@@ -1106,9 +829,9 @@ jQuery(x).find("img").show(10);
 jQuery(x).css('background','rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>)')
 jQuery(x).css('color','#<?php echo $theme->textSelectedColor  ?>')
 }
-function vid_select2_<?php echo $id?>(x)
+function vid_select2_<?php echo $ident?>(x)
 {
-jQuery("p.vid_title_<?php echo $id?>").each(function(){
+jQuery("p.vid_title_<?php echo $ident?>").each(function(){
 		this.onmouseover=function(){this.style.color='#'+'<?php echo $theme->textHoverColor?>' ;this.style.background='rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2)) ?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2)) ?>,0.4)'}
 		this.onmouseout=function(){this.style.color='<?php echo '#'.$theme->textColor ?>';this.style.background=" none"}
 		jQuery(this).css('background','none');
@@ -1119,34 +842,34 @@ jQuery(x).css('color','#<?php echo $theme->textSelectedColor  ?>')
 x.onmouseover=null;  
 x.onmouseout=null;
 }
-function playlist_select_<?php echo $id;?>(x)
+function playlist_select_<?php echo $ident;?>(x)
 {
-jQuery("#global_body_<?php echo $id;?> td.playlist_td_<?php echo $id;?>").each(function(){
+jQuery("#global_body_<?php echo $ident;?> td.playlist_td_<?php echo $ident;?>").each(function(){
 		jQuery(this).css('background','none');
 		jQuery(this).css('color','#<?php echo $theme->textColor  ?>');
 		this.onmouseover=function(){this.style.color='#'+'<?php echo $theme->textHoverColor?>' ;this.style.background='rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2)) ?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2)) ?>,0.4)'}
 		this.onmouseout=function(){this.style.color='<?php echo '#'.$theme->textColor ?>';this.style.background=" none"}		
 		})
-jQuery('#playlist_'+x+'_<?php  echo $id?>').css('background','rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>)')
-jQuery('#playlist_'+x+'_<?php  echo $id?>').css('color','#<?php echo $theme->textSelectedColor  ?>')
-jQuery('#playlist_'+x+'_<?php  echo $id?>')[0].onmouseover=null
-jQuery('#playlist_'+x+'_<?php  echo $id?>')[0].onmouseout=null
+jQuery('#playlist_'+x+'_<?php  echo $ident?>').css('background','rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>)')
+jQuery('#playlist_'+x+'_<?php  echo $ident?>').css('color','#<?php echo $theme->textSelectedColor  ?>')
+jQuery('#playlist_'+x+'_<?php  echo $ident?>')[0].onmouseover=null
+jQuery('#playlist_'+x+'_<?php  echo $ident?>')[0].onmouseout=null
 }
-jQuery('.shuffle_<?php  echo $id?>').on('click', function() {
-if(jQuery('#shuffle_<?php  echo $id?>').val()==0)
+jQuery('.shuffle_<?php  echo $ident?>').on('click', function() {
+if(jQuery('#shuffle_<?php  echo $ident?>').val()==0)
 {
-jQuery('#shuffle_<?php  echo $id?>').val(1);
-jQuery('.shuffle_<?php  echo $id?>')[1].style.display="none";
-jQuery('.shuffle_<?php  echo $id?>')[0].style.display="";
+jQuery('#shuffle_<?php  echo $ident?>').val(1);
+jQuery('.shuffle_<?php  echo $ident?>')[1].style.display="none";
+jQuery('.shuffle_<?php  echo $ident?>')[0].style.display="";
 }
 else
 {
-jQuery('#shuffle_<?php  echo $id?>').val(0);
-jQuery('.shuffle_<?php  echo $id?>')[0].style.display="none";
-jQuery('.shuffle_<?php  echo $id?>')[1].style.display="";
+jQuery('#shuffle_<?php  echo $ident?>').val(0);
+jQuery('.shuffle_<?php  echo $ident?>')[0].style.display="none";
+jQuery('.shuffle_<?php  echo $ident?>')[1].style.display="";
 }
 });
-jQuery("div.vid_thumb_<?php echo $id?>").each(function(){
+jQuery("div.vid_thumb_<?php echo $ident?>").each(function(){
         jQuery(this).mouseenter(function() {
 if(jQuery(this).find("img"))
 jQuery(this).find("img").slideToggle(100);
@@ -1160,340 +883,341 @@ jQuery(this).css('background','rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgHover
 		jQuery(this).css('color','#<?php echo $theme->textColor  ?>')
   });
   })
-function timeUpdate_<?php  echo $id?>()
+function timeUpdate_<?php  echo $ident?>()
 {
-if(parseInt(document.getElementById('videoID_<?php  echo $id?>').currentTime/60)<10 && parseInt(document.getElementById('videoID_<?php  echo $id?>').currentTime % 60<10))
-    document.getElementById('time_<?php  echo $id?>').innerHTML = '0'+parseInt(document.getElementById('videoID_<?php  echo $id?>').currentTime/60)+':0'+parseInt(document.getElementById('videoID_<?php  echo $id?>').currentTime % 60);
-if(parseInt(document.getElementById('videoID_<?php  echo $id?>').currentTime/60)<10)
-    document.getElementById('time_<?php  echo $id?>').innerHTML = '0'+parseInt(document.getElementById('videoID_<?php  echo $id?>').currentTime/60)+':'+parseInt(document.getElementById('videoID_<?php  echo $id?>').currentTime % 60);
-	if(parseInt(document.getElementById('videoID_<?php  echo $id?>').currentTime % 60)<10)
-    document.getElementById('time_<?php  echo $id?>').innerHTML = '0'+parseInt(document.getElementById('videoID_<?php  echo $id?>').currentTime/60)+':0'+parseInt(document.getElementById('videoID_<?php  echo $id?>').currentTime % 60);	
+if(parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime/60)<10 && parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime % 60<10))
+    document.getElementById('time_<?php  echo $ident?>').innerHTML = '0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime/60)+':0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime % 60);
+if(parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime/60)<10)
+    document.getElementById('time_<?php  echo $ident?>').innerHTML = '0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime/60)+':'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime % 60);
+	if(parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime % 60)<10)
+    document.getElementById('time_<?php  echo $ident?>').innerHTML = '0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime/60)+':0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime % 60);	
 }
-function durationChange_<?php  echo $id?>()
+function durationChange_<?php  echo $ident?>()
 {
-if(parseInt(document.getElementById('videoID_<?php  echo $id?>').duration/60)<10 && parseInt(document.getElementById('videoID_<?php  echo $id?>').duration % 60<10))
-    document.getElementById('duration_<?php  echo $id?>').innerHTML = '0'+parseInt(document.getElementById('videoID_<?php  echo $id?>').duration/60)+':0'+parseInt(document.getElementById('videoID_<?php  echo $id?>').duration % 60);
-	if(parseInt(document.getElementById('videoID_<?php  echo $id?>').duration/60)<10)
-    document.getElementById('duration_<?php  echo $id?>').innerHTML = '0'+parseInt(document.getElementById('videoID_<?php  echo $id?>').duration/60)+':'+parseInt(document.getElementById('videoID_<?php  echo $id?>').duration % 60);
-		if(parseInt(document.getElementById('videoID_<?php  echo $id?>').duration % 60)<10)
-    document.getElementById('duration_<?php  echo $id?>').innerHTML = parseInt(document.getElementById('videoID_<?php  echo $id?>').duration/60)+':0'+parseInt(document.getElementById('videoID_<?php  echo $id?>').duration % 60);
+if(parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration/60)<10 && parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration % 60<10))
+    document.getElementById('duration_<?php  echo $ident?>').innerHTML = '0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration/60)+':0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration % 60);
+	if(parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration/60)<10)
+    document.getElementById('duration_<?php  echo $ident?>').innerHTML = '0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration/60)+':'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration % 60);
+		if(parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration % 60)<10)
+    document.getElementById('duration_<?php  echo $ident?>').innerHTML = parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration/60)+':0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration % 60);
 	}
-function scrollBottom_<?php echo $id;?>(){
-current_playlist_table_<?php echo $id;?>=document.getElementById('current_playlist_table_<?php echo $id;?>').value;
-if(document.getElementById('scroll_div_'+current_playlist_table_<?php  echo $id?>+'_<?php echo $id?>').offsetHeight+parseInt(document.getElementById("scroll_div_"+current_playlist_table_<?php  echo $id?>+'_<?php echo $id?>').style.top)+55<=document.getElementById('global_body_<?php  echo $id?>').offsetHeight)
+function scrollBottom_<?php echo $ident;?>(){
+current_playlist_table_<?php echo $ident;?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+if(document.getElementById('scroll_div_'+current_playlist_table_<?php  echo $ident?>+'_<?php echo $ident?>').offsetHeight+parseInt(document.getElementById("scroll_div_"+current_playlist_table_<?php  echo $ident?>+'_<?php echo $ident?>').style.top)+55<=document.getElementById('global_body_<?php  echo $ident?>').offsetHeight)
 return false;
-document.getElementById('scroll_height_<?php  echo $id?>').value=parseInt(document.getElementById('scroll_height_<?php  echo $id?>').value)+5
-document.getElementById("scroll_div_"+current_playlist_table_<?php echo $id;?>+'_<?php echo $id?>').style.top="-"+document.getElementById('scroll_height_<?php  echo $id?>').value+"px";
+document.getElementById('scroll_height_<?php  echo $ident?>').value=parseInt(document.getElementById('scroll_height_<?php  echo $ident?>').value)+5
+document.getElementById("scroll_div_"+current_playlist_table_<?php echo $ident;?>+'_<?php echo $ident?>').style.top="-"+document.getElementById('scroll_height_<?php  echo $ident?>').value+"px";
 };
-function scrollTop_<?php echo $id;?>(){
-current_playlist_table_<?php  echo $id?>=document.getElementById('current_playlist_table_<?php echo $id;?>').value;
-if(document.getElementById('scroll_height_<?php  echo $id?>').value<=0)
+function scrollTop_<?php echo $ident;?>(){
+current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+if(document.getElementById('scroll_height_<?php  echo $ident?>').value<=0)
 return false;
-document.getElementById('scroll_height_<?php  echo $id?>').value=parseInt(document.getElementById('scroll_height_<?php  echo $id?>').value)-5
-document.getElementById("scroll_div_"+current_playlist_table_<?php  echo $id?>+'_<?php echo $id?>').style.top="-"+document.getElementById('scroll_height_<?php  echo $id?>').value+"px";
+document.getElementById('scroll_height_<?php  echo $ident?>').value=parseInt(document.getElementById('scroll_height_<?php  echo $ident?>').value)-5
+document.getElementById("scroll_div_"+current_playlist_table_<?php  echo $ident?>+'_<?php echo $ident?>').style.top="-"+document.getElementById('scroll_height_<?php  echo $ident?>').value+"px";
 };
-function scrollBottom2_<?php echo $id;?>(){
-current_playlist_table_<?php  echo $id?>=document.getElementById('current_playlist_table_<?php echo $id;?>').value;
-if(!current_playlist_table_<?php  echo $id?>)
+function scrollBottom2_<?php echo $ident;?>(){
+current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+if(!current_playlist_table_<?php  echo $ident?>)
 {
-current_playlist_table_<?php  echo $id?>=0;
+current_playlist_table_<?php  echo $ident?>=0;
 }
-if(document.getElementById('scroll_div2_'+current_playlist_table_<?php  echo $id?>+'_<?php  echo $id?>').offsetHeight+parseInt(document.getElementById("scroll_div2_"+current_playlist_table_<?php  echo $id?>+"_<?php  echo $id?>").style.top)+150<=document.getElementById('global_body_<?php  echo $id?>').offsetHeight)
+if(document.getElementById('scroll_div2_'+current_playlist_table_<?php  echo $ident?>+'_<?php  echo $ident?>').offsetHeight+parseInt(document.getElementById("scroll_div2_"+current_playlist_table_<?php  echo $ident?>+"_<?php  echo $ident?>").style.top)+150<=document.getElementById('global_body_<?php  echo $ident?>').offsetHeight)
 return false;
-document.getElementById('scroll_height2_<?php echo $id;?>').value=parseInt(document.getElementById('scroll_height2_<?php echo $id;?>').value)+5
-document.getElementById("scroll_div2_"+current_playlist_table_<?php  echo $id?>+"_<?php  echo $id?>").style.top="-"+document.getElementById('scroll_height2_<?php echo $id;?>').value+"px";
+document.getElementById('scroll_height2_<?php echo $ident;?>').value=parseInt(document.getElementById('scroll_height2_<?php echo $ident;?>').value)+5
+document.getElementById("scroll_div2_"+current_playlist_table_<?php  echo $ident?>+"_<?php  echo $ident?>").style.top="-"+document.getElementById('scroll_height2_<?php echo $ident;?>').value+"px";
 };
-function scrollTop2_<?php echo $id;?>(){
-current_playlist_table_<?php  echo $id?>=document.getElementById('current_playlist_table_<?php echo $id;?>').value;
-if(document.getElementById('scroll_height2_<?php echo $id;?>').value<=0)
+function scrollTop2_<?php echo $ident;?>(){
+current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+if(document.getElementById('scroll_height2_<?php echo $ident;?>').value<=0)
 return false;
-document.getElementById('scroll_height2_<?php echo $id;?>').value=parseInt(document.getElementById('scroll_height2_<?php echo $id;?>').value)-5
-document.getElementById("scroll_div2_"+current_playlist_table_<?php  echo $id?>+"_<?php  echo $id?>").style.top="-"+document.getElementById('scroll_height2_<?php echo $id;?>').value+"px";
+document.getElementById('scroll_height2_<?php echo $ident;?>').value=parseInt(document.getElementById('scroll_height2_<?php echo $ident;?>').value)-5
+document.getElementById("scroll_div2_"+current_playlist_table_<?php  echo $ident?>+"_<?php  echo $ident?>").style.top="-"+document.getElementById('scroll_height2_<?php echo $ident;?>').value+"px";
 };
-function openPlaylist_<?php  echo $id?>(i,j)
+function openPlaylist_<?php  echo $ident?>(i,j)
 {
-document.getElementById('scroll_height_<?php  echo $id?>').value=0;
-lib_table_count_<?php  echo $id?>=document.getElementById('lib_table_count_<?php  echo $id?>').value;
-for(lib_table=0;lib_table<lib_table_count_<?php  echo $id?>;lib_table++)
+document.getElementById('scroll_height_<?php  echo $ident?>').value=0;
+lib_table_count_<?php  echo $ident?>=document.getElementById('lib_table_count_<?php  echo $ident?>').value;
+for(lib_table=0;lib_table<lib_table_count_<?php  echo $ident?>;lib_table++)
 {
-document.getElementById('lib_table_'+lib_table+'_<?php  echo $id?>').style.display="none";
+document.getElementById('lib_table_'+lib_table+'_<?php  echo $ident?>').style.display="none";
 }
-jQuery("#playlist_table_"+i+"_<?php  echo $id?>").fadeIn(700);
-document.getElementById('current_lib_table_<?php  echo $id?>').value=j;
-document.getElementById('current_playlist_table_<?php echo $id;?>').value=i;
-document.getElementById('tracklist_down_<?php  echo $id?>').style.display="" ;
-document.getElementById('tracklist_up_<?php  echo $id?>').style.display="";
-document.getElementById('button29_<?php  echo $id?>').style.display="block";
-document.getElementById('button27_<?php  echo $id?>').onclick=function(){nextPlaylist_<?php echo $id;?>()};
-document.getElementById('button28_<?php  echo $id?>').onclick=function(){prevPlaylist_<?php echo $id;?>()};
+jQuery("#playlist_table_"+i+"_<?php  echo $ident?>").fadeIn(700);
+document.getElementById('current_lib_table_<?php  echo $ident?>').value=j;
+document.getElementById('current_playlist_table_<?php echo $ident;?>').value=i;
+document.getElementById('tracklist_down_<?php  echo $ident?>').style.display="" ;
+document.getElementById('tracklist_up_<?php  echo $ident?>').style.display="";
+document.getElementById('button29_<?php  echo $ident?>').style.display="block";
+document.getElementById('button27_<?php  echo $ident?>').onclick=function(){nextPlaylist_<?php echo $ident;?>()};
+document.getElementById('button28_<?php  echo $ident?>').onclick=function(){prevPlaylist_<?php echo $ident;?>()};
 }
-function nextPlaylist_<?php echo $id;?>()
+function nextPlaylist_<?php echo $ident;?>()
 {
-document.getElementById('scroll_height_<?php  echo $id?>').value=0;
-lib_table_count_<?php  echo $id?>=document.getElementById('lib_table_count_<?php  echo $id?>').value;
-for(lib_table=0;lib_table<lib_table_count_<?php  echo $id?>;lib_table++)
+document.getElementById('scroll_height_<?php  echo $ident?>').value=0;
+lib_table_count_<?php  echo $ident?>=document.getElementById('lib_table_count_<?php  echo $ident?>').value;
+for(lib_table=0;lib_table<lib_table_count_<?php  echo $ident?>;lib_table++)
 {
-document.getElementById('lib_table_'+lib_table+'_<?php  echo $id?>').style.display="none";
+document.getElementById('lib_table_'+lib_table+'_<?php  echo $ident?>').style.display="none";
 }
-current_lib_table_<?php  echo $id?>=document.getElementById('current_lib_table_<?php  echo $id?>').value;
-next_playlist_table_<?php  echo $id?>=parseInt(document.getElementById('current_playlist_table_<?php echo $id;?>').value)+1;
-current_playlist_table_<?php  echo $id?>=parseInt(document.getElementById('current_playlist_table_<?php echo $id;?>').value);
-if(next_playlist_table_<?php  echo $id?>><?php echo count($playlist_array)-2 ?>)
+current_lib_table_<?php  echo $ident?>=document.getElementById('current_lib_table_<?php  echo $ident?>').value;
+next_playlist_table_<?php  echo $ident?>=parseInt(document.getElementById('current_playlist_table_<?php echo $ident;?>').value)+1;
+current_playlist_table_<?php  echo $ident?>=parseInt(document.getElementById('current_playlist_table_<?php echo $ident;?>').value);
+if(next_playlist_table_<?php  echo $ident?>><?php echo count($playlist_array)-2 ?>)
 return false;
-jQuery("#playlist_table_"+current_playlist_table_<?php  echo $id?>+"_<?php  echo $id?>").css('display','none');
-jQuery("#playlist_table_"+next_playlist_table_<?php  echo $id?>+"_<?php  echo $id?>").fadeIn(700);
-document.getElementById('current_playlist_table_<?php echo $id;?>').value=next_playlist_table_<?php  echo $id?>;
-document.getElementById('tracklist_down_<?php  echo $id?>').style.display="" ;
-document.getElementById('tracklist_up_<?php  echo $id?>').style.display="";
-document.getElementById('button29_<?php  echo $id?>').style.display="block";
+jQuery("#playlist_table_"+current_playlist_table_<?php  echo $ident?>+"_<?php  echo $ident?>").css('display','none');
+jQuery("#playlist_table_"+next_playlist_table_<?php  echo $ident?>+"_<?php  echo $ident?>").fadeIn(700);
+document.getElementById('current_playlist_table_<?php echo $ident;?>').value=next_playlist_table_<?php  echo $ident?>;
+document.getElementById('tracklist_down_<?php  echo $ident?>').style.display="" ;
+document.getElementById('tracklist_up_<?php  echo $ident?>').style.display="";
+document.getElementById('button29_<?php  echo $ident?>').style.display="block";
 }
-function prevPlaylist_<?php echo $id;?>()
+function prevPlaylist_<?php echo $ident;?>()
 {
-document.getElementById('scroll_height_<?php  echo $id?>').value=0;
-lib_table_count_<?php  echo $id?>=document.getElementById('lib_table_count_<?php  echo $id?>').value;
-for(lib_table=0;lib_table<lib_table_count_<?php  echo $id?>;lib_table++)
+document.getElementById('scroll_height_<?php  echo $ident?>').value=0;
+lib_table_count_<?php  echo $ident?>=document.getElementById('lib_table_count_<?php  echo $ident?>').value;
+for(lib_table=0;lib_table<lib_table_count_<?php  echo $ident?>;lib_table++)
 {
-document.getElementById('lib_table_'+lib_table+'_<?php  echo $id?>').style.display="none";
+document.getElementById('lib_table_'+lib_table+'_<?php  echo $ident?>').style.display="none";
 }
-current_lib_table_<?php  echo $id?>=document.getElementById('current_lib_table_<?php  echo $id?>').value;
-prev_playlist_table_<?php  echo $id?>=parseInt(document.getElementById('current_playlist_table_<?php echo $id;?>').value)-1;
-current_playlist_table_<?php  echo $id?>=parseInt(document.getElementById('current_playlist_table_<?php echo $id;?>').value);
-if(prev_playlist_table_<?php  echo $id?><0)
+current_lib_table_<?php  echo $ident?>=document.getElementById('current_lib_table_<?php  echo $ident?>').value;
+prev_playlist_table_<?php  echo $ident?>=parseInt(document.getElementById('current_playlist_table_<?php echo $ident;?>').value)-1;
+current_playlist_table_<?php  echo $ident?>=parseInt(document.getElementById('current_playlist_table_<?php echo $ident;?>').value);
+if(prev_playlist_table_<?php  echo $ident?><0)
 return false;
-jQuery("#playlist_table_"+current_playlist_table_<?php  echo $id?>+"_<?php  echo $id?>").css('display','none');
-jQuery("#playlist_table_"+prev_playlist_table_<?php  echo $id?>+"_<?php  echo $id?>").fadeIn(700);
-document.getElementById('current_playlist_table_<?php echo $id;?>').value=prev_playlist_table_<?php  echo $id?>;
-document.getElementById('tracklist_down_<?php  echo $id?>').style.display="" ;
-document.getElementById('tracklist_up_<?php  echo $id?>').style.display="";
-document.getElementById('button29_<?php  echo $id?>').style.display="block";
+jQuery("#playlist_table_"+current_playlist_table_<?php  echo $ident?>+"_<?php  echo $ident?>").css('display','none');
+jQuery("#playlist_table_"+prev_playlist_table_<?php  echo $ident?>+"_<?php  echo $ident?>").fadeIn(700);
+document.getElementById('current_playlist_table_<?php echo $ident;?>').value=prev_playlist_table_<?php  echo $ident?>;
+document.getElementById('tracklist_down_<?php  echo $ident?>').style.display="" ;
+document.getElementById('tracklist_up_<?php  echo $ident?>').style.display="";
+document.getElementById('button29_<?php  echo $ident?>').style.display="block";
 }
-function openLibTable_<?php  echo $id?>()
+function openLibTable_<?php  echo $ident?>()
 {
-current_lib_table_<?php  echo $id?>=document.getElementById('current_lib_table_<?php  echo $id?>').value;
-document.getElementById('scroll_height_<?php  echo $id?>').value=0;
-current_playlist_table_<?php  echo $id?>=document.getElementById('current_playlist_table_<?php echo $id;?>').value;
-jQuery("#lib_table_"+current_lib_table_<?php  echo $id?>+"_<?php  echo $id?>").fadeIn(700);
-document.getElementById('playlist_table_'+current_playlist_table_<?php  echo $id?>+'_<?php  echo $id?>').style.display="none";
-document.getElementById('tracklist_down_<?php  echo $id?>').style.display="none" ;
-document.getElementById('tracklist_up_<?php  echo $id?>').style.display="none";
-document.getElementById('button29_<?php  echo $id?>').style.display="none";
-document.getElementById('button27_<?php  echo $id?>').onclick=function(){nextPage_<?php  echo $id?>()};
-document.getElementById('button28_<?php  echo $id?>').onclick=function(){prevPage_<?php  echo $id?>()};
+current_lib_table_<?php  echo $ident?>=document.getElementById('current_lib_table_<?php  echo $ident?>').value;
+document.getElementById('scroll_height_<?php  echo $ident?>').value=0;
+current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+jQuery("#lib_table_"+current_lib_table_<?php  echo $ident?>+"_<?php  echo $ident?>").fadeIn(700);
+document.getElementById('playlist_table_'+current_playlist_table_<?php  echo $ident?>+'_<?php  echo $ident?>').style.display="none";
+document.getElementById('tracklist_down_<?php  echo $ident?>').style.display="none" ;
+document.getElementById('tracklist_up_<?php  echo $ident?>').style.display="none";
+document.getElementById('button29_<?php  echo $ident?>').style.display="none";
+document.getElementById('button27_<?php  echo $ident?>').onclick=function(){nextPage_<?php  echo $ident?>()};
+document.getElementById('button28_<?php  echo $ident?>').onclick=function(){prevPage_<?php  echo $ident?>()};
 }
-var next_page_<?php  echo $id?>=0;
-function nextPage_<?php  echo $id?>()
+var next_page_<?php  echo $ident?>=0;
+function nextPage_<?php  echo $ident?>()
 {
-if(next_page_<?php  echo $id?>==document.getElementById('lib_table_count_<?php  echo $id?>').value-1)
+if(next_page_<?php  echo $ident?>==document.getElementById('lib_table_count_<?php  echo $ident?>').value-1)
 return false;
-next_page_<?php  echo $id?>=next_page_<?php  echo $id?>+1;
-for(g=0; g<document.getElementById('lib_table_count_<?php  echo $id?>').value; g++)
+next_page_<?php  echo $ident?>=next_page_<?php  echo $ident?>+1;
+for(g=0; g<document.getElementById('lib_table_count_<?php  echo $ident?>').value; g++)
 {
-document.getElementById('lib_table_'+g+'_<?php  echo $id?>').style.display="none";
-if(g==next_page_<?php  echo $id?>)
+document.getElementById('lib_table_'+g+'_<?php  echo $ident?>').style.display="none";
+if(g==next_page_<?php  echo $ident?>)
 {
-jQuery("#lib_table_"+g+"_<?php  echo $id?>").fadeIn(900);
+jQuery("#lib_table_"+g+"_<?php  echo $ident?>").fadeIn(900);
 }
 }
 }
-function prevPage_<?php  echo $id?>()
+function prevPage_<?php  echo $ident?>()
 {
-if(next_page_<?php  echo $id?>==0)
+if(next_page_<?php  echo $ident?>==0)
 return false;
-next_page_<?php  echo $id?>=next_page_<?php  echo $id?>-1;
-for(g=0; g<document.getElementById('lib_table_count_<?php  echo $id?>').value; g++)
+next_page_<?php  echo $ident?>=next_page_<?php  echo $ident?>-1;
+for(g=0; g<document.getElementById('lib_table_count_<?php  echo $ident?>').value; g++)
 {
-document.getElementById('lib_table_'+g+'_<?php  echo $id?>').style.display="none";
-if(g==next_page_<?php  echo $id?>)
+document.getElementById('lib_table_'+g+'_<?php  echo $ident?>').style.display="none";
+if(g==next_page_<?php  echo $ident?>)
 {
-jQuery("#lib_table_"+g+"_<?php  echo $id?>").fadeIn(900);
+jQuery("#lib_table_"+g+"_<?php  echo $ident?>").fadeIn(900);
 }
 }
 }
-function playBTN_<?php echo $id;?>()
+function playBTN_<?php echo $ident;?>()
 {
-current_playlist_table_<?php  echo $id?>=document.getElementById('current_playlist_table_<?php echo $id;?>').value;
-track_list_<?php  echo $id?>=document.getElementById('track_list_<?php echo $id;?>').value;
-document.getElementById('track_list_<?php echo $id;?>_'+current_playlist_table_<?php  echo $id?>).style.display="block";
-if(current_playlist_table_<?php  echo $id?>!=track_list_<?php  echo $id?>)
-document.getElementById('track_list_<?php echo $id;?>_'+track_list_<?php  echo $id?>).style.display="none";
-document.getElementById('track_list_<?php echo $id;?>').value=current_playlist_table_<?php  echo $id?>;
-video_<?php echo $id;?>[0].play();
-paly_<?php echo $id;?>.css('display',"none");
-pause_<?php echo $id;?>.css('display',"block");
+current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+track_list_<?php  echo $ident?>=document.getElementById('track_list_<?php echo $ident;?>').value;
+document.getElementById('track_list_<?php echo $ident;?>_'+current_playlist_table_<?php  echo $ident?>).style.display="block";
+if(current_playlist_table_<?php  echo $ident?>!=track_list_<?php  echo $ident?>)
+document.getElementById('track_list_<?php echo $ident;?>_'+track_list_<?php  echo $ident?>).style.display="none";
+document.getElementById('track_list_<?php echo $ident;?>').value=current_playlist_table_<?php  echo $ident?>;
+video_<?php echo $ident;?>[0].play();
+paly_<?php echo $ident;?>.css('display',"none");
+pause_<?php echo $ident;?>.css('display',"");
 }
-function play_<?php echo $id;?>()
+function play_<?php echo $ident;?>()
 {
-video_<?php echo $id;?>[0].play();
-paly_<?php echo $id;?>.css('display',"none");
-pause_<?php echo $id;?>.css('display',"block");
+video_<?php echo $ident;?>[0].play();
+paly_<?php echo $ident;?>.css('display',"none");
+pause_<?php echo $ident;?>.css('display',"");
 }
-jQuery('#global_body_<?php echo $id;?> .btnPlay <?php if($theme->clickOnVid==1) echo ',#videoID_'.$id.'' ?>, #global_body_<?php echo $id;?> .btnPause').on('click', function() {
-   if(video_<?php echo $id;?>[0].paused) {
-      video_<?php echo $id;?>[0].play();
-	 paly_<?php echo $id;?>.css('display',"none");
-	  pause_<?php echo $id;?>.css('display',"block");
+jQuery('#global_body_<?php echo $ident;?> .btnPlay <?php if($theme->clickOnVid==1) echo ',#videoID_'.$ident.'' ?>, #global_body_<?php echo $ident;?> .btnPause').on('click', function() {
+   if(video_<?php echo $ident;?>[0].paused) {
+      video_<?php echo $ident;?>[0].play();
+	 paly_<?php echo $ident;?>.css('display',"none");
+	  pause_<?php echo $ident;?>.css('display',"");
    }
    else {
-      video_<?php echo $id;?>[0].pause();
-	  paly_<?php echo $id;?>.css('display',"block");
-	  pause_<?php echo $id;?>.css('display',"none");  
+      video_<?php echo $ident;?>[0].pause();
+	  paly_<?php echo $ident;?>.css('display',"");
+	  pause_<?php echo $ident;?>.css('display',"none");  
    }
    return false;
 });
-function check_volume_<?php echo $id;?>()
+function check_volume_<?php echo $ident;?>()
 {
-percentage_<?php echo $id;?> = video_<?php echo $id;?>[0].volume * 100;
-jQuery('#global_body_<?php echo $id;?> .volume_<?php echo $id;?>').css('width', percentage_<?php echo $id;?> +'%');
-   document.getElementById("kukla_<?php  echo $id?>").style.width='0px';
-   document.getElementById("kukla_<?php  echo $id?>").style.display='none';
+percentage_<?php echo $ident;?> = video_<?php echo $ident;?>[0].volume * 100;
+jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width', percentage_<?php echo $ident;?> +'%');
+   document.getElementById("play_list_<?php  echo $ident?>").style.width='0px';
+   document.getElementById("play_list_<?php  echo $ident?>").style.display='none';
 }
-window.onload= check_volume_<?php echo $id;?>();
-video_<?php echo $id;?>.on('loadedmetadata', function() {
-   jQuery('.duration_<?php echo $id?>').text(video_<?php echo $id;?>[0].duration);
+window.onload= check_volume_<?php echo $ident;?>();
+video_<?php echo $ident;?>.on('loadedmetadata', function() {
+
+   jQuery('.duration_<?php echo $ident?>').text(video_<?php echo $ident;?>[0].duration);
 });
-video_<?php echo $id;?>.on('timeupdate', function() {
-   var progress_<?php  echo $id?> = jQuery('#global_body_<?php echo $id;?> .progressBar_<?php  echo $id?>');
-   var currentPos_<?php  echo $id?> = video_<?php echo $id;?>[0].currentTime; //Get currenttime
-   var maxduration_<?php  echo $id?> = video_<?php echo $id;?>[0].duration; //Get video duration  
-   var percentage_<?php  echo $id?> = 100 * currentPos_<?php  echo $id?> / maxduration_<?php echo $id;?>; //in %
-   var position_<?php  echo $id?> = (<?php echo $theme->appWidth; ?> * percentage_<?php  echo $id?> / 100)-progress_<?php  echo $id?>.offset().left; 
-   jQuery('#global_body_<?php echo $id;?> .timeBar_<?php  echo $id?>').css('width', percentage_<?php  echo $id?>+'%'); 
+video_<?php echo $ident;?>.on('timeupdate', function() {
+   var progress_<?php  echo $ident?> = jQuery('#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>');
+   var currentPos_<?php  echo $ident?> = video_<?php echo $ident;?>[0].currentTime; //Get currenttime
+   var maxduration_<?php  echo $ident?> = video_<?php echo $ident;?>[0].duration; //Get video duration  
+   var percentage_<?php  echo $ident?> = 100 * currentPos_<?php  echo $ident?> / maxduration_<?php echo $ident;?>; //in %
+   var position_<?php  echo $ident?> = (<?php echo $theme->appWidth; ?> * percentage_<?php  echo $ident?> / 100)-progress_<?php  echo $ident?>.offset().left; 
+   jQuery('#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>').css('width', percentage_<?php  echo $ident?>+'%'); 
 });
-video_<?php echo $id;?>.on('ended',function(){
-  if(jQuery('#repeat_<?php  echo $id?>').val()=="repeatOne") 
+video_<?php echo $ident;?>.on('ended',function(){
+  if(jQuery('#repeat_<?php  echo $ident?>').val()=="repeatOne") 
 	  {
-			video_<?php echo $id;?>[0].currentTime=0;
-			video_<?php echo $id;?>[0].play();
-			paly_<?php echo $id;?>.css('display',"none");
-			pause_<?php echo $id;?>.css('display',"block");  
+			video_<?php echo $ident;?>[0].currentTime=0;
+			video_<?php echo $ident;?>[0].play();
+			paly_<?php echo $ident;?>.css('display',"none");
+			pause_<?php echo $ident;?>.css('display',"");  
 	  }
-  if(jQuery('#repeat_<?php  echo $id?>').val()=="repeatAll") 
+  if(jQuery('#repeat_<?php  echo $ident?>').val()=="repeatAll") 
 	  {
-			jQuery('#global_body_<?php echo $id;?> .playNext_<?php  echo $id?>').click();
+			jQuery('#global_body_<?php echo $ident;?> .playNext_<?php  echo $ident?>').click();
 	  }  
-if(jQuery('#repeat_<?php  echo $id?>').val()=="repeatOff") 
+if(jQuery('#repeat_<?php  echo $ident?>').val()=="repeatOff") 
 	  {
-			if(vid_num_<?php  echo $id?>==video_urls_<?php  echo $id?>.length-1)
+			if(vid_num_<?php  echo $ident?>==video_urls_<?php  echo $ident?>.length-1)
 			{
-			video_<?php echo $id;?>[0].currentTime=0;
-			video_<?php echo $id;?>[0].pause();
-			paly_<?php echo $id;?>.css('display',"block");
-			pause_<?php echo $id;?>.css('display',"none");
+			video_<?php echo $ident;?>[0].currentTime=0;
+			video_<?php echo $ident;?>[0].pause();
+			paly_<?php echo $ident;?>.css('display',"");
+			pause_<?php echo $ident;?>.css('display',"none");
 			}
 		  }
 <?php if($theme->autoNext==1) { ?>
-  if(jQuery('#repeat_<?php  echo $id?>').val()=="repeatOff") 
-  if(vid_num_<?php  echo $id?>==video_urls_<?php  echo $id?>.length-1)
+  if(jQuery('#repeat_<?php  echo $ident?>').val()=="repeatOff") 
+  if(vid_num_<?php  echo $ident?>==video_urls_<?php  echo $ident?>.length-1)
 			{
-			video_<?php echo $id;?>[0].currentTime=0;
-			video_<?php echo $id;?>[0].pause();
-			paly_<?php echo $id;?>.css('display',"block");
-			pause_<?php echo $id;?>.css('display',"none");
+			video_<?php echo $ident;?>[0].currentTime=0;
+			video_<?php echo $ident;?>[0].pause();
+			paly_<?php echo $ident;?>.css('display',"");
+			pause_<?php echo $ident;?>.css('display',"none");
 			}
 	else
 		{	
-	  jQuery('#global_body_<?php echo $id;?> .playNext_<?php echo $id;?>').click();
+	  jQuery('#global_body_<?php echo $ident;?> .playNext_<?php echo $ident;?>').click();
 	   }
    <?php }?>		  
 })
 
-var timeDrag_<?php echo $id;?> = false;   /* Drag status */
-jQuery('#global_body_<?php echo $id;?> .progressBar_<?php  echo $id?>').mousedown(function(e) {
-   timeDrag_<?php echo $id;?> = true;
-   updatebar_<?php  echo $id?>(e.pageX);
+var timeDrag_<?php echo $ident;?> = false;   /* Drag status */
+jQuery('#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>').mousedown(function(e) {
+   timeDrag_<?php echo $ident;?> = true;
+   updatebar_<?php  echo $ident?>(e.pageX);
 });
-jQuery('#global_body_<?php echo $id;?> .progressBar_<?php  echo $id?>').select(function(){
+jQuery('#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>').select(function(){
 })
  jQuery(document).mouseup(function(e) {
-   if(timeDrag_<?php echo $id;?>) {
-      timeDrag_<?php echo $id;?> = false;
-      updatebar_<?php  echo $id?>(e.pageX);
+   if(timeDrag_<?php echo $ident;?>) {
+      timeDrag_<?php echo $ident;?> = false;
+      updatebar_<?php  echo $ident?>(e.pageX);
    }
 });
 jQuery(document).mousemove(function(e) {
-   if(timeDrag_<?php echo $id;?>) {
-      updatebar_<?php  echo $id?>(e.pageX); 
+   if(timeDrag_<?php echo $ident;?>) {
+      updatebar_<?php  echo $ident?>(e.pageX); 
    }
 });
-var updatebar_<?php  echo $id?> = function(x) {
-   var progress_<?php  echo $id?> = jQuery('#global_body_<?php echo $id;?> .progressBar_<?php  echo $id?>');
-   var maxduration_<?php  echo $id?> = video_<?php echo $id;?>[0].duration; //Video duraiton
-   var position_<?php  echo $id?> = x - progress_<?php  echo $id?>.offset().left; //Click pos
-   var percentage_<?php  echo $id?> = 100 * position_<?php  echo $id?> / progress_<?php  echo $id?>.width();
+var updatebar_<?php  echo $ident?> = function(x) {
+   var progress_<?php  echo $ident?> = jQuery('#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>');
+   var maxduration_<?php  echo $ident?> = video_<?php echo $ident;?>[0].duration; //Video duraiton
+   var position_<?php  echo $ident?> = x - progress_<?php  echo $ident?>.offset().left; //Click pos
+   var percentage_<?php  echo $ident?> = 100 * position_<?php  echo $ident?> / progress_<?php  echo $ident?>.width();
 
-   if(percentage_<?php  echo $id?> > 100) {
-      percentage_<?php  echo $id?> = 100;
+   if(percentage_<?php  echo $ident?> > 100) {
+      percentage_<?php  echo $ident?> = 100;
    }
-   if(percentage_<?php  echo $id?> < 0) {
-      percentage_<?php  echo $id?> = 0;
+   if(percentage_<?php  echo $ident?> < 0) {
+      percentage_<?php  echo $ident?> = 0;
    }
-   jQuery('#global_body_<?php echo $id;?> .timeBar_<?php  echo $id?>').css('width', percentage_<?php  echo $id?>+'%');
-   jQuery('.spanA').css('left', position_<?php  echo $id?>+'px');
-   video_<?php echo $id;?>[0].currentTime = maxduration_<?php  echo $id?> * percentage_<?php  echo $id?> / 100;
+   jQuery('#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>').css('width', percentage_<?php  echo $ident?>+'%');
+   jQuery('.spanA').css('left', position_<?php  echo $ident?>+'px');
+   video_<?php echo $ident;?>[0].currentTime = maxduration_<?php  echo $ident?> * percentage_<?php  echo $ident?> / 100;
 };
-function startBuffer_<?php echo $id;?>() {
+function startBuffer_<?php echo $ident;?>() {
 setTimeout(function(){
-   var maxduration_<?php echo $id;?> = video_<?php echo $id;?>[0].duration;
-   var currentBuffer_<?php echo $id;?> = video_<?php echo $id;?>[0].buffered.end(0);
-   var percentage_<?php echo $id;?> = 100 * currentBuffer_<?php echo $id;?> / maxduration_<?php echo $id;?>;
-   jQuery('#global_body_<?php echo $id;?> .bufferBar_<?php  echo $id?>').css('width', percentage_<?php echo $id;?> +'%');
-   if(currentBuffer_<?php echo $id;?> < maxduration_<?php echo $id;?>) {
-      setTimeout(startBuffer_<?php echo $id;?>, 500);
+   var maxduration_<?php echo $ident;?> = video_<?php echo $ident;?>[0].duration;
+   var currentBuffer_<?php echo $ident;?> = video_<?php echo $ident;?>[0].buffered.end(0);
+   var percentage_<?php echo $ident;?> = 100 * currentBuffer_<?php echo $ident;?> / maxduration_<?php echo $ident;?>;
+   jQuery('#global_body_<?php echo $ident;?> .bufferBar_<?php  echo $ident?>').css('width', percentage_<?php echo $ident;?> +'%');
+   if(currentBuffer_<?php echo $ident;?> < maxduration_<?php echo $ident;?>) {
+      setTimeout(startBuffer_<?php echo $ident;?>, 500);
    }
   },800)
 };
 checkVideoLoad=setInterval(function(){
-if(video_<?php echo $id;?>[0].duration)
+if(video_<?php echo $ident;?>[0].duration)
 {
-setTimeout(startBuffer_<?php echo $id;?>(), 500);
+setTimeout(startBuffer_<?php echo $ident;?>(), 500);
 clearInterval(checkVideoLoad)
 }
 }, 1000)
-var volume_<?php echo $id;?> = jQuery('#global_body_<?php echo $id;?> .volumeBar_<?php echo $id;?>');
-jQuery('#global_body_<?php echo $id;?> .muted').click(function() {
-   video_<?php echo $id;?>[0].muted = !video_<?php echo $id;?>[0].muted;
+var volume_<?php echo $ident;?> = jQuery('#global_body_<?php echo $ident;?> .volumeBar_<?php echo $ident;?>');
+jQuery('#global_body_<?php echo $ident;?> .muted').click(function() {
+   video_<?php echo $ident;?>[0].muted = !video_<?php echo $ident;?>[0].muted;
    return false;
 });
-jQuery('#global_body_<?php echo $id;?> .volumeBar_<?php echo $id;?>').on('mousedown', function(e) {
-   var position_<?php echo $id;?> = e.pageX - volume_<?php echo $id;?>.offset().left;
-   var percentage_<?php  echo $id?> = 100 * position_<?php echo $id;?> / volume_<?php echo $id;?>.width();
-   jQuery('#global_body_<?php echo $id;?> .volume_<?php echo $id;?>').css('width', percentage_<?php  echo $id?>+'%');
-   video_<?php echo $id;?>[0].volume = percentage_<?php  echo $id?> / 100;
+jQuery('#global_body_<?php echo $ident;?> .volumeBar_<?php echo $ident;?>').on('mousedown', function(e) {
+   var position_<?php echo $ident;?> = e.pageX - volume_<?php echo $ident;?>.offset().left;
+   var percentage_<?php  echo $ident?> = 100 * position_<?php echo $ident;?> / volume_<?php echo $ident;?>.width();
+   jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width', percentage_<?php  echo $ident?>+'%');
+   video_<?php echo $ident;?>[0].volume = percentage_<?php  echo $ident?> / 100;
 });
-var volumeDrag_<?php  echo $id?> = false;   /* Drag status */
-jQuery('#global_body_<?php echo $id;?> .volumeBar_<?php echo $id;?>').mousedown(function(e) {
-   volumeDrag_<?php  echo $id?> = true;
-   updateVolumeBar_<?php  echo $id?>(e.pageX);
+var volumeDrag_<?php  echo $ident?> = false;   /* Drag status */
+jQuery('#global_body_<?php echo $ident;?> .volumeBar_<?php echo $ident;?>').mousedown(function(e) {
+   volumeDrag_<?php  echo $ident?> = true;
+   updateVolumeBar_<?php  echo $ident?>(e.pageX);
 });
 jQuery(document).mouseup(function(e) {
-   if(volumeDrag_<?php  echo $id?>) {
-      volumeDrag_<?php  echo $id?> = false;
-      updateVolumeBar_<?php  echo $id?>(e.pageX);
+   if(volumeDrag_<?php  echo $ident?>) {
+      volumeDrag_<?php  echo $ident?> = false;
+      updateVolumeBar_<?php  echo $ident?>(e.pageX);
    }
 });
 jQuery(document).mousemove(function(e) {
-   if(volumeDrag_<?php  echo $id?>) {
-      updateVolumeBar_<?php  echo $id?>(e.pageX);
+   if(volumeDrag_<?php  echo $ident?>) {
+      updateVolumeBar_<?php  echo $ident?>(e.pageX);
    }
 });
-var updateVolumeBar_<?php  echo $id?> = function(x) {
-   var progress_<?php  echo $id?> = jQuery('#global_body_<?php echo $id;?> .volumeBar_<?php echo $id;?>');
-   var position_<?php echo $id;?> = x - progress_<?php  echo $id?>.offset().left; //Click pos
-   var percentage_<?php  echo $id?> = 100 * position_<?php echo $id;?> / progress_<?php  echo $id?>.width();
-   if(percentage_<?php  echo $id?> > 100) {
-      percentage_<?php  echo $id?> = 100;
+var updateVolumeBar_<?php  echo $ident?> = function(x) {
+   var progress_<?php  echo $ident?> = jQuery('#global_body_<?php echo $ident;?> .volumeBar_<?php echo $ident;?>');
+   var position_<?php echo $ident;?> = x - progress_<?php  echo $ident?>.offset().left; //Click pos
+   var percentage_<?php  echo $ident?> = 100 * position_<?php echo $ident;?> / progress_<?php  echo $ident?>.width();
+   if(percentage_<?php  echo $ident?> > 100) {
+      percentage_<?php  echo $ident?> = 100;
    }
-   if(percentage_<?php  echo $id?> < 0) {
-      percentage_<?php  echo $id?> = 0;
+   if(percentage_<?php  echo $ident?> < 0) {
+      percentage_<?php  echo $ident?> = 0;
    }
-   jQuery('#global_body_<?php echo $id;?> .volume_<?php echo $id;?>').css('width', percentage_<?php  echo $id?>+'%');
-   video_<?php echo $id;?>[0].volume =  percentage_<?php  echo $id?> / 100;
+   jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width', percentage_<?php  echo $ident?>+'%');
+   video_<?php echo $ident;?>[0].volume =  percentage_<?php  echo $ident?> / 100;
 };
 var yy=1;
-controlHideTime_<?php  echo $id?>='';
-jQuery("#global_body_<?php  echo $id?>").each(function(){
+controlHideTime_<?php  echo $ident?>='';
+jQuery("#global_body_<?php  echo $ident?>").each(function(){
 	jQuery(this).mouseleave(function() {
-controlHideTime_<?php  echo $id?>=setInterval(function(){
+controlHideTime_<?php  echo $ident?>=setInterval(function(){
 yy=yy+1;
 	if(yy<<?php echo $theme->autohideTime ?>)
 		{
@@ -1501,43 +1225,51 @@ yy=yy+1;
 		}
 	else
 		{
-						clearInterval(controlHideTime_<?php  echo $id?>);
+						clearInterval(controlHideTime_<?php  echo $ident?>);
 						 yy=1;
-					jQuery("#event_type_<?php echo $id;?>").val('mouseleave');
-					jQuery("#kukla_<?php  echo $id?>").animate({
+					jQuery("#event_type_<?php echo $ident;?>").val('mouseleave');
+					<?php if($theme->playlistAutoHide==1){ ?>
+					jQuery("#play_list_<?php  echo $ident?>").animate({
 						width: "0px",
 					  },300 );
-					  setTimeout(function(){ jQuery("#kukla_<?php  echo $id?>").css('display','none');},300)
-					  jQuery("#global_body_<?php echo $id;?> .control_<?php  echo $id?>").animate({
+					  setTimeout(function(){ jQuery("#play_list_<?php  echo $ident?>").css('display','none');},300)
+					  jQuery("#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>").animate({
 						width: <?php echo $theme->appWidth; ?>+"px",
+						<?php if ($theme->playlistPos==1){ ?>
 						marginLeft:'0px'
+						<?php } else {?>
+						marginRight:'0px'
+							<?php } ?>
 					  }, 300 );
-					  jQuery("#global_body_<?php echo $id;?> #control_btns_<?php  echo $id?>").animate({
+					  jQuery("#global_body_<?php echo $ident;?> #control_btns_<?php  echo $ident?>").animate({
 					width: <?php echo $theme->appWidth?>+"px",
-					}, 300 );/*jQuery("#space").animate({
+					}, 300 );
+					/*jQuery("#space").animate({
 	paddingLeft:<?php echo (($theme->appWidth*20)/100) ?>+"px"},300)*/  
-
-					jQuery('#global_body_<?php echo $id;?> .control_<?php  echo $id?>').hide("slide", { direction: "<?php if($theme->ctrlsPos==1) echo 'up'; else echo 'down'; ?>" }, 1000);		
+                      <?php }?>
+					  <?php if($theme->ctrlsSlideOut==1){ ?>
+					jQuery('#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>').hide("slide", { direction: "<?php if($theme->ctrlsPos==1) echo 'up'; else echo 'down'; ?>" }, 1000);	
+                      <?php } ?>					
 		 }
  },1000);
   });
 jQuery(this).mouseenter(function() {
-if(controlHideTime_<?php  echo $id?>)
+if(controlHideTime_<?php  echo $ident?>)
 {
-clearInterval(controlHideTime_<?php  echo $id?>)
+clearInterval(controlHideTime_<?php  echo $ident?>)
 yy=1;
 }	 
-	if(document.getElementById('control_<?php  echo $id?>').style.display=="none")
+	if(document.getElementById('control_<?php  echo $ident?>').style.display=="none")
 		{
-				jQuery('#global_body_<?php echo $id;?> .control_<?php  echo $id?>').show("slide", { direction: "<?php if($theme->ctrlsPos==1) echo 'up'; else echo 'down'; ?>" }, 450);
+				jQuery('#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>').show("slide", { direction: "<?php if($theme->ctrlsPos==1) echo 'up'; else echo 'down'; ?>" }, 450);
 		 }
 })
   })
 var xx=1;
-volumeHideTime_<?php echo $id;?>='';
-jQuery("#volumeTD_<?php echo $id;?>").each(function(){
-jQuery('#volumeTD_<?php echo $id;?>').mouseleave(function() {
-volumeHideTime_<?php echo $id;?>=setInterval(function(){
+volumeHideTime_<?php echo $ident;?>='';
+jQuery("#volumeTD_<?php echo $ident;?>").each(function(){
+jQuery('#volumeTD_<?php echo $ident;?>').mouseleave(function() {
+volumeHideTime_<?php echo $ident;?>=setInterval(function(){
 xx=xx+1;
 	if(xx<2)
 		{
@@ -1545,29 +1277,29 @@ xx=xx+1;
 		}
 	else
 		{
-clearInterval(volumeHideTime_<?php echo $id;?>);
+clearInterval(volumeHideTime_<?php echo $ident;?>);
 						 xx=1;
-jQuery("#global_body_<?php echo $id;?> #space").animate({ 
+jQuery("#global_body_<?php echo $ident;?> #space").animate({ 
 paddingLeft:<?php echo (($theme->appWidth*20)/100)+'px' ?>,
 },1000);
-jQuery("#global_body_<?php echo $id;?> #volumebar_player_<?php echo $id;?>").animate({ 
+jQuery("#global_body_<?php echo $ident;?> #volumebar_player_<?php echo $ident;?>").animate({ 
 	width:'0px',
 },1000);
-percentage_<?php  echo $id?> = video_<?php echo $id;?>[0].volume * 100;
-jQuery('#global_body_<?php echo $id;?> .volume_<?php echo $id;?>').css('width', percentage_<?php  echo $id?>+'%');
+percentage_<?php  echo $ident?> = video_<?php echo $ident;?>[0].volume * 100;
+jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width', percentage_<?php  echo $ident?>+'%');
 }
 },1000)
 })
-jQuery('#volumeTD_<?php echo $id;?>').mouseenter(function() {
-if(volumeHideTime_<?php echo $id;?>)
+jQuery('#volumeTD_<?php echo $ident;?>').mouseenter(function() {
+if(volumeHideTime_<?php echo $ident;?>)
 {
-clearInterval(volumeHideTime_<?php echo $id;?>)
+clearInterval(volumeHideTime_<?php echo $ident;?>)
 xx=1;
 }
-jQuery("#global_body_<?php echo $id;?> #space").animate({ 
+jQuery("#global_body_<?php echo $ident;?> #space").animate({ 
 paddingLeft:<?php echo (($theme->appWidth*20)/100)-100+'px' ?>,
 },500);
-jQuery("#global_body_<?php echo $id;?> #volumebar_player_<?php echo $id;?>").animate({ 
+jQuery("#global_body_<?php echo $ident;?> #volumebar_player_<?php echo $ident;?>").animate({ 
 <?php if($theme->appWidth > 400){ ?>
 width:'100px',
 <?php } 
@@ -1577,137 +1309,145 @@ width:'50px',
 },500);
 });
 })
-jQuery('#global_body_<?php echo $id;?> .playlist_<?php  echo $id?>').on('click', function() {
-  if(document.getElementById("kukla_<?php  echo $id?>").style.width=="0px")
+jQuery('#global_body_<?php echo $ident;?> .playlist_<?php  echo $ident?>').on('click', function() {
+  if(document.getElementById("play_list_<?php  echo $ident?>").style.width=="0px")
  { 
-  jQuery("#kukla_<?php  echo $id?>").css('display','')
- jQuery("#kukla_<?php  echo $id?>").animate({
+  jQuery("#play_list_<?php  echo $ident?>").css('display','')
+ jQuery("#play_list_<?php  echo $ident?>").animate({
     width: <?php echo $theme->playlistWidth; ?>+"px",
   }, 500 );
-  jQuery("#global_body_<?php echo $id;?> .control_<?php  echo $id?>").animate({
+  jQuery("#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>").animate({
     width: <?php echo $theme->appWidth-$theme->playlistWidth; ?>+"px",
+	 <?php if ($theme->playlistPos==1){ ?>
     marginLeft:<?php echo $theme->playlistWidth; ?>+'px'
+	<?php } else {?>
+	marginRight:<?php echo $theme->playlistWidth; ?>+'px'
+	<?php } ?>
   }, 500 );
   /*jQuery("#space").animate({paddingLeft:<?php echo (($theme->appWidth*20)/100)-$theme->playlistWidth ?>+"px"},500)*/ 
-   jQuery("#global_body_<?php echo $id;?> #control_btns_<?php  echo $id?>").animate({
+   jQuery("#global_body_<?php echo $ident;?> #control_btns_<?php  echo $ident?>").animate({
   width: <?php echo $theme->appWidth-$theme->playlistWidth; ?>+"px",  
   }, 500 );
  }  
   else  
   { 
-  jQuery("#global_body_<?php echo $id;?> #kukla_<?php  echo $id?>").animate({
+  jQuery("#global_body_<?php echo $ident;?> #play_list_<?php  echo $ident?>").animate({
     width: "0px",    
   }, 1500 );
-     setTimeout(function(){ jQuery("#kukla_<?php  echo $id?>").css('display','none');},1500)
-  jQuery("#global_body_<?php echo $id;?> .control_<?php  echo $id?>").animate({
+     setTimeout(function(){ jQuery("#play_list_<?php  echo $ident?>").css('display','none');},1500)
+  jQuery("#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>").animate({
     width: <?php echo $theme->appWidth; ?>+"px",
+     <?php if ($theme->playlistPos==1){ ?>
     marginLeft:'0px'
+	<?php } else {?>
+	marginRight:'0px'
+	<?php } ?>
   }, 1500 );
-     jQuery("#global_body_<?php echo $id;?> #control_btns_<?php  echo $id?>").animate({
+     jQuery("#global_body_<?php echo $ident;?> #control_btns_<?php  echo $ident?>").animate({
   width: <?php echo $theme->appWidth?>+"px",
   }, 1500 );
  /*jQuery("#space").animate({paddingLeft:<?php echo (($theme->appWidth*20)/100)?>+'px'},1500)*/
   }
 });
-current_playlist_table_<?php  echo $id?>=document.getElementById('current_playlist_table_<?php echo $id;?>').value;
-video_urls_<?php echo $id;?>=jQuery('#track_list_<?php  echo $id?>_'+current_playlist_table_<?php  echo $id?>).find('.vid_thumb_<?php echo $id?>');
-function current_playlist_videos_<?php  echo $id?>(){
-current_playlist_table_<?php  echo $id?>=document.getElementById('current_playlist_table_<?php echo $id;?>').value;
-video_urls_<?php  echo $id?>=jQuery('#track_list_<?php  echo $id?>_'+current_playlist_table_<?php  echo $id?>).find('.vid_thumb_<?php echo $id?>');
+current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+video_urls_<?php echo $ident;?>=jQuery('#track_list_<?php  echo $ident?>_'+current_playlist_table_<?php  echo $ident?>).find('.vid_thumb_<?php echo $ident?>');
+function current_playlist_videos_<?php  echo $ident?>(){
+current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+video_urls_<?php  echo $ident?>=jQuery('#track_list_<?php  echo $ident?>_'+current_playlist_table_<?php  echo $ident?>).find('.vid_thumb_<?php echo $ident?>');
 }
-var vid_num_<?php  echo $id?>=0;
-jQuery('.playPrev_<?php  echo $id?>').on('click', function() {
-vid_num_<?php  echo $id?>--;
-if(jQuery('#shuffle_<?php  echo $id?>').val()==1)
-vid_num=parseInt(Math.random() * (video_urls_<?php  echo $id?>.length+1 - 0) + 0);
-if(vid_num_<?php  echo $id?><0)
+var vid_num_<?php  echo $ident?>=0;
+jQuery('.playPrev_<?php  echo $ident?>').on('click', function() {
+vid_num_<?php  echo $ident?>--;
+if(jQuery('#shuffle_<?php  echo $ident?>').val()==1)
+vid_num=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length+1 - 0) + 0);
+if(vid_num_<?php  echo $ident?><0)
 {
-vid_num_<?php  echo $id?>=video_urls_<?php  echo $id?>.length-1;
+vid_num_<?php  echo $ident?>=video_urls_<?php  echo $ident?>.length-1;
 }
-video_urls_<?php  echo $id?>[vid_num_<?php  echo $id?>].click()
+video_urls_<?php  echo $ident?>[vid_num_<?php  echo $ident?>].click()
 });
-jQuery('#global_body_<?php echo $id;?> .playNext_<?php echo $id;?>').on('click', function() {
-vid_num_<?php  echo $id?>++;
-if(jQuery('#shuffle_<?php  echo $id?>').val()==1)
-vid_num_<?php  echo $id?>=parseInt(Math.random() * (video_urls_<?php  echo $id?>.length+1 - 0) + 0);
-jQuery('#global_body_<?php echo $id;?> .timeBar_<?php  echo $id?>').css('width', '0%');
-if(vid_num_<?php  echo $id?>==video_urls_<?php  echo $id?>.length)
+jQuery('#global_body_<?php echo $ident;?> .playNext_<?php echo $ident;?>').on('click', function() {
+vid_num_<?php  echo $ident?>++;
+if(jQuery('#shuffle_<?php  echo $ident?>').val()==1)
+vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length+1 - 0) + 0);
+jQuery('#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>').css('width', '0%');
+if(vid_num_<?php  echo $ident?>==video_urls_<?php  echo $ident?>.length)
 {
-vid_num_<?php  echo $id?>=0;
+vid_num_<?php  echo $ident?>=0;
 }
-video_urls_<?php  echo $id?>[vid_num_<?php  echo $id?>].click()
+video_urls_<?php  echo $ident?>[vid_num_<?php  echo $ident?>].click()
 });
-jQuery(".lib_<?php  echo $id?>").click(function () {
-jQuery('#album_div_<?php  echo $id?>').css('transform','');
-jQuery('#global_body_<?php  echo $id?>').css('transform','');
-jQuery('#global_body_<?php  echo $id?>').transition({
+jQuery(".lib_<?php  echo $ident?>").click(function () {
+jQuery('#album_div_<?php  echo $ident?>').css('transform','');
+jQuery('#global_body_<?php  echo $ident?>').css('transform','');
+jQuery('#global_body_<?php  echo $ident?>').transition({
 perspective: '700px',
     rotateY: '180deg',		
 	},1000);
 setTimeout(function(){
-jQuery('#album_div_<?php  echo $id?>').css('-ms-transform','rotateY(180deg)')
-jQuery('#album_div_<?php  echo $id?>').css('transform','rotateY(180deg)')
-jQuery('#album_div_<?php  echo $id?>').css('-o-transform','rotateY(180deg)')
-document.getElementById('album_div_<?php  echo $id?>').style.display='block'
-document.getElementById('video_div_<?php  echo $id?>').style.display='none'
+jQuery('#album_div_<?php  echo $ident?>').css('-ms-transform','rotateY(180deg)')
+jQuery('#album_div_<?php  echo $ident?>').css('transform','rotateY(180deg)')
+jQuery('#album_div_<?php  echo $ident?>').css('-o-transform','rotateY(180deg)')
+document.getElementById('album_div_<?php  echo $ident?>').style.display='block'
+document.getElementById('video_div_<?php  echo $ident?>').style.display='none'
 },300);
 setTimeout(function(){
-jQuery('#album_div_<?php  echo $id?>').css('-ms-transform','');
-jQuery('#global_body_<?php  echo $id?>').css('-ms-transform','');
-jQuery('#album_div_<?php  echo $id?>').css('transform','');
-jQuery('#global_body_<?php  echo $id?>').css('transform','');
-jQuery('#album_div_<?php  echo $id?>').css('-o-transform','');
-jQuery('#global_body_<?php  echo $id?>').css('-o-transform','');
+jQuery('#album_div_<?php  echo $ident?>').css('-ms-transform','');
+jQuery('#global_body_<?php  echo $ident?>').css('-ms-transform','');
+jQuery('#album_div_<?php  echo $ident?>').css('transform','');
+jQuery('#global_body_<?php  echo $ident?>').css('transform','');
+jQuery('#album_div_<?php  echo $ident?>').css('-o-transform','');
+jQuery('#global_body_<?php  echo $ident?>').css('-o-transform','');
 },1100);
 })
-  jQuery(".show_vid_<?php  echo $id?>").click(function () {
-jQuery('#global_body_<?php  echo $id?>').transition({
+  jQuery(".show_vid_<?php  echo $ident?>").click(function () {
+jQuery('#global_body_<?php  echo $ident?>').transition({
 perspective: '700px',
     rotateY: '180deg',
     	},1000);
 setTimeout(function(){
-jQuery('#video_div_<?php  echo $id?>').css('-ms-transform','rotateY(180deg)')
-jQuery('#video_div_<?php  echo $id?>').css('transform','rotateY(180deg)')
-jQuery('#video_div_<?php  echo $id?>').css('-o-transform','rotateY(180deg)')
-document.getElementById('album_div_<?php  echo $id?>').style.display='none'
-document.getElementById('video_div_<?php  echo $id?>').style.display='block'
+jQuery('#video_div_<?php  echo $ident?>').css('-ms-transform','rotateY(180deg)')
+jQuery('#video_div_<?php  echo $ident?>').css('transform','rotateY(180deg)')
+jQuery('#video_div_<?php  echo $ident?>').css('-o-transform','rotateY(180deg)')
+document.getElementById('album_div_<?php  echo $ident?>').style.display='none'
+document.getElementById('video_div_<?php  echo $ident?>').style.display='block'
 },300);		
 setTimeout(function(){
-jQuery('#video_div_<?php  echo $id?>').css('-ms-transform','');
-jQuery('#global_body_<?php  echo $id?>').css('-ms-transform','');
-jQuery('#video_div_<?php  echo $id?>').css('transform','');
-jQuery('#global_body_<?php  echo $id?>').css('transform',''); 
-jQuery('#video_div_<?php  echo $id?>').css('-o-transform','');
-jQuery('#global_body_<?php  echo $id?>').css('-o-transform','');
+jQuery('#video_div_<?php  echo $ident?>').css('-ms-transform','');
+jQuery('#global_body_<?php  echo $ident?>').css('-ms-transform','');
+jQuery('#video_div_<?php  echo $ident?>').css('transform','');
+jQuery('#global_body_<?php  echo $ident?>').css('transform',''); 
+jQuery('#video_div_<?php  echo $ident?>').css('-o-transform','');
+jQuery('#global_body_<?php  echo $ident?>').css('-o-transform','');
 },1100);
 })
-var canvas_<?php  echo $id?>=[]
-var ctx_<?php  echo $id?>=[]
-var originalPixels_<?php  echo $id?>=[]
-var currentPixels_<?php  echo $id?>=[]
+var canvas_<?php  echo $ident?>=[]
+var ctx_<?php  echo $ident?>=[]
+var originalPixels_<?php  echo $ident?>=[]
+var currentPixels_<?php  echo $ident?>=[]
 	for(i=1;i<30;i++)
-		if(document.getElementById('button'+i+'_<?php  echo $id?>'))
+		if(document.getElementById('button'+i+'_<?php  echo $ident?>'))
 		{
-			canvas_<?php  echo $id?>[i] = document.createElement("canvas");
-			ctx_<?php  echo $id?>[i] = canvas_<?php  echo $id?>[i].getContext("2d");
-			originalPixels_<?php  echo $id?>[i] = null;
-			currentPixels_<?php  echo $id?>[i] = null;
+			canvas_<?php  echo $ident?>[i] = document.createElement("canvas");
+			ctx_<?php  echo $ident?>[i] = canvas_<?php  echo $ident?>[i].getContext("2d");
+			originalPixels_<?php  echo $ident?>[i] = null;
+			currentPixels_<?php  echo $ident?>[i] = null;
 		}
-function getPixels_<?php  echo $id?>()
+function getPixels_<?php  echo $ident?>()
 		{
 			for(i=1;i<30;i++)
-				if(document.getElementById('button'+i+'_<?php  echo $id?>'))
+				if(document.getElementById('button'+i+'_<?php  echo $ident?>'))
 				{
-					img=document.getElementById('button'+i+'_<?php  echo $id?>');	
-					canvas_<?php  echo $id?>[i].width = img.width;
-					canvas_<?php  echo $id?>[i].height = img.height;
-					ctx_<?php  echo $id?>[i].drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, img.width, img.height);
-					originalPixels_<?php  echo $id?>[i] = ctx_<?php  echo $id?>[i].getImageData(0, 0, img.width, img.height);
-					currentPixels_<?php  echo $id?>[i] = ctx_<?php  echo $id?>[i].getImageData(0, 0, img.width, img.height);
+					img=document.getElementById('button'+i+'_<?php  echo $ident?>');	
+					canvas_<?php  echo $ident?>[i].width = img.width;
+					canvas_<?php  echo $ident?>[i].height = img.height;
+					ctx_<?php  echo $ident?>[i].drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, img.width, img.height);
+					originalPixels_<?php  echo $ident?>[i] = ctx_<?php  echo $ident?>[i].getImageData(0, 0, img.width, img.height);
+					currentPixels_<?php  echo $ident?>[i] = ctx_<?php  echo $ident?>[i].getImageData(0, 0, img.width, img.height);
 					img.onload = null;
 				}
 		}
-		function HexToRGB_<?php  echo $id?>(Hex)
+		function HexToRGB_<?php  echo $ident?>(Hex)
 		{
 			var Long = parseInt(Hex.replace(/^#/, ""), 16);
 			return {
@@ -1716,31 +1456,31 @@ function getPixels_<?php  echo $id?>()
 				B: Long & 0xff
 			};
 		}
-		function changeColor_<?php  echo $id?>()
+		function changeColor_<?php  echo $ident?>()
 		{
 			
 			for(i=1;i<30;i++)
-			if(document.getElementById('button'+i+'_<?php  echo $id?>'))
+			if(document.getElementById('button'+i+'_<?php  echo $ident?>'))
 			{		
-			if(!originalPixels_<?php  echo $id?>[i]) return; // Check if image has loaded
-			var newColor = HexToRGB_<?php  echo $id?>(document.getElementById("color_<?php echo $id;?>").value);
-			for(var I = 0, L = originalPixels_<?php  echo $id?>[i].data.length; I < L; I += 4)
+			if(!originalPixels_<?php  echo $ident?>[i]) return; // Check if image has loaded
+			var newColor = HexToRGB_<?php  echo $ident?>(document.getElementById("color_<?php echo $ident;?>").value);
+			for(var I = 0, L = originalPixels_<?php  echo $ident?>[i].data.length; I < L; I += 4)
 			{
-				if(currentPixels_<?php  echo $id?>[i].data[I + 3] > 0)
+				if(currentPixels_<?php  echo $ident?>[i].data[I + 3] > 0)
 				{
-					currentPixels_<?php  echo $id?>[i].data[I] = originalPixels_<?php  echo $id?>[i].data[I] / 255 * newColor.R;
-					currentPixels_<?php  echo $id?>[i].data[I + 1] = originalPixels_<?php  echo $id?>[i].data[I + 1] / 255 * newColor.G;
-					currentPixels_<?php  echo $id?>[i].data[I + 2] = originalPixels_<?php  echo $id?>[i].data[I + 2] / 255 * newColor.B;
+					currentPixels_<?php  echo $ident?>[i].data[I] = originalPixels_<?php  echo $ident?>[i].data[I] / 255 * newColor.R;
+					currentPixels_<?php  echo $ident?>[i].data[I + 1] = originalPixels_<?php  echo $ident?>[i].data[I + 1] / 255 * newColor.G;
+					currentPixels_<?php  echo $ident?>[i].data[I + 2] = originalPixels_<?php  echo $ident?>[i].data[I + 2] / 255 * newColor.B;
 				}
 			}
-					ctx_<?php  echo $id?>[i].putImageData(currentPixels_<?php  echo $id?>[i], 0, 0);
-					img=document.getElementById('button'+i+'_<?php  echo $id?>');	
-					img.src = canvas_<?php  echo $id?>[i].toDataURL("image/png");
+					ctx_<?php  echo $ident?>[i].putImageData(currentPixels_<?php  echo $ident?>[i], 0, 0);
+					img=document.getElementById('button'+i+'_<?php  echo $ident?>');	
+					img.src = canvas_<?php  echo $ident?>[i].toDataURL("image/png");
 				}
 		}		
 <?php if($theme->spaceOnVid==1) { ?>
 var video_focus;
-jQuery('#global_body_<?php  echo $id?> ,#videoID_<?php  echo $id?>').each(function(){
+jQuery('#global_body_<?php  echo $ident?> ,#videoID_<?php  echo $ident?>').each(function(){
 jQuery(this).on('click',function() { 
 setTimeout("video_focus=1",100) 
 })
@@ -1752,44 +1492,1625 @@ jQuery(window).keypress(function(event) {
    }
   if(event.keyCode==32 && video_focus==1)
   {
-  vidOnSpace_<?php echo $id;?>()
+  vidOnSpace_<?php echo $ident;?>()
   return false;
   }
 });
 <?php }?>
-function vidOnSpace_<?php echo $id;?>()
+function vidOnSpace_<?php echo $ident;?>()
 {
-if(video_<?php echo $id;?>[0].paused) {
-      video_<?php echo $id;?>[0].play();
-	 paly_<?php echo $id;?>.css('display',"none");
-	  pause_<?php echo $id;?>.css('display',"block");
+if(video_<?php echo $ident;?>[0].paused) {
+      video_<?php echo $ident;?>[0].play();
+	 paly_<?php echo $ident;?>.css('display',"none");
+	  pause_<?php echo $ident;?>.css('display',"");
    }
    else {
-      video_<?php echo $id;?>[0].pause();
-	  paly_<?php echo $id;?>.css('display',"block");
-	  pause_<?php echo $id;?>.css('display',"none");
+      video_<?php echo $ident;?>[0].pause();
+	  paly_<?php echo $ident;?>.css('display',"");
+	  pause_<?php echo $ident;?>.css('display',"none");
    }
 }
-jQuery('#track_list_<?php  echo $id?>_0').find('#thumb_0_<?php echo $id?>').click();
-video_<?php echo $id;?>[0].pause();
-if(paly_<?php echo $id;?> && pause_<?php echo $id;?>)
+jQuery('#track_list_<?php  echo $ident?>_0').find('#thumb_0_<?php echo $ident?>').click();
+video_<?php echo $ident;?>[0].pause();
+if(paly_<?php echo $ident;?> && pause_<?php echo $ident;?>)
 {
-paly_<?php echo $id;?>.css('display',"block");
-pause_<?php echo $id;?>.css('display',"none");
+paly_<?php echo $ident;?>.css('display',"");
+pause_<?php echo $ident;?>.css('display',"none");
 }
 <?php if($AlbumId!=''){ ?>
-jQuery('#track_list_<?php  echo $id?>_<?php echo $AlbumId ?>').find('#thumb_<?php echo $TrackId ?>_<?php echo $id?>').click();
+jQuery('#track_list_<?php  echo $ident?>_<?php echo $AlbumId ?>').find('#thumb_<?php echo $identId ?>_<?php echo $ident?>').click();
 <?php } ?>
-jQuery(window).load(function(){getPixels_<?php  echo $id?>();changeColor_<?php  echo $id?>()})
+jQuery(window).load(function(){getPixels_<?php  echo $ident?>();changeColor_<?php  echo $ident?>()})
+jQuery('.volume_<?php  echo $ident?>')[0].style.width='<?php echo $theme->defaultVol?>%';
+video_<?php echo $ident;?>[0].volume=<?php echo $theme->defaultVol/100 ;?>;
 </script>
-
-
 </div><br />
+<?php 
+$many_players++;
+$ident++;
+ $content=ob_get_contents();
+                ob_end_clean();
+				return $content;
+}
+
+
+
+////
+ function   front_end_Spider_Video_Player($id){
+	  global $wpdb;
+	  global $ident; 
+	 $find_priority=$wpdb->get_row("SELECT priority FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
+	$priority=$find_priority->priority;
+	
+	
+
+	  
+	 $row=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
+	$params=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$row->theme);
+	if($priority==0){ 
+	 $scripttt='    <script type="text/javascript"> 
+var html5_'.$ident.' = document.getElementById("spidervideoplayerhtml5_'.$ident.'");
+var flash_'.$ident.' = document.getElementById("spidervideoplayerflash_'.$ident.'");
+if(!FlashDetect.installed){
+flash_'.$ident.'.parentNode.removeChild(flash_'.$ident.');
+spidervideoplayerhtml5_'.$ident.'.style.display=\'\';
+}
+else{
+html5_'.$ident.'.parentNode.removeChild(html5_'.$ident.');
+spidervideoplayerflash_'.$ident.'.style.display=\'\';
+}
+</script>';
+   
+	}
+	else
+	{
+		 $scripttt='';
+	}
+
+	 if($priority ==0){
+	 global $post;
+	 $id_for_posts = $post->ID;
+	 $all_player_ids=$wpdb->get_col("SELECT id FROM ".$wpdb->prefix."Spider_Video_Player_player");
+				$b=false;
+				foreach($all_player_ids as $all_player_id)
+				{
+					if($all_player_id==$id)
+					$b=true;
+				}
+				if(!$b)
+				return "";	
+				
+				$Spider_Video_Player_front_end="";		
+		$row=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
+		
+		$params=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$row->theme);
+		$theme=$row->theme;
+		$playlist=$row->id;
+		if($params->appWidth!="")
+			$width=$params->appWidth;
+		else
+			$width='700';
+		
+		if($params->appHeight!="")
+			$height=$params->appHeight;
+		else
+			$height='400';
+			
+			$show_trackid=$params->show_trackid;
+			
+		global $many_players;
+			?>
+        <?php		
+        $Spider_Video_Player_front_end="<script type=\"text/javascript\" src=\"".plugins_url("swfobject.js",__FILE__)."\"></script>
+		<div id=\"spidervideoplayerflash_".$ident."\" style=\"display:none\">		
+		  <div id=\"".$id_for_posts."_".$many_players."_flashcontent\"  style=\"width: ".$width."px; height:".$height."px\"></div>
+			<script type=\"text/javascript\">
+function flashShare(type,b,c)	
+{
+u=location.href;
+	u=u.replace('/?','/index.php?');
+	if(u.search('&AlbumId')!=-1)
+	{
+		var u_part2='';
+		u_part2=u.substring(u.search('&TrackId')+2, 1000)
+		if(u_part2.search('&')!=-1)
+		{
+			u_part2=u_part2.substring(u_part2.search('&'),1000);
+		}
+		u=u.replace(u.substring(u.search('&AlbumId'), 1000),'')+u_part2;		
+	}
+	if(!location.search)
+			u=u+'?';
+		else
+			u=u+'&';
+	t=document.title;
+	switch (type)
+	{
+	case 'fb':	
+		window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u+'AlbumId='+b+'&TrackId='+c)+'&t='+encodeURIComponent(t), \"Facebook\",\"menubar=1,resizable=1,width=350,height=250\");
+		break;
+	case 'g':
+		window.open('http://plus.google.com/share?url='+encodeURIComponent(u+'AlbumId='+b+'&TrackId='+c)+'&t='+encodeURIComponent(t), \"Google\",\"menubar=1,resizable=1,width=350,height=250\");
+		break;
+	case 'tw':
+		window.open('http://twitter.com/home/?status='+encodeURIComponent(u+'AlbumId='+b+'&TrackId='+c), \"Twitter\",\"menubar=1,resizable=1,width=350,height=250\");
+		break;
+	}
+}		
+     var so = new SWFObject(\"".plugins_url("videoSpider_Video_Player.swf",__FILE__)."?wdrand=".mt_rand() ."\", \"Spider_Video_Player\", \"100%\", \"100%\", \"8\", \"#000000\");
+	 so.addParam(\"FlashVars\", \"settingsUrl=".str_replace("&","@",  str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml')."&playlist=".$playlist."&theme=".$theme."&s_v_player_id=".$id."&single=0"))."&playlistUrl=".str_replace("&","@",str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml')."&playlist=".$playlist."&single=0&show_trackid=".$show_trackid))."&defaultAlbumId=".$_GET['AlbumId']."&defaultTrackId=".$_GET['TrackId']."\");
+		   so.addParam(\"quality\", \"high\");
+		   so.addParam(\"menu\", \"false\");
+		   so.addParam(\"wmode\", \"transparent\");
+		   so.addParam(\"loop\", \"false\");
+		   so.addParam(\"allowfullscreen\", \"true\");
+		   so.write(\"".$id_for_posts."_".$many_players."_flashcontent\");
+			</script>
+			</div>
+			";
+			
+			$many_players++;
+			?>
+            <?php
+			return $Spider_Video_Player_front_end.Spider_Video_Player_front_end($id).$scripttt;
+			
+	 }
+	 else
+	 {
+	     $identt=$ident;
+		 return Spider_Video_Player_front_end($id).'<script>document.getElementById("spidervideoplayerhtml5_'.$identt.'").style.display=\'\'</script>';
+		
+	 }	 
+}
+
+function Spider_Video_Player_front_end($id){
+ob_start();
+global $ident;
+?>	
+<div id="spidervideoplayerhtml5_<?php echo $ident?>" style="display:none">	
+<?php		
+	global $wpdb; 
+	$theme_id=$wpdb->get_row("SELECT theme FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
+	$playlist=$wpdb->get_row("SELECT playlist FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
+	$playlist_array=explode(',',$playlist->playlist);	
+	global $many_players;
+	if(isset($_POST['playlist_id'])){
+	$playlistID	= $_POST['playlist_id'];
+	}
+	else $playlistID = 1;
+	$key=$playlistID-1;
+if(isset($playlist->playlist)){
+$playlistID	= $playlist->playlist;
+}
+else $playlistID=1;
+$key=$playlistID-1;
+$row=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist WHERE id=".$playlist_array[$key]);
+$theme=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$theme_id->theme);	
+	$row1=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
+	$params1=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$row1->theme);
+	$themeid=$row1->theme;
+$display=$_POST['display'];
+$video_ids=substr($row->videos,0,-1);
+	$videos = $wpdb->get_results("SELECT urlHtml5,type,title FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id IN ($video_ids)");	
+	$video_urls='';
+	for($i=0;$i<count($videos);$i++)
+	{
+		if($videos[$i]->urlHtml5 !=""){	
+	$video_urls.="'".$videos[$i]->urlHtml5."'".',';
+		}
+		else $video_urls.="'".$videos[$i]->url."'".',';
+	}	
+	 $video_urls=substr($video_urls,0,-1);	 
+	$playlists = $wpdb->get_results("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist");	
+	$libRows=$theme->libRows;
+	$libCols=$theme->libCols;	
+	$cellWidth=100/$libCols.'%';
+	$cellHeight=100/$libRows.'%';	
+	$play = $wpdb->get_results("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist");
+				// load the row from the db table
+	$k=$libRows*$libCols;	
+	if(isset($_POST['play'])){	
+$p=$_POST['play'];
+	}	
+	else $p=0;
+$display='style="width:100%;height:100% !important;border-collapse: collapse;"';
+$table_count=1;
+$itemBgHoverColor ='#'.$theme->itemBgHoverColor;
+$vds=$wpdb->get_results("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video");	
+$ctrlsStack=$theme->ctrlsStack;
+if($theme->ctrlsPos==2){
+$ctrl_top=$theme->appHeight-35 .'px';
+$share_top='-140px';
+}
+else{
+$ctrl_top='5px';
+$share_top='-'.$theme->appHeight+20 .'px';
+}
+$AlbumId=$_POST['AlbumId'];
+$TrackId=$_POST['TrackId'];
+?>
+<style>
+a#dorado_mark_<?php echo $ident;?>:hover{
+ background:none !important;
+}
+#album_table_<?php  echo $ident?> td, 
+#album_table_<?php  echo $ident?> tr,
+#album_table_<?php  echo $ident?> img{
+	line-height: 1em !important;
+	}
+#share_buttons_<?php echo $ident;?> img{	
+	display:inline !important;
+}
+#album_div_<?php  echo $ident?> table{
+	margin:0px !important;}	
+#album_table_<?php  echo $ident?>{	
+margin: -1 0 1.625em !important;
+}
+table
+{	
+margin:0em;	
+}
+#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>
+{
+position:absolute;
+background-color: rgba(<?php echo HEXDEC(SUBSTR($theme->framesBgColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
+top:<?php echo $ctrl_top?> !important;
+width:<?php echo $theme->appWidth; ?>px;
+height:40px;
+z-index:7;
+margin-top: -5px;
+}
+#global_body_<?php echo $ident;?> .control_<?php  echo $ident?> td
+{
+	padding: 0px !important;
+	margin: 0px !important;
+}
+#global_body_<?php echo $ident;?> .control_<?php  echo $ident?> td img{
+	padding: 0px !important;
+	margin: 0px !important;	
+	}
+#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>
+{
+   position: relative;
+   width: 100%;
+   height:6px;
+   z-index:5;
+   cursor:pointer;
+   border-top:1px solid rgba(<?php echo HEXDEC(SUBSTR($theme->slideColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
+   border-bottom:1px solid rgba(<?php echo HEXDEC(SUBSTR($theme->slideColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);   
+}
+#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>
+{
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 0;
+   height: 100%;
+   background-color: <?php echo '#'.$theme->slideColor; ?>;
+   z-index:5; 
+}
+#global_body_<?php echo $ident;?>  .bufferBar_<?php  echo $ident?> {
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 0;
+   height: 100%;
+   background-color: <?php echo '#'.$theme->slideColor; ?>;
+   opacity:0.3; 
+   }  
+ #global_body_<?php echo $ident;?> .volumeBar_<?php echo $ident;?>
+	{
+   position: relative;
+   overflow: hidden;
+   width: 0px;
+   height:4px;
+   background-color: rgba(<?php echo HEXDEC(SUBSTR($theme->framesBgColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
+   border:1px solid rgba(<?php echo HEXDEC(SUBSTR($theme->slideColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
+	}
+#global_body_<?php echo $ident;?> img{
+	background: none !important;
+	}
+#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>
+	{
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 0;
+   height: 100%;
+   background-color: <?php echo '#'.$theme->slideColor; ?>;
+	}	
+	#play_list_<?php  echo $ident?>
+	{
+	height:<?php echo $theme->appHeight; ?>px;
+	width:0px;
+	<?php
+	if ($theme->playlistPos==1)
+	echo 'position:absolute;float:left !important;';
+	else
+	echo 'position:relative;float:right !important;';
+	?> ;  	
+	background-color: rgba(<?php echo HEXDEC(SUBSTR($theme->framesBgColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>) !important;
+	color:white;
+	z-index:100;
+	padding: 0px !important;
+	margin: 0px !important;
+	} 
+   #play_list_<?php  echo $ident?> img, 
+   #play_list_<?php  echo $ident?> td{
+	background-color:transparent !important;
+	color:white;
+	padding: 0px !important;
+	margin: 0px !important;	
+	   }
+   .control_btns_<?php  echo $ident?>
+   {
+   opacity:<?php echo $theme->ctrlsMainAlpha/100; ?>; 
+   }	
+	#control_btns_<?php  echo $ident?>,
+	#volumeTD_<?php echo $ident;?>
+   {
+	margin: 0px;
+	  }
+  img{
+	  box-shadow:none !important;  	 
+	  } 	  
+	#td_ik_<?php echo $ident;?>{
+			border:0px;			
+		} 
+</style>
+<?php 
+$player_id=$wpdb->get_var("SELECT theme FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
+?>
+<div id="global_body_<?php echo $ident;?>" style="width:<?php echo $theme->appWidth; ?>px;height:<?php echo $theme->appHeight; ?>px; position:relative;">
+<?php
+$row1=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$player_id);
+$start_lib = $row1->startWithLib; 
+?>
+<div id="video_div_<?php echo $ident;?>"  style="display:<?php if($start_lib == 1) echo 'none'; else echo 'block'?>;width:<?php echo $theme->appWidth; ?>px;height:<?php echo $theme->appHeight; ?>px;background-color:<?php echo "#".$theme->vidBgColor;  ?>">
+<div id="play_list_<?php  echo $ident?>" >
+<input type='hidden' value='0' id="track_list_<?php echo $ident;?>" />
+<div style="height:90%" id="play_list1_<?php echo $ident;?>">
+<div id="arrow_up_<?php echo $ident?>" onmousedown="scrolltp2=setInterval('scrollTop2_<?php echo $ident;?>()', 30)" onmouseup="clearInterval(scrolltp2)" style="overflow:hidden; text-align:center;width:<?php echo $theme->playlistWidth; ?>px; height:20px"><img  src="<?php echo plugins_url('',__FILE__)?>/images/top.png" style="cursor:pointer;  border:none;" id="button20_<?php  echo $ident?>" />
+</div>
+<div style="height:<?php echo $theme->appHeight-40; ?>px;overflow:hidden;" id="video_list_<?php echo $ident;?>">
+<?php
+//echo '<p onclick="document.getElementById("videoID").src="'.$videos[$i]["url"].'" ">'.$videos[$i]['title'].'</p>';
+for($i=0;$i<count($playlist_array)-1;$i++)
+{
+$playy = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist WHERE id=".$playlist_array[$i]);
+$v_ids=explode(',',$playy->videos);
+$vi_ids=substr($playy->videos,0,-1);
+	if($i!=0)
+		echo '<table id="track_list_'.$ident.'_'.$i.'" width="100%" style="display:none;height:100%;border-spacing:0px;border:none;border-collapse: inherit;padding:0px !important;background: transparent !important;" >';
+	else
+		echo '<table id="track_list_'.$ident.'_'.$i.'" width="100%" style="display:block;height:100%; border-spacing:0px;border:none;border-collapse: inherit;padding:0px !important;background: transparent !important;" > ';
+echo '<tr style="background:transparent ">
+<td id="td_ik_'.$ident.'" style="text-align:left;border:0px solid grey;width:100%;vertical-align:top;">
+<div id="scroll_div2_'.$i.'_'.$ident.'" class="playlist_values_'.$ident.'" style="position:relative">';
+$jj=0;
+for($j=0;$j<count($v_ids)-1;$j++)
+{
+$vdss=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=".$v_ids[$j]);
+	if($vdss->type=="http")
+		{
+		if($vdss->urlHtml5!=""){	
+		$html5Url=$vdss->urlHtml5;
+		}
+		else $html5Url=$vdss->url;
+		$vidsTHUMB=$vdss->thumb;
+		if($vdss->urlHDHtml5!=""){
+		$html5UrlHD=$vdss->urlHDHtml5;
+		}
+		else $html5UrlHD=$vdss->urlHD;
+			echo '<div id="thumb_'.$jj.'_'.$ident.'"  onclick="jQuery(\'#HD_on_'.$ident.'\').val(0);document.getElementById(\'videoID_'.$ident.'\').src=\''.$html5Url.'\';play_'.$ident.'();vid_select_'.$ident.'(this);vid_num='.$jj.';jQuery(\'#current_track_'.$ident.'\').val('.$jj.');" class="vid_thumb_'.$ident.'" style="color:#'.$theme->textColor .';cursor:pointer;width:'.$theme->playlistWidth.'px;text-align:center; "  >';
+			if($vdss->thumb)
+			echo '<img   src="'.$vidsTHUMB.'" width="90px" style="display:none;  border:none;"  />';
+			echo '<p style="font-size:'.$theme->playlistTextSize.'px !important;line-height:30px !important;cursor:pointer;margin: 0px !important;padding:0px !important" >'.($jj+1).'-'.$vdss->title.'</p></div>';
+
+			echo '<input type="hidden" id="urlHD_'.$jj.'_'.$ident.'" value="'.$html5UrlHD.'" />';
+			echo '<input type="hidden" id="vid_type_'.$jj.'_'.$ident.'" value="'.$vdss->type.'" />';
+			$jj=$jj+1;
+		}
+}
+echo '</div></td>
+</tr></table>';
+}
+?> 
+</div>
+<div onmousedown="scrollBot2=setInterval('scrollBottom2_<?php echo $ident;?>()', 30)" onmouseup="clearInterval(scrollBot2)" style="position:absolute;overflow:hidden; text-align:center;width:<?php echo $theme->playlistWidth; ?>px; height:20px" id="divulushka_<?php echo $ident;?>"><img  src="<?php echo plugins_url('',__FILE__)?>/images/bot.png" style="cursor:pointer;  border:none;" id="button21_<?php  echo $ident?>" /></div>
+</div>
+</div>
+<video  ontimeupdate="timeUpdate_<?php  echo $ident?>()"  ondurationchange="durationChange_<?php  echo $ident?>();" id="videoID_<?php  echo $ident?>" src="<?php echo $videos[0]->urlHtml5; ?>"   style="width:100%; height:100% !important;margin:0px !important;position: absolute;" >  
+<p>Your browser does not support the video tag.</p> 
+</video>
+<a href="http://web-dorado.com/" target="_blank" id="dorado_mark_<?php echo $ident;?>" style="bottom: 30px;position: absolute;text-decoration: none;border: 0px !important;">
+<img src="<?php echo plugins_url('',__FILE__)?>/images/wd_logo.png" style="width: 140px;height: 73px; border: 0px !important;"/></a> 
+<div class="control_<?php echo $ident;?>" id="control_<?php echo $ident;?>" style="overflow:hidden;">
+<?php if($theme->ctrlsPos==2){ ?>
+<div class="progressBar_<?php echo $ident;?>">
+   <div class="timeBar_<?php echo $ident;?>"></div>
+   <div class="bufferBar_<?php echo $ident;?>"></div>
+</div>
+<?php
+}
+$ctrls=explode(',',$ctrlsStack);
+
+$y=1;
+echo '<table id="control_btns_'.$ident.'" style="width: 100%; border:none;border-collapse: inherit; background: transparent; margin-top: 4px;padding: 0px !important;"><tr style="background: transparent;">';
+for($i=0;$i<count($ctrls);$i++)
+{
+	$ctrl=explode(':',$ctrls[$i]);
+	if($ctrl[1]==1)
+		{
+			echo '<td style="border:none;background: transparent;">';
+			if($ctrl[0]=='playPause')
+				{
+					if($theme->appWidth > 400){
+						echo '<img id="button'.$y.'_'.$ident.'"  class="btnPlay" width="16" style="position: relative;vertical-align: middle;cursor:pointer;  border:none;opacity:'.$theme->ctrlsMainAlpha/100 .'; height:19px"   src="'.plugins_url('',__FILE__).'/images/play.png" />';
+						echo '<img id="button'.($y+1).'_'.$ident.'" width="16"  class="btnPause" style="position: relative;vertical-align: middle;display:none;cursor:pointer;  border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';height:18px"  src="'.plugins_url('',__FILE__).'/images/pause.png" />';	
+					}					
+					else {
+						echo '<img id="button'.$y.'_'.$ident.'"  class="btnPlay" style="vertical-align: middle;cursor:pointer;max-width:7px;  border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"   src="'.plugins_url('',__FILE__).'/images/play.png" />';
+						echo '<img id="button'.($y+1).'_'.$ident.'" width="16"  class="btnPause" style="vertical-align: middle;height: 18px !important;display:none;cursor:pointer;max-width:7px;  border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"  src="'.plugins_url('',__FILE__).'/images/pause.png" />';	
+					}
+			$y=$y+2;
+				}
+			else
+				if($ctrl[0]=='+')
+					{
+						echo '<span id="space" style="position: relative;vertical-align: middle;padding-left:'.(($theme->appWidth*20)/100).'px"></span>';
+					}
+			else
+				if($ctrl[0]=='time')
+					{					
+					echo '						
+						  <span style="color:#'.$theme->ctrlsMainColor.';opacity:'.$theme->ctrlsMainAlpha/100 .'; position:relative; vertical-align: middle; " id="time_'.$ident.'">00:00</span>
+						  <span style="color:#'.$theme->ctrlsMainColor.'; opacity:'.$theme->ctrlsMainAlpha/100 .';position:relative; vertical-align: middle;">/</span> 
+						  <span style="color:#'.$theme->ctrlsMainColor.';opacity:'.$theme->ctrlsMainAlpha/100 .';position:relative; vertical-align: middle;" id="duration_'.$ident.'">00:00</span>';					
+					}
+			else
+				if($ctrl[0]=='vol')
+				{
+					if($theme->appWidth > 400){
+				$img_button='<img  style="position: relative;cursor:pointer; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';vertical-align: middle;"  id="button'.$y.'_'.$ident.'"    src="'.plugins_url('',__FILE__).'/images/vol.png"  />';
+					}
+					else {
+						$img_button='<img  style="vertical-align: middle;cursor:pointer;max-width:7px; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"  id="button'.$y.'_'.$ident.'"    src="'.plugins_url('',__FILE__).'/images/vol.png"  />';
+						}
+				echo '<table  id="volumeTD_'.$ident.'" style="border:none;border-collapse: inherit; min-width: 0;background: transparent;padding: 0px !important;" >
+						<tr style="background: transparent;">
+							<td id="voulume_img_'.$ident.'" style="top:5px;border:none;min-width:13px;  background: transparent; width:20px;" >'.$img_button.'
+							</td>
+							<td id="volumeTD2_'.$ident.'" style="width:0px; border:none; position:relative;background: transparent; ">
+									<span id="volumebar_player_'.$ident.'" class="volumeBar_'.$ident.'" style="vertical-align: middle;">
+								    <span class="volume_'.$ident.'" style="vertical-align: middle;"></span>
+									</span>
+							 </td>
+						</tr>
+						</table> ';			
+						$y=$y+1;
+				}
+			else
+				if($ctrl[0]=='shuffle')
+				{
+					if($theme->appWidth > 400){
+				echo '<img  id="button'.$y.'_'.$ident.'" class="shuffle_'.$ident.'" style="position: relative;vertical-align: middle;cursor:pointer; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"   src="'.plugins_url('',__FILE__).'/images/shuffle.png" />';
+				echo '<img  id="button'.($y+1).'_'.$ident.'"  class="shuffle_'.$ident.'" style="position: relative;vertical-align: middle;display:none;cursor:pointer; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"  src="'.plugins_url('',__FILE__).'/images/shuffleoff.png" />';					
+					}					
+					else {
+						echo '<img  id="button'.$y.'_'.$ident.'" class="shuffle_'.$ident.'" style="vertical-align: middle;cursor:pointer;max-width:7px;  border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"   src="'.plugins_url('',__FILE__).'/images/shuffle.png" />';
+						echo '<img  id="button'.($y+1).'_'.$ident.'"  class="shuffle_'.$ident.'" style="vertical-align: middle;display:none;cursor:pointer;max-width:7px; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"  src="'.plugins_url('',__FILE__).'/images/shuffleoff.png" />';				
+						}
+			$y=$y+2;
+				}
+			else	
+				if($ctrl[0]=='repeat')
+				{					
+				if($theme->appWidth > 400){	
+					echo '
+					<img  id="button'.$y.'_'.$ident.'" class="repeat_'.$ident.'" style="position: relative;vertical-align: middle;cursor:pointer; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"   src="'.plugins_url('',__FILE__).'/images/repeat.png"/>
+					<img  id="button'.($y+1).'_'.$ident.'"  class="repeat_'.$ident.'" style="position: relative;vertical-align: middle;display:none;cursor:pointer; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"   src="'.plugins_url('',__FILE__).'/images/repeatOff.png"/>
+					<img  id="button'.($y+2).'_'.$ident.'"  class="repeat_'.$ident.'" style="osition: relative;vertical-align: middle;display:none;cursor:pointer; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"  src="'.plugins_url('',__FILE__).'/images/repeatOne.png"/>
+					';
+				}
+				else{
+					echo '
+				<img  id="button'.$y.'_'.$ident.'" class="repeat_'.$ident.'" style="vertical-align: middle;cursor:pointer;max-width:7px; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"   src="'.plugins_url('',__FILE__).'/images/repeat.png"/>
+				<img  id="button'.($y+1).'_'.$ident.'"  class="repeat_'.$ident.'" style="vertical-align: middle;display:none;cursor:pointer;max-width:7px; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"   src="'.plugins_url('',__FILE__).'/images/repeatOff.png"/>
+				<img  id="button'.($y+2).'_'.$ident.'"  class="repeat_'.$ident.'" style="vertical-align: middle;display:none;cursor:pointer;max-width:7px; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';"  src="'.plugins_url('',__FILE__).'/images/repeatOne.png"/>
+				';					
+					}					
+			$y=$y+3;
+				}
+				else
+				{
+					if($theme->appWidth > 400){
+						echo '<img  style="position: relative;vertical-align: middle;cursor:pointer; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';" id="button'.$y.'_'.$ident.'" class="'.$ctrl[0].'_'.$ident.'"  src="'.plugins_url('',__FILE__).'/images/'.$ctrl[0].'.png" />';
+					}
+					else{
+						echo '<img  style="vertical-align: middle;cursor:pointer;max-width:7px; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';" id="button'.$y.'_'.$ident.'" class="'.$ctrl[0].'_'.$ident.'"  src="'.plugins_url('',__FILE__).'/images/'.$ctrl[0].'.png" />';						
+						}
+				$y=$y+1;
+				}
+			echo '</td>';	
+		}
+}
+echo '</tr></table>';
+if($theme->ctrlsPos==1){ ?>
+<div class="progressBar_<?php echo $ident;?>">
+   <div class="timeBar_<?php echo $ident;?>"></div>
+   <div class="bufferBar_<?php echo $ident;?>"></div>
+</div>
+<?php
+}
+?>
+   </div>
+</div>
+<div id="album_div_<?php echo $ident;?>" style="display:<?php if($start_lib == 0) echo 'none' ?>;background-color:<?php echo "#".$theme->appBgColor;?>;overflow:hidden;position:relative;height:<?php echo $theme->appHeight; ?>px;">
+<table width="100%" height="100%" style="padding:0px !important;border:none;border-collapse: inherit;width: 100% !important;" id="album_table_<?php  echo $ident?>">
+<tr id="tracklist_up_<?php  echo $ident?>" style="display:none; background: transparent;">
+<td height="12px" colspan="2" style="text-align:right; border:none;background: transparent;padding: 0px !important;">
+<div onmouseover="this.style.background='rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2))?>,0.4)'" onmouseout="this.style.background='none'" id="scroll" style="overflow:hidden;width:50%;height:100%;text-align:center;float:right;cursor:pointer;" onmousedown="scrolltp=setInterval('scrollTop_<?php echo $ident;?>()', 30)" onmouseup="clearInterval(scrolltp)">
+<img   src="<?php echo plugins_url('',__FILE__)?>/images/top.png" style="cursor:pointer; margin: 0px !important; padding: 0px !important; border:none;background: transparent;" id="button25_<?php echo $ident;?>" />
+<div>
+</td>
+</tr>
+<tr style="background: transparent;">
+<td style="vertical-align:middle; border:none;background: transparent;padding: 0px !important;width: 4% !important; ">
+<img src="<?php echo plugins_url('',__FILE__)?>/images/prev.png" style="cursor:pointer; margin: 0px !important; padding: 0px !important; background: transparent;border:none;min-width: 16px;" id="button28_<?php  echo $ident?>" onclick="prevPage_<?php  echo $ident?>();" />
+</td>
+<td style="border:none;background: transparent;padding: 2px !important;width:92% !important;" id="lib_td_<?php echo $ident;?>">
+<?php
+for($l=0;$l<$table_count;$l++)
+{
+echo '<table class="lib_tbl_'.$ident.'" id="lib_table_'.$l.'_'.$ident.'" '.$display.'> ';
+for($i=0;$i<$libRows;$i++)
+{
+	echo '<tr style="background: transparent;">';
+	for($j=0;$j<$libCols;$j++)
+	{			
+		if($p<count($playlist_array)-1)
+		{
+		$playyy= $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist WHERE id=".$playlist_array[$p]);
+		$playTHUMB=$playyy->thumb;
+if($playTHUMB!=""){
+			$image_nk = '<img src="'.$playTHUMB.'" style="border:none; width:50% !important;background: transparent;"/>';
+			}
+			else $image_nk = "";		
+echo '<td  class="playlist_td_'.$ident.'" id="playlist_'.$p.'_'.$ident.'"  onclick="openPlaylist_'.$ident.'('.$p.','.$l.')" onmouseover="this.style.color=\'#'.$theme->textHoverColor .'\';this.style.background=\'rgba('.HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2)).','.HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2)).','.HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2)).',0.4)\'" onmouseout="this.style.color=\'#'.$theme->textColor .'\';this.style.background=\' none\'" onclick="" style="color:#'.$theme->textColor .';border:1px solid white;background: transparent;vertical-align:center; text-align:center;width:'.$cellWidth.';height:'.$cellHeight.';cursor:pointer;padding:5px !important; ">'.$image_nk.'
+		<p style="font-size:'.$theme->libListTextSize.'px !important;margin-bottom: 0px !important;padding:0px !important;">'.$playyy->title.'</p>
+		</td>';
+		$p=$p+1;		
+		}
+		else
+			{
+			echo '<td style="border:1px solid white;vertical-align:top;background: transparent; align:center;width:'.$cellWidth.';height:'.$cellHeight.'">
+			</td>';
+			}		
+		}
+		
+	echo '</tr>';
+}
+if($p<count($playlist_array)-1)
+		{
+		$table_count=$table_count+1;
+		$display='style="display:none;width:100%;height:100%;border-collapse: collapse;"';
+		}
+echo '</table>';
+}
+for($i=0;$i<$p;$i++)
+{
+$play1= $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist WHERE id=".$playlist_array[$i]);
+$v_ids=explode(',',$play1->videos);
+$vi_ids=substr($play1->videos,0,-1);
+		$playTHUMB=$play1->thumb;
+		if($playTHUMB!="")
+			$image_nkar = '<img src="'.$playTHUMB.'"  style="border:none;width:70% !important" /><br /><br />';
+		else 
+			$image_nkar = "";	
+	echo '<table playlist_id="'.$i.'" id="playlist_table_'.$i.'_'.$ident.'"  style="border:none;border-collapse: inherit;display:none;height:100%;width:100% !important; padding:0px !important;" >
+</tr>
+<tr style="background: transparent;">
+<td style="text-align:center;vertical-align:top;background: transparent;border:none;background: transparent;padding:5px !important;">';
+echo $image_nkar;
+echo '<p style="color:#'.$theme->textColor .'; font-size:'.$theme->libDetailsTextSize.'px !important;margin-bottom: 0px !important;">'.$play1->title.'</p>';
+echo '</td>
+<td style="width:50% !important;border:none; background: transparent;padding: 5px !important;">
+<div style="width:100%;text-align:left;border:1px solid white;height:'.($theme->appHeight-55).'px;vertical-align:top;position:relative;overflow:hidden; min-width: 130px;">
+<div id="scroll_div_'.$i.'_'.$ident.'" style="position:relative;">';
+$jj=0;
+for($j=0;$j<count($v_ids)-1;$j++)
+{
+	$vds1=$wpdb->get_results("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=".$v_ids[$j]);
+			if($vds1[0]->type=='http')
+			{
+				echo '<p class="vid_title_'.$ident.'" ondblclick="jQuery(\'.show_vid_'.$ident.'\').click()" onmouseover="this.style.color=\'#'.$theme->textHoverColor .'\';this.style.background=\'rgba('.HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2)).','.HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2)).','.HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2)).',0.4)\'" onmouseout="this.style.color=\'#'.$theme->textColor .'\';this.style.background=\' none\'" style="padding: 0px !important;color:#'.$theme->textColor .' !important;font-size:'.$theme->libDetailsTextSize.'px !important;line-height:30px !important;cursor:pointer; margin: 0px !important;" onclick="jQuery(\'#HD_on_'.$ident.'\').val(0);jQuery(\'#track_list_'.$ident.'_'.$i.'\').find(\'.vid_thumb_'.$ident.'\')['.$jj.'].click();playBTN_'.$ident.'();current_playlist_videos_'.$ident.'();vid_num='.$jj.';jQuery(\'#current_track_'.$ident.'\').val('.$jj.');vid_select2_'.$ident.'(this);playlist_select_'.$ident.'('.$i.') ">'.($jj+1).' - '.$vds1[0]->title.'</p>';
+				$jj=$jj+1;
+			}		
+}
+echo '</div></div>
+</td>
+</tr>
+</table>';
+}
+?>
+</td>
+<td style="vertical-align:bottom; border:none;background: transparent; position: relative;width: 5% !important;padding: 0px !important;max-width: 20px !important;">
+<table style='height:<?php echo $theme->appHeight-46 ?>px; border:none;border-collapse: inherit;'>
+<tr style="background: transparent;">
+<td height='100%' style="border:none;background: transparent; vertical-align: middle;padding: 0px !important;">
+<img  src="<?php echo plugins_url('',__FILE__)?>/images/next.png" style="cursor:pointer;border:none;background: transparent;display:inline !important; " id="button27_<?php  echo $ident?>" onclick="nextPage_<?php  echo $ident?>()" />
+</td>
+</tr>
+<tr style="background: transparent;">
+<td style="border:none;background: transparent;padding: 0px !important;">
+  <img  src="<?php echo plugins_url('',__FILE__)?>/images/back.png" style="cursor:pointer; display:none; border:none;background: transparent;" id="button29_<?php  echo $ident?>" onclick="openLibTable_<?php  echo $ident?>()" />
+</td>
+</tr>
+<tr style="background: transparent;">
+<td style="border:none;background: transparent;padding: 0px !important;"> 
+ <img style="cursor:pointer;border:none;background: transparent; position:relative;"  id="button19_<?php  echo $ident?>"  class="show_vid_<?php  echo $ident?>"  src="<?php echo plugins_url('',__FILE__)?>/images/lib.png"  />
+</td>
+</tr>
+</table>
+ </td>
+</tr>
+<tr id="tracklist_down_<?php  echo $ident?>" style="display:none;background: transparent" >
+<td height="12px" colspan="2" style="text-align:right;border:none;background: transparent;padding: 5px !important;">
+<div  onmouseover="this.style.background='rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2))?>,0.4)'" onmouseout="this.style.background='none'" id="scroll" style="overflow:hidden;width:50%;height:100%;text-align:center;float:right;cursor:pointer;" onmousedown="scrollBot=setInterval('scrollBottom_<?php echo $ident;?>()', 30)" onmouseup="clearInterval(scrollBot)">
+<img src="<?php echo plugins_url('',__FILE__)?>/images/bot.png" style="cursor:pointer;border:none;background: transparent;padding:0px !important;" id="button26_<?php  echo $ident?>"  />
+</div>
+</td>
+</tr>
+</table>
+ </div>
+<script type="text/javascript">
+function flashShare(type,b,c)	
+{
+	u=location.href;
+	u=u.replace('/?','/index.php?');
+	if(u.search('&AlbumId')!=-1)
+	{
+		var u_part2='';
+		u_part2=u.substring(u.search('&TrackId')+2, 1000)
+		if(u_part2.search('&')!=-1)
+		{
+			u_part2=u_part2.substring(u_part2.search('&'),1000);
+		}
+		u=u.replace(u.substring(u.search('&AlbumId'), 1000),'')+u_part2;		
+	}
+	if(!location.search)
+			u=u+'?';
+		else
+			u=u+'&';
+	t=document.title;
+	switch (type)
+	{
+	case 'fb':	
+		window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u+'AlbumId='+b+'&TrackId='+c)+'&t='+encodeURIComponent(t), "Facebook","menubar=1,resizable=1,width=350,height=250");
+		break;
+	case 'g':
+		window.open('http://plus.google.com/share?url='+encodeURIComponent(u+'AlbumId='+b+'&TrackId='+c)+'&t='+encodeURIComponent(t), "Google","menubar=1,resizable=1,width=350,height=250");
+		break;		
+	case 'tw':
+		window.open('http://twitter.com/home/?status='+encodeURIComponent(u+'AlbumId='+b+'&TrackId='+c), "Twitter","menubar=1,resizable=1,width=350,height=250");
+		break;
+	}
+}		
+</script>
+<div id="embed_Url_div_<?php echo $ident;?>" style="display:none;text-align:center;background-color:rgba(0,0,0,0.5); height:160px;width:300px;position:relative;left:<?php echo ($theme->appWidth/2)-150 ?>px;top:-<?php echo ($theme->appHeight/2)+75 ?>px">
+<textarea  onclick="jQuery('#embed_Url_<?php  echo $ident?>').focus(); jQuery('#embed_Url_<?php  echo $ident?>').select();"  id="embed_Url_<?php  echo $ident?>" readonly="readonly" style="font-size:11px;width:285px;overflow-y:scroll;resize:none;height:100px;position:relative;top:5px;"></textarea>
+<span style="position:relative;top:10px;"><button onclick="jQuery('#embed_Url_div_<?php  echo $ident?>').css('display','none')" style="border:0px">Close</button><p style="color:white">Press Ctrl+C to copy the embed code to clipboard</p></span>
+</div>
+<div id="share_buttons_<?php echo $ident;?>" style="text-align:center;height:113px;width:30px;background-color:rgba(0,0,0,0.5);position:relative;z-index:20000;top:<?php echo $share_top; ?>;display:none;" >
+<img onclick="flashShare('fb',document.getElementById('current_playlist_table_<?php echo $ident;?>').value,document.getElementById('current_track_<?php echo $ident;?>').value)" style="cursor:pointer;  border:none;background: transparent;padding:0px;max-width: auto;"  src="<?php echo plugins_url('',__FILE__)?>/images/facebook.png" /><br>
+<img onclick="flashShare('tw',document.getElementById('current_playlist_table_<?php echo $ident;?>').value,document.getElementById('current_track_<?php echo $ident;?>').value)" style="cursor:pointer; border:none;background: transparent;padding:0px;max-width: auto;" src="<?php echo plugins_url('',__FILE__)?>/images/twitter.png" /><br>
+<img onclick="flashShare('g',document.getElementById('current_playlist_table_<?php echo $ident;?>').value,document.getElementById('current_track_<?php echo $ident;?>').value)" style="cursor:pointer; border:none;background: transparent;padding:0px;max-width: auto;" src="<?php echo plugins_url('',__FILE__)?>/images/googleplus.png" /><br>
+<img onclick="jQuery('#embed_Url_div_<?php echo $ident;?>').css('display','');embed_url_<?php echo $ident;?>(document.getElementById('current_playlist_table_<?php echo $ident;?>').value,document.getElementById('current_track_<?php echo $ident;?>').value)" style="cursor:pointer; border:none; background: transparent;padding:0px;max-width: auto;" src="<?php echo plugins_url('',__FILE__)?>/images/embed.png" />
+</div>
 </div>
 <?php 
+$sufffle=str_replace ('Shuffle', 'shuffle', $theme->defaultShuffle);
+if($sufffle=='shuffleOff')
+$shuffle=0;
+else
+$shuffle=1;
+$admin_url=admin_url('admin-ajax.php?action=spiderVeideoPlayervideoonly');
+?>
+<input type="hidden" id="color_<?php echo $ident;?>" value="<?php echo "#".$theme->ctrlsMainColor ?>" />
+<input type="hidden" id="support_<?php echo $ident;?>" value="1"/>
+<input type="hidden" id="event_type_<?php echo $ident;?>" value="mouseenter"/>
+<input type="hidden" id="current_track_<?php echo $ident;?>" value="0"/>
+<input type="hidden" id="shuffle_<?php echo $ident;?>" value="<?php echo $shuffle ?>"/>
+<input type="hidden" id="scroll_height_<?php  echo $ident?>" value="0"/>
+<input type="hidden" id="scroll_height2_<?php echo $ident;?>" value="0"/>
+<input type="hidden" value="<?php echo $l ?>" id="lib_table_count_<?php  echo $ident?>"/>
+<input type="hidden" value="" id="current_lib_table_<?php  echo $ident?>"/>
+<input type="hidden" value="0" id="current_playlist_table_<?php echo $ident;?>"/>
+<input type="hidden" value="<?php echo $theme->defaultRepeat ?>" id="repeat_<?php  echo $ident?>"/>
+<input type="hidden" value="0" id="HD_on_<?php  echo $ident?>"/>
+<input type="hidden" value="" id="volumeBar_width_<?php  echo $ident?>"/>
+<script>
+var video_<?php echo $ident;?> = jQuery('#videoID_<?php  echo $ident?>');
+var paly_<?php echo $ident;?> = jQuery('#global_body_<?php echo $ident;?> .btnPlay');
+var pause_<?php echo $ident;?> = jQuery('#global_body_<?php echo $ident;?> .btnPause');
+function embed_url_<?php echo $ident;?>(a,b)
+	{
+	jQuery('#embed_Url_<?php  echo $ident?>').html('<iframe allowFullScreen allowTransparency="true" frameborder="0" width="<?php echo $theme->appWidth ?>" height="<?php echo $theme->appHeight ?>" src="'+location.href+'&AlbumId='+a+'&TrackId='+b+'" type="text/html" ></iframe>')
+	jQuery('#embed_Url_<?php  echo $ident?>').focus(); jQuery('#embed_Url_<?php  echo $ident?>').select();	
+	}
+jQuery('#global_body_<?php echo $ident;?> .share_<?php echo $ident;?>, #global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').on('mouseenter',function(){
+left=jQuery('#global_body_<?php echo $ident;?> .share_<?php echo $ident;?>').position().left
+if(parseInt(jQuery('#global_body_<?php echo $ident;?> #play_list_<?php  echo $ident?>').css('width'))==0) 
+jQuery('#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').css('left',left)
+else
+<?php if ($theme->playlistPos==1){ ?>
+jQuery('#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').css('left',left+<?php echo $theme->playlistWidth ?>)
+<?php } else {?>
+jQuery('#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').css('left',left)
+<?php }?>
+jQuery('#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').css('display','')
+})
+jQuery('#global_body_<?php echo $ident;?> .share_<?php echo $ident;?>,#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').on('mouseleave',function(){
+jQuery('#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').css('display','none')
+})
+	if(<?php echo $theme->autoPlay ?>==1)
+		{
+		setTimeout(function(){jQuery('#thumb_0_<?php echo $ident?>').click()},500);
+		}
+	<?php if($sufffle=='shuffleOff') {?>
+		if(jQuery('#global_body_<?php echo $ident;?> .shuffle_<?php  echo $ident?>')[0])
+			{
+				jQuery('#global_body_<?php echo $ident;?> .shuffle_<?php  echo $ident?>')[0].style.display="none";
+				jQuery('#global_body_<?php echo $ident;?> .shuffle_<?php  echo $ident?>')[1].style.display="";
+			}
+		<?php
+		}
+		else
+		{
+		?>
+	if(jQuery('#global_body_<?php echo $ident;?> .shuffle_<?php  echo $ident?>')[0])
+		{
+			jQuery('#global_body_<?php echo $ident;?> .shuffle_<?php  echo $ident?>')[1].style.display="none";
+			jQuery('#global_body_<?php echo $ident;?> .shuffle_<?php  echo $ident?>')[0].style.display="";
+		}
+		<?php } ?>
+jQuery('#global_body_<?php echo $ident;?> .fullScreen_<?php echo $ident;?>').on('click',function(){
+if(video_<?php echo $ident;?>[0].mozRequestFullScreen)
+video_<?php echo $ident;?>[0].mozRequestFullScreen();
+if(video_<?php echo $ident;?>[0].webkitEnterFullscreen)
+video_<?php echo $ident;?>[0].webkitEnterFullscreen()
+})
+jQuery('#global_body_<?php echo $ident;?> .stop').on('click',function(){
+video_<?php echo $ident;?>[0].currentTime=0;
+video_<?php echo $ident;?>[0].pause();
+paly_<?php echo $ident;?>.css('display',"");
+pause_<?php echo $ident;?>.css('display',"none");
+})
+<?php if($theme->defaultRepeat=='repeatOff'){ ?>
+if(jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[0])
+{
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[0].style.display="none";
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[1].style.display="";
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[2].style.display="none";
+}
+<?php }?>
+<?php if($theme->defaultRepeat=='repeatOne'){ ?>
+if(jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[0])
+{
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[0].style.display="none";
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[1].style.display="none";
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[2].style.display="";
+}
+<?php }?>
+<?php if($theme->defaultRepeat=='repeatAll'){ ?>
+if(jQuery('.repeat_<?php  echo $ident?>')[0])
+{
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[0].style.display="";
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[1].style.display="none";
+jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[2].style.display="none";
+}
+<?php }?>
+jQuery('.repeat_<?php  echo $ident?>').on('click',function(){
+repeat_<?php  echo $ident?>=jQuery('#repeat_<?php  echo $ident?>').val();
+switch (repeat_<?php  echo $ident?>)
+{
+case 'repeatOff':
+jQuery('#repeat_<?php  echo $ident?>').val('repeatOne');
+jQuery('.repeat_<?php  echo $ident?>')[0].style.display="none";
+jQuery('.repeat_<?php  echo $ident?>')[1].style.display="none";
+jQuery('.repeat_<?php  echo $ident?>')[2].style.display="";
+break;
+case 'repeatOne':
+jQuery('#repeat_<?php  echo $ident?>').val('repeatAll');
+jQuery('.repeat_<?php  echo $ident?>')[0].style.display="";
+jQuery('.repeat_<?php  echo $ident?>')[1].style.display="none";
+jQuery('.repeat_<?php  echo $ident?>')[2].style.display="none";
+break;
+case 'repeatAll':
+jQuery('#repeat_<?php  echo $ident?>').val('repeatOff');
+jQuery('.repeat_<?php  echo $ident?>')[0].style.display="none";
+jQuery('.repeat_<?php  echo $ident?>')[1].style.display="";
+jQuery('.repeat_<?php  echo $ident?>')[2].style.display="none";
+break;
+}
+})
+jQuery('#global_body_<?php echo $ident;?> #voulume_img_<?php echo $ident;?>').on('click',function(){
+if(jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>')[0].style.width!='0%')
+{
+video_<?php echo $ident;?>[0].volume=0;
+jQuery('#global_body_<?php echo $ident;?> #volumeBar_width_<?php  echo $ident?>').val(jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>')[0].style.width)
+jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width','0%')
+}
+else
+{
+video_<?php echo $ident;?>[0].volume=parseInt(jQuery('#global_body_<?php echo $ident;?> #volumeBar_width_<?php  echo $ident?>').val())/100;
+jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width',jQuery('#global_body_<?php echo $ident;?> #volumeBar_width_<?php  echo $ident?>').val())
+}
+})
+jQuery('.hd_<?php echo $ident;?>').on('click',function(){
+current_time_<?php  echo $ident?>=video_<?php echo $ident;?>[0].currentTime;
+HD_on_<?php  echo $ident?>=jQuery('#HD_on_<?php  echo $ident?>').val();
+current_playlist_table_<?php echo $ident;?>=jQuery('#current_playlist_table_<?php echo $ident;?>').val();
+current_track_<?php echo $ident;?>=jQuery('#current_track_<?php echo $ident;?>').val();
+if(jQuery('#track_list_<?php  echo $ident?>_'+current_playlist_table_<?php echo $ident;?>).find('#urlHD_'+current_track_<?php echo $ident?>+'_'+<?php echo $ident?>).val() && HD_on_<?php  echo $ident?>==0)
+{
+document.getElementById('videoID_<?php  echo $ident?>').src=jQuery('#track_list_<?php  echo $ident?>_'+current_playlist_table_<?php  echo $ident?>).find('#urlHD_'+current_track_<?php echo $ident?>+'_'+<?php echo $ident?>).val();
+play_<?php  echo $ident?>();
+setTimeout('video_<?php echo $ident;?>[0].currentTime=current_time_<?php echo $ident?>',500)
+jQuery('#HD_on_<?php  echo $ident?>').val(1);
+}
+if(jQuery('#track_list_<?php  echo $ident?>_'+current_playlist_table_<?php  echo $ident?>).find('#urlHD_'+current_track_<?php echo $ident?>+'_'+<?php echo $ident?>).val() && HD_on_<?php echo $ident?>==1)
+{
+jQuery('#track_list_<?php  echo $ident?>_'+current_playlist_table_<?php  echo $ident?>).find('#thumb_'+current_track_<?php echo $ident?>+'_'+<?php echo $ident?>).click();
+setTimeout('video_<?php echo $ident;?>[0].currentTime=current_time_<?php echo $ident?>',500)
+jQuery('#HD_on_<?php  echo $ident?>').val(0);
+}
+})
+function support_<?php echo $ident;?>(i,j)
+{
+if(jQuery('#track_list_<?php  echo $ident?>_'+i).find('#vid_type_'+j+'_<?php echo $ident?>').val()!='http')
+{
+jQuery('#not_supported_<?php  echo $ident?>').css('display','');
+jQuery('#support_<?php echo $ident;?>').val(0);
+}
+else
+{
+jQuery('#not_supported_<?php  echo $ident?>').css('display','none');
+jQuery('#support_<?php echo $ident;?>').val(1);
+}
+}
+jQuery('.play_<?php echo $ident;?>').on('click',function(){video_<?php echo $ident;?>[0].play();})
+jQuery('.pause_<?php echo $ident;?>').on('click',function(){video_<?php echo $ident;?>[0].pause();})
+function vid_select_<?php echo $ident?>(x)
+{
+jQuery("div.vid_thumb_<?php echo $ident?>").each(function(){
+if(jQuery(this).find("img"))
+{
+jQuery(this).find("img").hide(20);
+		if(jQuery(this).find("img")[0])
+		jQuery(this).find("img")[0].style.display="none";
+	}	
+		jQuery(this).css('background','none');
+  }) 
+  jQuery("div.vid_thumb_<?php echo $ident?>").each(function(){
+        jQuery(this).mouseenter(function() {
+if(jQuery(this).find("img"))
+jQuery(this).find("img").slideDown(100);
+jQuery(this).css('background','rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>)')
+  jQuery(this).css('color','#<?php echo $theme->textHoverColor  ?>')  
+  })  
+    jQuery(this).mouseleave(function() {
+	if(jQuery(this).find("img"))
+	jQuery(this).find("img").slideUp(300);		
+		jQuery(this).css('background','none');
+		jQuery(this).css('color','#<?php echo $theme->textColor  ?>')
+  });
+jQuery(this).css('color','#<?php echo $theme->textColor  ?>')
+  })
+jQuery(x).unbind('mouseleave mouseenter'); 
+if(jQuery(x).find("img"))
+jQuery(x).find("img").show(10); 
+jQuery(x).css('background','rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>)')
+jQuery(x).css('color','#<?php echo $theme->textSelectedColor  ?>')
+}
+function vid_select2_<?php echo $ident?>(x)
+{
+jQuery("p.vid_title_<?php echo $ident?>").each(function(){
+		this.onmouseover=function(){this.style.color='#'+'<?php echo $theme->textHoverColor?>' ;this.style.background='rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2)) ?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2)) ?>,0.4)'}
+		this.onmouseout=function(){this.style.color='<?php echo '#'.$theme->textColor ?>';this.style.background=" none"}
+		jQuery(this).css('background','none');
+		jQuery(this).css('color','#<?php echo $theme->textColor  ?>');
+  })
+jQuery(x).css('background','rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>)')
+jQuery(x).css('color','#<?php echo $theme->textSelectedColor  ?>')
+x.onmouseover=null;  
+x.onmouseout=null;
+}
+function playlist_select_<?php echo $ident;?>(x)
+{
+jQuery("#global_body_<?php echo $ident;?> td.playlist_td_<?php echo $ident;?>").each(function(){
+		jQuery(this).css('background','none');
+		jQuery(this).css('color','#<?php echo $theme->textColor  ?>');
+		this.onmouseover=function(){this.style.color='#'+'<?php echo $theme->textHoverColor?>' ;this.style.background='rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2)) ?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2))?>,<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2)) ?>,0.4)'}
+		this.onmouseout=function(){this.style.color='<?php echo '#'.$theme->textColor ?>';this.style.background=" none"}		
+		})
+jQuery('#playlist_'+x+'_<?php  echo $ident?>').css('background','rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgSelectedColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>)')
+jQuery('#playlist_'+x+'_<?php  echo $ident?>').css('color','#<?php echo $theme->textSelectedColor  ?>')
+jQuery('#playlist_'+x+'_<?php  echo $ident?>')[0].onmouseover=null
+jQuery('#playlist_'+x+'_<?php  echo $ident?>')[0].onmouseout=null
+}
+jQuery('.shuffle_<?php  echo $ident?>').on('click', function() {
+if(jQuery('#shuffle_<?php  echo $ident?>').val()==0)
+{
+jQuery('#shuffle_<?php  echo $ident?>').val(1);
+jQuery('.shuffle_<?php  echo $ident?>')[1].style.display="none";
+jQuery('.shuffle_<?php  echo $ident?>')[0].style.display="";
+}
+else
+{
+jQuery('#shuffle_<?php  echo $ident?>').val(0);
+jQuery('.shuffle_<?php  echo $ident?>')[0].style.display="none";
+jQuery('.shuffle_<?php  echo $ident?>')[1].style.display="";
+}
+});
+jQuery("div.vid_thumb_<?php echo $ident?>").each(function(){
+        jQuery(this).mouseenter(function() {
+if(jQuery(this).find("img"))
+jQuery(this).find("img").slideToggle(100);
+jQuery(this).css('background','rgba(<?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>)')
+   jQuery(this).css('color','#<?php echo $theme->textHoverColor  ?>')
+  })
+    jQuery(this).mouseleave(function() {
+		if(jQuery(this).find("img"))
+		jQuery(this).find("img").slideToggle(300);
+		jQuery(this).css('background','none');
+		jQuery(this).css('color','#<?php echo $theme->textColor  ?>')
+  });
+  })
+function timeUpdate_<?php  echo $ident?>()
+{
+if(parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime/60)<10 && parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime % 60<10))
+    document.getElementById('time_<?php  echo $ident?>').innerHTML = '0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime/60)+':0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime % 60);
+if(parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime/60)<10)
+    document.getElementById('time_<?php  echo $ident?>').innerHTML = '0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime/60)+':'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime % 60);
+	if(parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime % 60)<10)
+    document.getElementById('time_<?php  echo $ident?>').innerHTML = '0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime/60)+':0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').currentTime % 60);	
+}
+function durationChange_<?php  echo $ident?>()
+{
+if(parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration/60)<10 && parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration % 60<10))
+    document.getElementById('duration_<?php  echo $ident?>').innerHTML = '0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration/60)+':0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration % 60);
+	if(parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration/60)<10)
+    document.getElementById('duration_<?php  echo $ident?>').innerHTML = '0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration/60)+':'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration % 60);
+		if(parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration % 60)<10)
+    document.getElementById('duration_<?php  echo $ident?>').innerHTML = parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration/60)+':0'+parseInt(document.getElementById('videoID_<?php  echo $ident?>').duration % 60);
+	}
+function scrollBottom_<?php echo $ident;?>(){
+current_playlist_table_<?php echo $ident;?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+if(document.getElementById('scroll_div_'+current_playlist_table_<?php  echo $ident?>+'_<?php echo $ident?>').offsetHeight+parseInt(document.getElementById("scroll_div_"+current_playlist_table_<?php  echo $ident?>+'_<?php echo $ident?>').style.top)+55<=document.getElementById('global_body_<?php  echo $ident?>').offsetHeight)
+return false;
+document.getElementById('scroll_height_<?php  echo $ident?>').value=parseInt(document.getElementById('scroll_height_<?php  echo $ident?>').value)+5
+document.getElementById("scroll_div_"+current_playlist_table_<?php echo $ident;?>+'_<?php echo $ident?>').style.top="-"+document.getElementById('scroll_height_<?php  echo $ident?>').value+"px";
+};
+function scrollTop_<?php echo $ident;?>(){
+current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+if(document.getElementById('scroll_height_<?php  echo $ident?>').value<=0)
+return false;
+document.getElementById('scroll_height_<?php  echo $ident?>').value=parseInt(document.getElementById('scroll_height_<?php  echo $ident?>').value)-5
+document.getElementById("scroll_div_"+current_playlist_table_<?php  echo $ident?>+'_<?php echo $ident?>').style.top="-"+document.getElementById('scroll_height_<?php  echo $ident?>').value+"px";
+};
+function scrollBottom2_<?php echo $ident;?>(){
+current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+if(!current_playlist_table_<?php  echo $ident?>)
+{
+current_playlist_table_<?php  echo $ident?>=0;
+}
+if(document.getElementById('scroll_div2_'+current_playlist_table_<?php  echo $ident?>+'_<?php  echo $ident?>').offsetHeight+parseInt(document.getElementById("scroll_div2_"+current_playlist_table_<?php  echo $ident?>+"_<?php  echo $ident?>").style.top)+150<=document.getElementById('global_body_<?php  echo $ident?>').offsetHeight)
+return false;
+document.getElementById('scroll_height2_<?php echo $ident;?>').value=parseInt(document.getElementById('scroll_height2_<?php echo $ident;?>').value)+5
+document.getElementById("scroll_div2_"+current_playlist_table_<?php  echo $ident?>+"_<?php  echo $ident?>").style.top="-"+document.getElementById('scroll_height2_<?php echo $ident;?>').value+"px";
+};
+function scrollTop2_<?php echo $ident;?>(){
+current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+if(document.getElementById('scroll_height2_<?php echo $ident;?>').value<=0)
+return false;
+document.getElementById('scroll_height2_<?php echo $ident;?>').value=parseInt(document.getElementById('scroll_height2_<?php echo $ident;?>').value)-5
+document.getElementById("scroll_div2_"+current_playlist_table_<?php  echo $ident?>+"_<?php  echo $ident?>").style.top="-"+document.getElementById('scroll_height2_<?php echo $ident;?>').value+"px";
+};
+function openPlaylist_<?php  echo $ident?>(i,j)
+{
+document.getElementById('scroll_height_<?php  echo $ident?>').value=0;
+lib_table_count_<?php  echo $ident?>=document.getElementById('lib_table_count_<?php  echo $ident?>').value;
+for(lib_table=0;lib_table<lib_table_count_<?php  echo $ident?>;lib_table++)
+{
+document.getElementById('lib_table_'+lib_table+'_<?php  echo $ident?>').style.display="none";
+}
+jQuery("#playlist_table_"+i+"_<?php  echo $ident?>").fadeIn(700);
+document.getElementById('current_lib_table_<?php  echo $ident?>').value=j;
+document.getElementById('current_playlist_table_<?php echo $ident;?>').value=i;
+document.getElementById('tracklist_down_<?php  echo $ident?>').style.display="" ;
+document.getElementById('tracklist_up_<?php  echo $ident?>').style.display="";
+document.getElementById('button29_<?php  echo $ident?>').style.display="block";
+document.getElementById('button27_<?php  echo $ident?>').onclick=function(){nextPlaylist_<?php echo $ident;?>()};
+document.getElementById('button28_<?php  echo $ident?>').onclick=function(){prevPlaylist_<?php echo $ident;?>()};
+}
+function nextPlaylist_<?php echo $ident;?>()
+{
+document.getElementById('scroll_height_<?php  echo $ident?>').value=0;
+lib_table_count_<?php  echo $ident?>=document.getElementById('lib_table_count_<?php  echo $ident?>').value;
+for(lib_table=0;lib_table<lib_table_count_<?php  echo $ident?>;lib_table++)
+{
+document.getElementById('lib_table_'+lib_table+'_<?php  echo $ident?>').style.display="none";
+}
+current_lib_table_<?php  echo $ident?>=document.getElementById('current_lib_table_<?php  echo $ident?>').value;
+next_playlist_table_<?php  echo $ident?>=parseInt(document.getElementById('current_playlist_table_<?php echo $ident;?>').value)+1;
+current_playlist_table_<?php  echo $ident?>=parseInt(document.getElementById('current_playlist_table_<?php echo $ident;?>').value);
+if(next_playlist_table_<?php  echo $ident?>><?php echo count($playlist_array)-2 ?>)
+return false;
+jQuery("#playlist_table_"+current_playlist_table_<?php  echo $ident?>+"_<?php  echo $ident?>").css('display','none');
+jQuery("#playlist_table_"+next_playlist_table_<?php  echo $ident?>+"_<?php  echo $ident?>").fadeIn(700);
+document.getElementById('current_playlist_table_<?php echo $ident;?>').value=next_playlist_table_<?php  echo $ident?>;
+document.getElementById('tracklist_down_<?php  echo $ident?>').style.display="" ;
+document.getElementById('tracklist_up_<?php  echo $ident?>').style.display="";
+document.getElementById('button29_<?php  echo $ident?>').style.display="block";
+}
+function prevPlaylist_<?php echo $ident;?>()
+{
+document.getElementById('scroll_height_<?php  echo $ident?>').value=0;
+lib_table_count_<?php  echo $ident?>=document.getElementById('lib_table_count_<?php  echo $ident?>').value;
+for(lib_table=0;lib_table<lib_table_count_<?php  echo $ident?>;lib_table++)
+{
+document.getElementById('lib_table_'+lib_table+'_<?php  echo $ident?>').style.display="none";
+}
+current_lib_table_<?php  echo $ident?>=document.getElementById('current_lib_table_<?php  echo $ident?>').value;
+prev_playlist_table_<?php  echo $ident?>=parseInt(document.getElementById('current_playlist_table_<?php echo $ident;?>').value)-1;
+current_playlist_table_<?php  echo $ident?>=parseInt(document.getElementById('current_playlist_table_<?php echo $ident;?>').value);
+if(prev_playlist_table_<?php  echo $ident?><0)
+return false;
+jQuery("#playlist_table_"+current_playlist_table_<?php  echo $ident?>+"_<?php  echo $ident?>").css('display','none');
+jQuery("#playlist_table_"+prev_playlist_table_<?php  echo $ident?>+"_<?php  echo $ident?>").fadeIn(700);
+document.getElementById('current_playlist_table_<?php echo $ident;?>').value=prev_playlist_table_<?php  echo $ident?>;
+document.getElementById('tracklist_down_<?php  echo $ident?>').style.display="" ;
+document.getElementById('tracklist_up_<?php  echo $ident?>').style.display="";
+document.getElementById('button29_<?php  echo $ident?>').style.display="block";
+}
+function openLibTable_<?php  echo $ident?>()
+{
+current_lib_table_<?php  echo $ident?>=document.getElementById('current_lib_table_<?php  echo $ident?>').value;
+document.getElementById('scroll_height_<?php  echo $ident?>').value=0;
+current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+jQuery("#lib_table_"+current_lib_table_<?php  echo $ident?>+"_<?php  echo $ident?>").fadeIn(700);
+document.getElementById('playlist_table_'+current_playlist_table_<?php  echo $ident?>+'_<?php  echo $ident?>').style.display="none";
+document.getElementById('tracklist_down_<?php  echo $ident?>').style.display="none" ;
+document.getElementById('tracklist_up_<?php  echo $ident?>').style.display="none";
+document.getElementById('button29_<?php  echo $ident?>').style.display="none";
+document.getElementById('button27_<?php  echo $ident?>').onclick=function(){nextPage_<?php  echo $ident?>()};
+document.getElementById('button28_<?php  echo $ident?>').onclick=function(){prevPage_<?php  echo $ident?>()};
+}
+var next_page_<?php  echo $ident?>=0;
+function nextPage_<?php  echo $ident?>()
+{
+if(next_page_<?php  echo $ident?>==document.getElementById('lib_table_count_<?php  echo $ident?>').value-1)
+return false;
+next_page_<?php  echo $ident?>=next_page_<?php  echo $ident?>+1;
+for(g=0; g<document.getElementById('lib_table_count_<?php  echo $ident?>').value; g++)
+{
+document.getElementById('lib_table_'+g+'_<?php  echo $ident?>').style.display="none";
+if(g==next_page_<?php  echo $ident?>)
+{
+jQuery("#lib_table_"+g+"_<?php  echo $ident?>").fadeIn(900);
+}
+}
+}
+function prevPage_<?php  echo $ident?>()
+{
+if(next_page_<?php  echo $ident?>==0)
+return false;
+next_page_<?php  echo $ident?>=next_page_<?php  echo $ident?>-1;
+for(g=0; g<document.getElementById('lib_table_count_<?php  echo $ident?>').value; g++)
+{
+document.getElementById('lib_table_'+g+'_<?php  echo $ident?>').style.display="none";
+if(g==next_page_<?php  echo $ident?>)
+{
+jQuery("#lib_table_"+g+"_<?php  echo $ident?>").fadeIn(900);
+}
+}
+}
+function playBTN_<?php echo $ident;?>()
+{
+current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+track_list_<?php  echo $ident?>=document.getElementById('track_list_<?php echo $ident;?>').value;
+document.getElementById('track_list_<?php echo $ident;?>_'+current_playlist_table_<?php  echo $ident?>).style.display="block";
+if(current_playlist_table_<?php  echo $ident?>!=track_list_<?php  echo $ident?>)
+document.getElementById('track_list_<?php echo $ident;?>_'+track_list_<?php  echo $ident?>).style.display="none";
+document.getElementById('track_list_<?php echo $ident;?>').value=current_playlist_table_<?php  echo $ident?>;
+video_<?php echo $ident;?>[0].play();
+paly_<?php echo $ident;?>.css('display',"none");
+pause_<?php echo $ident;?>.css('display',"");
+}
+function play_<?php echo $ident;?>()
+{
+video_<?php echo $ident;?>[0].play();
+paly_<?php echo $ident;?>.css('display',"none");
+pause_<?php echo $ident;?>.css('display',"");
+}
+jQuery('#global_body_<?php echo $ident;?> .btnPlay <?php if($theme->clickOnVid==1) echo ',#videoID_'.$ident.'' ?>, #global_body_<?php echo $ident;?> .btnPause').on('click', function() {
+   if(video_<?php echo $ident;?>[0].paused) {
+      video_<?php echo $ident;?>[0].play();
+	 paly_<?php echo $ident;?>.css('display',"none");
+	  pause_<?php echo $ident;?>.css('display',"");
+   }
+   else {
+      video_<?php echo $ident;?>[0].pause();
+	  paly_<?php echo $ident;?>.css('display',"");
+	  pause_<?php echo $ident;?>.css('display',"none");  
+   }
+   return false;
+});
+function check_volume_<?php echo $ident;?>()
+{
+percentage_<?php echo $ident;?> = video_<?php echo $ident;?>[0].volume * 100;
+jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width', percentage_<?php echo $ident;?> +'%');
+   document.getElementById("play_list_<?php  echo $ident?>").style.width='0px';
+   document.getElementById("play_list_<?php  echo $ident?>").style.display='none';
+}
+window.onload= check_volume_<?php echo $ident;?>();
+video_<?php echo $ident;?>.on('loadedmetadata', function() {
+   jQuery('.duration_<?php echo $ident?>').text(video_<?php echo $ident;?>[0].duration);
+});
+video_<?php echo $ident;?>.on('timeupdate', function() {
+   var progress_<?php  echo $ident?> = jQuery('#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>');
+   var currentPos_<?php  echo $ident?> = video_<?php echo $ident;?>[0].currentTime; //Get currenttime
+   var maxduration_<?php  echo $ident?> = video_<?php echo $ident;?>[0].duration; //Get video duration  
+   var percentage_<?php  echo $ident?> = 100 * currentPos_<?php  echo $ident?> / maxduration_<?php echo $ident;?>; //in %
+   var position_<?php  echo $ident?> = (<?php echo $theme->appWidth; ?> * percentage_<?php  echo $ident?> / 100)-progress_<?php  echo $ident?>.offset().left; 
+   jQuery('#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>').css('width', percentage_<?php  echo $ident?>+'%'); 
+});
+video_<?php echo $ident;?>.on('ended',function(){
+  if(jQuery('#repeat_<?php  echo $ident?>').val()=="repeatOne") 
+	  {
+			video_<?php echo $ident;?>[0].currentTime=0;
+			video_<?php echo $ident;?>[0].play();
+			paly_<?php echo $ident;?>.css('display',"none");
+			pause_<?php echo $ident;?>.css('display',"");  
+	  }
+  if(jQuery('#repeat_<?php  echo $ident?>').val()=="repeatAll") 
+	  {
+			jQuery('#global_body_<?php echo $ident;?> .playNext_<?php  echo $ident?>').click();
+	  }  
+if(jQuery('#repeat_<?php  echo $ident?>').val()=="repeatOff") 
+	  {
+			if(vid_num_<?php  echo $ident?>==video_urls_<?php  echo $ident?>.length-1)
+			{
+			video_<?php echo $ident;?>[0].currentTime=0;
+			video_<?php echo $ident;?>[0].pause();
+			paly_<?php echo $ident;?>.css('display',"");
+			pause_<?php echo $ident;?>.css('display',"none");
+			}
+		  }
+<?php if($theme->autoNext==1) { ?>
+  if(jQuery('#repeat_<?php  echo $ident?>').val()=="repeatOff") 
+  if(vid_num_<?php  echo $ident?>==video_urls_<?php  echo $ident?>.length-1)
+			{
+			video_<?php echo $ident;?>[0].currentTime=0;
+			video_<?php echo $ident;?>[0].pause();
+			paly_<?php echo $ident;?>.css('display',"");
+			pause_<?php echo $ident;?>.css('display',"none");
+			}
+	else
+		{	
+	  jQuery('#global_body_<?php echo $ident;?> .playNext_<?php echo $ident;?>').click();
+	   }
+   <?php }?>		  
+})
+var timeDrag_<?php echo $ident;?> = false;   /* Drag status */
+jQuery('#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>').mousedown(function(e) {
+   timeDrag_<?php echo $ident;?> = true;
+   updatebar_<?php  echo $ident?>(e.pageX);
+});
+jQuery('#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>').select(function(){
+})
+ jQuery(document).mouseup(function(e) {
+   if(timeDrag_<?php echo $ident;?>) {
+      timeDrag_<?php echo $ident;?> = false;
+      updatebar_<?php  echo $ident?>(e.pageX);
+   }
+});
+jQuery(document).mousemove(function(e) {
+   if(timeDrag_<?php echo $ident;?>) {
+      updatebar_<?php  echo $ident?>(e.pageX); 
+   }
+});
+var updatebar_<?php  echo $ident?> = function(x) {
+   var progress_<?php  echo $ident?> = jQuery('#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>');
+   var maxduration_<?php  echo $ident?> = video_<?php echo $ident;?>[0].duration; //Video duraiton
+   var position_<?php  echo $ident?> = x - progress_<?php  echo $ident?>.offset().left; //Click pos
+   var percentage_<?php  echo $ident?> = 100 * position_<?php  echo $ident?> / progress_<?php  echo $ident?>.width();
 
+   if(percentage_<?php  echo $ident?> > 100) {
+      percentage_<?php  echo $ident?> = 100;
+   }
+   if(percentage_<?php  echo $ident?> < 0) {
+      percentage_<?php  echo $ident?> = 0;
+   }
+   jQuery('#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>').css('width', percentage_<?php  echo $ident?>+'%');
+   jQuery('.spanA').css('left', position_<?php  echo $ident?>+'px');
+   video_<?php echo $ident;?>[0].currentTime = maxduration_<?php  echo $ident?> * percentage_<?php  echo $ident?> / 100;
+};
+function startBuffer_<?php echo $ident;?>() {
+setTimeout(function(){
+   var maxduration_<?php echo $ident;?> = video_<?php echo $ident;?>[0].duration;
+   var currentBuffer_<?php echo $ident;?> = video_<?php echo $ident;?>[0].buffered.end(0);
+   var percentage_<?php echo $ident;?> = 100 * currentBuffer_<?php echo $ident;?> / maxduration_<?php echo $ident;?>;
+   jQuery('#global_body_<?php echo $ident;?> .bufferBar_<?php  echo $ident?>').css('width', percentage_<?php echo $ident;?> +'%');
+   if(currentBuffer_<?php echo $ident;?> < maxduration_<?php echo $ident;?>) {
+      setTimeout(startBuffer_<?php echo $ident;?>, 500);
+   }
+  },800)
+};
+checkVideoLoad=setInterval(function(){
+if(video_<?php echo $ident;?>[0].duration)
+{
+setTimeout(startBuffer_<?php echo $ident;?>(), 500);
+clearInterval(checkVideoLoad)
+}
+}, 1000)
+var volume_<?php echo $ident;?> = jQuery('#global_body_<?php echo $ident;?> .volumeBar_<?php echo $ident;?>');
+jQuery('#global_body_<?php echo $ident;?> .muted').click(function() {
+   video_<?php echo $ident;?>[0].muted = !video_<?php echo $ident;?>[0].muted;
+   return false;
+});
+jQuery('#global_body_<?php echo $ident;?> .volumeBar_<?php echo $ident;?>').on('mousedown', function(e) {
+   var position_<?php echo $ident;?> = e.pageX - volume_<?php echo $ident;?>.offset().left;
+   var percentage_<?php  echo $ident?> = 100 * position_<?php echo $ident;?> / volume_<?php echo $ident;?>.width();
+   jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width', percentage_<?php  echo $ident?>+'%');
+   video_<?php echo $ident;?>[0].volume = percentage_<?php  echo $ident?> / 100;
+});
+var volumeDrag_<?php  echo $ident?> = false;   /* Drag status */
+jQuery('#global_body_<?php echo $ident;?> .volumeBar_<?php echo $ident;?>').mousedown(function(e) {
+   volumeDrag_<?php  echo $ident?> = true;
+   updateVolumeBar_<?php  echo $ident?>(e.pageX);
+});
+jQuery(document).mouseup(function(e) {
+   if(volumeDrag_<?php  echo $ident?>) {
+      volumeDrag_<?php  echo $ident?> = false;
+      updateVolumeBar_<?php  echo $ident?>(e.pageX);
+   }
+});
+jQuery(document).mousemove(function(e) {
+   if(volumeDrag_<?php  echo $ident?>) {
+      updateVolumeBar_<?php  echo $ident?>(e.pageX);
+   }
+});
+var updateVolumeBar_<?php  echo $ident?> = function(x) {
+   var progress_<?php  echo $ident?> = jQuery('#global_body_<?php echo $ident;?> .volumeBar_<?php echo $ident;?>');
+   var position_<?php echo $ident;?> = x - progress_<?php  echo $ident?>.offset().left; //Click pos
+   var percentage_<?php  echo $ident?> = 100 * position_<?php echo $ident;?> / progress_<?php  echo $ident?>.width();
+   if(percentage_<?php  echo $ident?> > 100) {
+      percentage_<?php  echo $ident?> = 100;
+   }
+   if(percentage_<?php  echo $ident?> < 0) {
+      percentage_<?php  echo $ident?> = 0;
+   }
+   jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width', percentage_<?php  echo $ident?>+'%');
+   video_<?php echo $ident;?>[0].volume =  percentage_<?php  echo $ident?> / 100;
+};
+var yy=1;
+controlHideTime_<?php  echo $ident?>='';
+jQuery("#global_body_<?php  echo $ident?>").each(function(){
+	jQuery(this).mouseleave(function() {
+controlHideTime_<?php  echo $ident?>=setInterval(function(){
+yy=yy+1;
+	if(yy<<?php echo $theme->autohideTime ?>)
+		{
+			return false
+		}
+	else
+		{
+						clearInterval(controlHideTime_<?php  echo $ident?>);
+						 yy=1;
+					jQuery("#event_type_<?php echo $ident;?>").val('mouseleave');
+					<?php if($theme->playlistAutoHide==1){ ?>
+					jQuery("#play_list_<?php  echo $ident?>").animate({
+						width: "0px",
+					  },300 );
+					  setTimeout(function(){ jQuery("#play_list_<?php  echo $ident?>").css('display','none');},300)
+					  jQuery("#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>").animate({
+						width: <?php echo $theme->appWidth; ?>+"px",
+						<?php if ($theme->playlistPos==1){ ?>
+						marginLeft:'0px'
+						<?php } else {?>
+						marginRight:'0px'
+							<?php } ?>
+					  }, 300 );
+					  jQuery("#global_body_<?php echo $ident;?> #control_btns_<?php  echo $ident?>").animate({
+					width: <?php echo $theme->appWidth?>+"px",
+					}, 300 );
+					/*jQuery("#space").animate({
+	paddingLeft:<?php echo (($theme->appWidth*20)/100) ?>+"px"},300)*/  
+                      <?php }?>
+					  <?php if($theme->ctrlsSlideOut==1){ ?>
+					jQuery('#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>').hide("slide", { direction: "<?php if($theme->ctrlsPos==1) echo 'up'; else echo 'down'; ?>" }, 1000);	
+                      <?php } ?>					
+		 }
+ },1000);
+  });
+jQuery(this).mouseenter(function() {
+if(controlHideTime_<?php  echo $ident?>)
+{
+clearInterval(controlHideTime_<?php  echo $ident?>)
+yy=1;
+}	 
+	if(document.getElementById('control_<?php  echo $ident?>').style.display=="none")
+		{
+				jQuery('#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>').show("slide", { direction: "<?php if($theme->ctrlsPos==1) echo 'up'; else echo 'down'; ?>" }, 450);
+		 }
+})
+  })
+var xx=1;
+volumeHideTime_<?php echo $ident;?>='';
+jQuery("#volumeTD_<?php echo $ident;?>").each(function(){
+jQuery('#volumeTD_<?php echo $ident;?>').mouseleave(function() {
+volumeHideTime_<?php echo $ident;?>=setInterval(function(){
+xx=xx+1;
+	if(xx<2)
+		{
+			return false
+		}
+	else
+		{
+clearInterval(volumeHideTime_<?php echo $ident;?>);
+						 xx=1;
+jQuery("#global_body_<?php echo $ident;?> #space").animate({ 
+paddingLeft:<?php echo (($theme->appWidth*20)/100)+'px' ?>,
+},1000);
+jQuery("#global_body_<?php echo $ident;?> #volumebar_player_<?php echo $ident;?>").animate({ 
+	width:'0px',
+},1000);
+percentage_<?php  echo $ident?> = video_<?php echo $ident;?>[0].volume * 100;
+jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width', percentage_<?php  echo $ident?>+'%');
+}
+},1000)
+})
+jQuery('#volumeTD_<?php echo $ident;?>').mouseenter(function() {
+if(volumeHideTime_<?php echo $ident;?>)
+{
+clearInterval(volumeHideTime_<?php echo $ident;?>)
+xx=1;
+}
+jQuery("#global_body_<?php echo $ident;?> #space").animate({ 
+paddingLeft:<?php echo (($theme->appWidth*20)/100)-100+'px' ?>,
+},500);
+jQuery("#global_body_<?php echo $ident;?> #volumebar_player_<?php echo $ident;?>").animate({ 
+<?php if($theme->appWidth > 400){ ?>
+width:'100px',
+<?php } 
+else { ?>
+width:'50px',
+<?php } ?>
+},500);
+});
+})
+jQuery('#global_body_<?php echo $ident;?> .playlist_<?php  echo $ident?>').on('click', function() {
+  if(document.getElementById("play_list_<?php  echo $ident?>").style.width=="0px")
+ { 
+  jQuery("#play_list_<?php  echo $ident?>").css('display','')
+ jQuery("#play_list_<?php  echo $ident?>").animate({
+    width: <?php echo $theme->playlistWidth; ?>+"px",
+  }, 500 );
+  jQuery("#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>").animate({
+    width: <?php echo $theme->appWidth-$theme->playlistWidth; ?>+"px",
+	 <?php if ($theme->playlistPos==1){ ?>
+    marginLeft:<?php echo $theme->playlistWidth; ?>+'px'
+	<?php } else {?>
+	marginRight:<?php echo $theme->playlistWidth; ?>+'px'
+	<?php } ?>
+  }, 500 );
+  /*jQuery("#space").animate({paddingLeft:<?php echo (($theme->appWidth*20)/100)-$theme->playlistWidth ?>+"px"},500)*/ 
+   jQuery("#global_body_<?php echo $ident;?> #control_btns_<?php  echo $ident?>").animate({
+  width: <?php echo $theme->appWidth-$theme->playlistWidth; ?>+"px",  
+  }, 500 );
+ }  
+  else  
+  { 
+  jQuery("#global_body_<?php echo $ident;?> #play_list_<?php  echo $ident?>").animate({
+    width: "0px",    
+  }, 1500 );
+     setTimeout(function(){ jQuery("#play_list_<?php  echo $ident?>").css('display','none');},1500)
+  jQuery("#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>").animate({
+    width: <?php echo $theme->appWidth; ?>+"px",
+    <?php if ($theme->playlistPos==1){ ?>
+    marginLeft:'0px'
+	<?php } else {?>
+	marginRight:'0px'
+	<?php } ?>
+  }, 1500 );
+     jQuery("#global_body_<?php echo $ident;?> #control_btns_<?php  echo $ident?>").animate({
+  width: <?php echo $theme->appWidth?>+"px",
+  }, 1500 );
+ /*jQuery("#space").animate({paddingLeft:<?php echo (($theme->appWidth*20)/100)?>+'px'},1500)*/
+  }
+});
+current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+video_urls_<?php echo $ident;?>=jQuery('#track_list_<?php  echo $ident?>_'+current_playlist_table_<?php  echo $ident?>).find('.vid_thumb_<?php echo $ident?>');
+function current_playlist_videos_<?php  echo $ident?>(){
+current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
+video_urls_<?php  echo $ident?>=jQuery('#track_list_<?php  echo $ident?>_'+current_playlist_table_<?php  echo $ident?>).find('.vid_thumb_<?php echo $ident?>');
+}
+var vid_num_<?php  echo $ident?>=0;
+jQuery('.playPrev_<?php  echo $ident?>').on('click', function() {
+vid_num_<?php  echo $ident?>--;
+if(jQuery('#shuffle_<?php  echo $ident?>').val()==1)
+vid_num=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length+1 - 0) + 0);
+if(vid_num_<?php  echo $ident?><0)
+{
+vid_num_<?php  echo $ident?>=video_urls_<?php  echo $ident?>.length-1;
+}
+video_urls_<?php  echo $ident?>[vid_num_<?php  echo $ident?>].click()
+});
+jQuery('#global_body_<?php echo $ident;?> .playNext_<?php echo $ident;?>').on('click', function() {
+vid_num_<?php  echo $ident?>++;
+if(jQuery('#shuffle_<?php  echo $ident?>').val()==1)
+vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length+1 - 0) + 0);
+jQuery('#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>').css('width', '0%');
+if(vid_num_<?php  echo $ident?>==video_urls_<?php  echo $ident?>.length)
+{
+vid_num_<?php  echo $ident?>=0;
+}
+video_urls_<?php  echo $ident?>[vid_num_<?php  echo $ident?>].click()
+});
+jQuery(".lib_<?php  echo $ident?>").click(function () {
+jQuery('#album_div_<?php  echo $ident?>').css('transform','');
+jQuery('#global_body_<?php  echo $ident?>').css('transform','');
+jQuery('#global_body_<?php  echo $ident?>').transition({
+perspective: '700px',
+    rotateY: '180deg',		
+	},1000);
+setTimeout(function(){
+jQuery('#album_div_<?php  echo $ident?>').css('-ms-transform','rotateY(180deg)')
+jQuery('#album_div_<?php  echo $ident?>').css('transform','rotateY(180deg)')
+jQuery('#album_div_<?php  echo $ident?>').css('-o-transform','rotateY(180deg)')
+document.getElementById('album_div_<?php  echo $ident?>').style.display='block'
+document.getElementById('video_div_<?php  echo $ident?>').style.display='none'
+},300);
+setTimeout(function(){
+jQuery('#album_div_<?php  echo $ident?>').css('-ms-transform','');
+jQuery('#global_body_<?php  echo $ident?>').css('-ms-transform','');
+jQuery('#album_div_<?php  echo $ident?>').css('transform','');
+jQuery('#global_body_<?php  echo $ident?>').css('transform','');
+jQuery('#album_div_<?php  echo $ident?>').css('-o-transform','');
+jQuery('#global_body_<?php  echo $ident?>').css('-o-transform','');
+},1100);
+})
+  jQuery(".show_vid_<?php  echo $ident?>").click(function () {
+jQuery('#global_body_<?php  echo $ident?>').transition({
+perspective: '700px',
+    rotateY: '180deg',
+    	},1000);
+setTimeout(function(){
+jQuery('#video_div_<?php  echo $ident?>').css('-ms-transform','rotateY(180deg)')
+jQuery('#video_div_<?php  echo $ident?>').css('transform','rotateY(180deg)')
+jQuery('#video_div_<?php  echo $ident?>').css('-o-transform','rotateY(180deg)')
+document.getElementById('album_div_<?php  echo $ident?>').style.display='none'
+document.getElementById('video_div_<?php  echo $ident?>').style.display='block'
+},300);		
+setTimeout(function(){
+jQuery('#video_div_<?php  echo $ident?>').css('-ms-transform','');
+jQuery('#global_body_<?php  echo $ident?>').css('-ms-transform','');
+jQuery('#video_div_<?php  echo $ident?>').css('transform','');
+jQuery('#global_body_<?php  echo $ident?>').css('transform',''); 
+jQuery('#video_div_<?php  echo $ident?>').css('-o-transform','');
+jQuery('#global_body_<?php  echo $ident?>').css('-o-transform','');
+},1100);
+})
+var canvas_<?php  echo $ident?>=[]
+var ctx_<?php  echo $ident?>=[]
+var originalPixels_<?php  echo $ident?>=[]
+var currentPixels_<?php  echo $ident?>=[]
+	for(i=1;i<30;i++)
+		if(document.getElementById('button'+i+'_<?php  echo $ident?>'))
+		{
+			canvas_<?php  echo $ident?>[i] = document.createElement("canvas");
+			ctx_<?php  echo $ident?>[i] = canvas_<?php  echo $ident?>[i].getContext("2d");
+			originalPixels_<?php  echo $ident?>[i] = null;
+			currentPixels_<?php  echo $ident?>[i] = null;
+		}
+function getPixels_<?php  echo $ident?>()
+		{
+			for(i=1;i<30;i++)
+				if(document.getElementById('button'+i+'_<?php  echo $ident?>'))
+				{
+					img=document.getElementById('button'+i+'_<?php  echo $ident?>');	
+					canvas_<?php  echo $ident?>[i].width = img.width;
+					canvas_<?php  echo $ident?>[i].height = img.height;
+					ctx_<?php  echo $ident?>[i].drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, img.width, img.height);
+					originalPixels_<?php  echo $ident?>[i] = ctx_<?php  echo $ident?>[i].getImageData(0, 0, img.width, img.height);
+					currentPixels_<?php  echo $ident?>[i] = ctx_<?php  echo $ident?>[i].getImageData(0, 0, img.width, img.height);
+					img.onload = null;
+				}
+		}
+		function HexToRGB_<?php  echo $ident?>(Hex)
+		{
+			var Long = parseInt(Hex.replace(/^#/, ""), 16);
+			return {
+				R: (Long >>> 16) & 0xff,
+				G: (Long >>> 8) & 0xff,
+				B: Long & 0xff
+			};
+		}
+		function changeColor_<?php  echo $ident?>()
+		{
+			
+			for(i=1;i<30;i++)
+			if(document.getElementById('button'+i+'_<?php  echo $ident?>'))
+			{		
+			if(!originalPixels_<?php  echo $ident?>[i]) return; // Check if image has loaded
+			var newColor = HexToRGB_<?php  echo $ident?>(document.getElementById("color_<?php echo $ident;?>").value);
+			for(var I = 0, L = originalPixels_<?php  echo $ident?>[i].data.length; I < L; I += 4)
+			{
+				if(currentPixels_<?php  echo $ident?>[i].data[I + 3] > 0)
+				{
+					currentPixels_<?php  echo $ident?>[i].data[I] = originalPixels_<?php  echo $ident?>[i].data[I] / 255 * newColor.R;
+					currentPixels_<?php  echo $ident?>[i].data[I + 1] = originalPixels_<?php  echo $ident?>[i].data[I + 1] / 255 * newColor.G;
+					currentPixels_<?php  echo $ident?>[i].data[I + 2] = originalPixels_<?php  echo $ident?>[i].data[I + 2] / 255 * newColor.B;
+				}
+			}
+					ctx_<?php  echo $ident?>[i].putImageData(currentPixels_<?php  echo $ident?>[i], 0, 0);
+					img=document.getElementById('button'+i+'_<?php  echo $ident?>');	
+					img.src = canvas_<?php  echo $ident?>[i].toDataURL("image/png");
+				}
+		}		
+<?php if($theme->spaceOnVid==1) { ?>
+var video_focus;
+jQuery('#global_body_<?php  echo $ident?> ,#videoID_<?php  echo $ident?>').each(function(){
+jQuery(this).on('click',function() { 
+setTimeout("video_focus=1",100) 
+})
+})
+jQuery('body').on('click',function(){video_focus=0})
+jQuery(window).keypress(function(event) {
+  if ( event.which == 13 ) {
+     event.preventDefault();
+   }
+  if(event.keyCode==32 && video_focus==1)
+  {
+  vidOnSpace_<?php echo $ident;?>()
+  return false;
+  }
+});
+<?php }?>
+function vidOnSpace_<?php echo $ident;?>()
+{
+if(video_<?php echo $ident;?>[0].paused) {
+      video_<?php echo $ident;?>[0].play();
+	 paly_<?php echo $ident;?>.css('display',"none");
+	  pause_<?php echo $ident;?>.css('display',"");
+   }
+   else {
+      video_<?php echo $ident;?>[0].pause();
+	  paly_<?php echo $ident;?>.css('display',"");
+	  pause_<?php echo $ident;?>.css('display',"none");
+   }
+}
+jQuery('#track_list_<?php  echo $ident?>_0').find('#thumb_0_<?php echo $ident?>').click();
+video_<?php echo $ident;?>[0].pause();
+if(paly_<?php echo $ident;?> && pause_<?php echo $ident;?>)
+{
+paly_<?php echo $ident;?>.css('display',"");
+pause_<?php echo $ident;?>.css('display',"none");
+}
+<?php if($AlbumId!=''){ ?>
+jQuery('#track_list_<?php  echo $ident?>_<?php echo $AlbumId ?>').find('#thumb_<?php echo $TrackId ?>_<?php echo $ident?>').click();
+<?php } ?>
+jQuery(window).load(function(){getPixels_<?php  echo $ident?>();changeColor_<?php  echo $ident?>()})
+jQuery('.volume_<?php  echo $ident?>')[0].style.width='<?php echo $theme->defaultVol?>%';
+video_<?php echo $ident;?>[0].volume=<?php echo $theme->defaultVol/100 ;?>;
+</script>
+</div><br />
+<?php 
 $many_players++;
-
+$ident++;
  $content=ob_get_contents();
                 ob_end_clean();
 				return $content;
@@ -2613,17 +3934,17 @@ global $wpdb;
 $sql_playlist="CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."Spider_Video_Player_playlist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `thumb` varchar(200) NOT NULL,
-  `published` tinyint(1) NOT NULL,
-  `videos` varchar(1000) NOT NULL,
+  `thumb` varchar(200) DEFAULT NULL,
+  `published` tinyint(1) unsigned DEFAULT NULL,
+  `videos` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1" ;
 
 $sql_tag="CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."Spider_Video_Player_tag` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
-  `required` int(11) NOT NULL,
-  `published` int(11) NOT NULL,
+  `required` int(11) DEFAULT NULL,
+  `published` int(11) unsigned DEFAULT NULL,
   `ordering` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1" ;
@@ -2634,33 +3955,33 @@ $sql_theme="CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."Spider_Video_Player_the
   `title` varchar(256) NOT NULL,
   `appWidth` int(11) NOT NULL,
   `appHeight` int(11) NOT NULL,
-  `playlistWidth` int(11) NOT NULL,
-  `startWithLib` tinyint(1) NOT NULL,
-  `autoPlay` tinyint(1) NOT NULL,
-  `autoNext` tinyint(1) NOT NULL,
-  `autoNextAlbum` tinyint(1) NOT NULL,
-  `defaultVol` double NOT NULL,
+  `playlistWidth` int(11) DEFAULT NULL,
+  `startWithLib` tinyint(1) DEFAULT NULL,
+  `autoPlay` tinyint(1) DEFAULT NULL,
+  `autoNext` tinyint(1) DEFAULT NULL,
+  `autoNextAlbum` tinyint(1) DEFAULT NULL,
+  `defaultVol` double DEFAULT NULL,
   `defaultRepeat` varchar(20) NOT NULL,
   `defaultShuffle` varchar(20) NOT NULL,
-  `autohideTime` int(11) NOT NULL,
-  `centerBtnAlpha` double NOT NULL,
-  `loadinAnimType` tinyint(4) NOT NULL,
-  `keepAspectRatio` tinyint(1) NOT NULL,
-  `clickOnVid` tinyint(1) NOT NULL,
-  `spaceOnVid` tinyint(1) NOT NULL,
-  `mouseWheel` tinyint(1) NOT NULL,
-  `ctrlsPos` tinyint(4) NOT NULL,
+  `autohideTime` int(11) DEFAULT NULL,
+  `centerBtnAlpha` double DEFAULT NULL,
+  `loadinAnimType` tinyint(4) DEFAULT NULL,
+  `keepAspectRatio` tinyint(1) DEFAULT NULL,
+  `clickOnVid` tinyint(1) DEFAULT NULL,
+  `spaceOnVid` tinyint(1) DEFAULT NULL,
+  `mouseWheel` tinyint(1) DEFAULT NULL,
+  `ctrlsPos` tinyint(4) DEFAULT NULL,
   `ctrlsStack` text NOT NULL,
-  `ctrlsOverVid` tinyint(1) NOT NULL,
-  `ctrlsSlideOut` tinyint(1) NOT NULL,
-  `watermarkUrl` varchar(255) NOT NULL,
-  `watermarkPos` tinyint(4) NOT NULL,
-  `watermarkSize` int(11) NOT NULL,
-  `watermarkSpacing` int(11) NOT NULL,
-  `watermarkAlpha` double NOT NULL,
-  `playlistPos` int(11) NOT NULL,
-  `playlistOverVid` tinyint(1) NOT NULL,
-  `playlistAutoHide` tinyint(1) NOT NULL,
+  `ctrlsOverVid` tinyint(1) DEFAULT NULL,
+  `ctrlsSlideOut` tinyint(1) DEFAULT NULL,
+  `watermarkUrl` varchar(255) DEFAULT NULL,
+  `watermarkPos` tinyint(4) DEFAULT NULL,
+  `watermarkSize` int(11) DEFAULT NULL,
+  `watermarkSpacing` int(11) DEFAULT NULL,
+  `watermarkAlpha` double DEFAULT NULL,
+  `playlistPos` int(11) DEFAULT NULL,
+  `playlistOverVid` tinyint(1) DEFAULT NULL,
+  `playlistAutoHide` tinyint(1) DEFAULT NULL,
   `playlistTextSize` int(11) NOT NULL,
   `libCols` int(11) NOT NULL,
   `libRows` int(11) NOT NULL,
@@ -2680,21 +4001,21 @@ $sql_theme="CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."Spider_Video_Player_the
   `framesBgAlpha` double NOT NULL,
   `ctrlsMainAlpha` double NOT NULL,
   `itemBgAlpha` double NOT NULL,
-  `show_trackid` tinyint(1) NOT NULL,
+  `show_trackid` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ";
 
 $sql_video="CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."Spider_Video_Player_video` (
   `id` int(11) NOT NULL auto_increment,
   `url` varchar(200) NOT NULL,
-  `urlHtml5` varchar(200) NOT NULL,
-  `urlHD` varchar(200) NOT NULL,
-  `urlHDHtml5` varchar(200) NOT NULL,
-  `thumb` varchar(200) NOT NULL,
+  `urlHtml5` varchar(200) DEFAULT NULL,
+  `urlHD` varchar(200) DEFAULT NULL,
+  `urlHDHtml5` varchar(200) DEFAULT NULL,
+  `thumb` varchar(200) DEFAULT NULL,
   `title` varchar(200) NOT NULL,
-  `published` int(11) NOT NULL,
+  `published` int(11) unsigned DEFAULT NULL,
   `type` varchar(20) NOT NULL,
-  `fmsUrl` varchar(256) NOT NULL,
+  `fmsUrl` varchar(256) DEFAULT NULL,
   `params` text NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1" ;
@@ -2707,13 +4028,12 @@ $sql_Spider_Video_Player="CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."Spider_Vi
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1" ;
 
-
 $table_name=$wpdb->prefix."Spider_Video_Player_theme";
 $sql_theme1="INSERT INTO `".$table_name."` VALUES(1, 1, 'Theme 1', 650, 400, 100, 0, 1, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playlist:1,playPrev:1,playPause:1,playNext:1,lib:1,stop:0,time:1,vol:1,+:1,hd:1,repeat:1,shuffle:1,play:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 12, 3, 3, 16, 20, '001326', '001326', '3665A3', 'C0B8F2', '000000', '00A2FF', 'DAE858', '0C8A58', 'DEDEDE', '000000', 'FFFFFF', 50, 79, 50, 1)";
 $sql_theme2="INSERT INTO `".$table_name."` VALUES(2, 0, 'Theme 2', 650, 400, 60, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPrev:1,playPause:1,playNext:1,stop:0,playlist:1,lib:1,play:0,vol:1,+:1,time:1,hd:1,repeat:1,shuffle:1,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 0, 1, 6, 3, 3, 6, 8, 'FFBB00', '001326', 'FFA200', '030000', '595959', 'FF0000', 'E8E84D', 'FF5500', 'EBEBEB', '000000', 'FFFFFF', 82, 79, 0, 1)";
 $sql_theme3="INSERT INTO `".$table_name."` VALUES(3, 0, 'Theme 3', 650, 400, 100, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,play:0,playlist:1,lib:1,playPrev:1,playNext:1,stop:0,vol:1,+:1,time:1,hd:1,repeat:1,shuffle:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 0, 12, 3, 3, 16, 20, 'FF0000', '070801', 'D10000', 'FFFFFF', '00A2FF', '00A2FF', 'F0FF61', '00A2FF', 'DEDEDE', '000000', 'FFFFFF', 65, 99, 0, 1)";
 $sql_theme4="INSERT INTO `".$table_name."` VALUES(4, 0, 'Theme 4', 650, 400, 60, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 60, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,vol:1,playPrev:0,playNext:0,stop:0,+:1,hd:1,repeat:1,shuffle:0,play:0,pause:0,share:1,time:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 6, 4, 4, 6, 8, '239DC2', '000000', '2E6DFF', 'F5DA51', 'FFA64D', 'BFBA73', 'FF8800', 'FFF700', 'FFFFFF', 'FFFFFF', '000000', 71, 82, 0, 1)";
-$sql_theme5="INSERT INTO `".$table_name."` VALUES(5, 0, 'Theme 5', 650, 400, 100, 1, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPrev:0,playPause:1,playlist:1,lib:1,playNext:0,stop:0,time:1,vol:1,+:1,hd:1,repeat:1,shuffle:1,play:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 14, 4, 4, 14, 16, '878787', '001326', 'FFFFFF', '000000', '525252', '14B1FF', 'CCCCCC', '14B1FF', '030303', '000000', 'FFFFFF', 100, 75, 0, 1)";
+$sql_theme5="INSERT INTO `".$table_name."` VALUES(5, 0, 'Theme 5', 650, 400, 100, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPrev:0,playPause:1,playlist:1,lib:1,playNext:0,stop:0,time:1,vol:1,+:1,hd:1,repeat:1,shuffle:1,play:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 14, 4, 4, 14, 16, '878787', '001326', 'FFFFFF', '000000', '525252', '14B1FF', 'CCCCCC', '14B1FF', '030303', '000000', 'FFFFFF', 100, 75, 0, 1)";
 $sql_theme6="INSERT INTO `".$table_name."` VALUES(6, 0, 'Theme 6', 650, 400, 100, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,vol:1,playPrev:0,playNext:0,stop:0,+:1,repeat:0,shuffle:0,play:0,pause:0,hd:1,share:1,time:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 14, 3, 3, 16, 16, '080808', '000000', '1C1C1C', 'FFFFFF', '40C6FF', '00A2FF', 'E8E8E8', '40C6FF', 'DEDEDE', '2E2E2E', 'FFFFFF', 61, 79, 0, 1)";
 $sql_theme7="INSERT INTO `".$table_name."` VALUES(7, 0, 'Theme  7', 650, 400, 100, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,playPrev:0,playNext:0,stop:0,vol:1,+:1,hd:0,repeat:0,shuffle:0,play:0,pause:0,share:1,fullScreen:1,time:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 12, 3, 3, 16, 16, '212121', '000000', '222424', 'FFCC00', 'FFFFFF', 'ABABAB', 'B8B8B8', 'EEFF00', 'DEDEDE', '000000', '000000', 90, 78, 0, 1)";
 

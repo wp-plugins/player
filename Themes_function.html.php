@@ -134,6 +134,8 @@ jQuery(document).ready(function($) {
 			image=document.getElementById("arr_" + i).getAttribute('image');
 			if(document.getElementById("td_arr_" + i).getAttribute('active') == 0)
 			{
+
+
 				document.getElementById("arr_" + i).src="<?php echo $path ;?>"+image+'_1.png';
 				document.getElementById("td_arr_" + i).setAttribute('active','1');
 			}
@@ -777,7 +779,7 @@ This section allows you to create themes to customize the design of the player. 
  
  
  
- <div style="width:35%; float:left; min-width:390px"">
+ <div style=" float:left; width:390px"">
  <fieldset class="adminform">
 						<legend>General Parameters</legend>
                         <table class="admintable">
@@ -827,7 +829,7 @@ This section allows you to create themes to customize the design of the player. 
                        <tr>
                             <td class="paramlist_key">
                                 <span class="editlinktip">
-                                    <label>Show Track Id</label>
+                                    <label>Show Track Id (only for flash):</label>
                             </span>
                             </td>
                             <td class="paramlist_value">
@@ -849,7 +851,7 @@ This section allows you to create themes to customize the design of the player. 
                         <tr>
                             <td  class="paramlist_key">
                                 <span class="editlinktip">
-                                    <label>Keep aspect ratio:</label>
+                                    <label>Keep aspect ratio (only for flash):</label>
                             </span>
                             </td>
                            <td class="paramlist_value">
@@ -863,7 +865,7 @@ This section allows you to create themes to customize the design of the player. 
                          <tr>
                             <td  class="paramlist_key">
                                 <span class="editlinktip">
-                                    <label>Control bar over video:</label>
+                                    <label>Control bar over video  (only for flash):</label>
                             </span>
                             </td>
                             <td class="paramlist_value">
@@ -877,7 +879,7 @@ This section allows you to create themes to customize the design of the player. 
                          <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Watermark image (only for flash):</label>
+                                        <label>Watermark image  (only for flash):</label>
                                 </span>
                                 </td>
                                 <td>
@@ -899,7 +901,7 @@ This section allows you to create themes to customize the design of the player. 
                             <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Watermark Position (only for flash):</label>
+                                        <label>Watermark Position  (only for flash):</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -912,7 +914,7 @@ This section allows you to create themes to customize the design of the player. 
                           <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Watermark size (only for flash):</label>
+                                        <label>Watermark size  (only for flash):</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -922,7 +924,7 @@ This section allows you to create themes to customize the design of the player. 
                              <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Watermark Margin (only for flash):</label>
+                                        <label>Watermark Margin  (only for flash):</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -932,7 +934,7 @@ This section allows you to create themes to customize the design of the player. 
                              <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Watermark transparency (only for flash):</label>
+                                        <label>Watermark transparency  (only for flash):</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -945,7 +947,7 @@ This section allows you to create themes to customize the design of the player. 
                         </table>
 </fieldset>
 </div>
-<div style="width:35%; float:left; min-width:390px"">
+<div style="float:left; width:390px"">
 <fieldset class="adminform">
 						<legend>Style Parameters</legend>
                         <table class="admintable">
@@ -953,7 +955,7 @@ This section allows you to create themes to customize the design of the player. 
                             <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Center button transparency:</label>
+                                        <label>Center button transparency  (only for flash):</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -1102,7 +1104,7 @@ This section allows you to create themes to customize the design of the player. 
                 <tr>
                     <td  class="paramlist_key">
                         <span class="editlinktip">
-                            <label>Loading animation type:</label>
+                            <label>Loading animation type  (only for flash):</label>
                     </span>
                     </td>
                     <td class="paramlist_value">
@@ -1115,7 +1117,118 @@ This section allows you to create themes to customize the design of the player. 
                         </table>
 </fieldset>
 </div>
-<div style="width:35%; float:left; min-width:390px"">
+
+
+<div style="float:left; width:390px;">
+<fieldset class="adminform">
+						<legend>Playlist and Library Parameters</legend>
+                        <table class="admintable">
+                       		 <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Playlist Position:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    <input type="radio" id="playlistPos1" name="playlistPos" value="1" <?php cheched($row->playlistPos,1) ?>><label for="playlistPos1">Left</label> 
+                                    <input type="radio" id="playlistPos2" name="playlistPos" value="2" <?php cheched($row->playlistPos,2) ?>><label for="playlistPos2">Right</label> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label id="playlistWidth-lbl" for="playlistWidth">Width of playlist:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    <input type="text" name="playlistWidth" id="playlistWidth" value="<?php echo $row->playlistWidth; ?>" class="text_area"  onkeypress="return check_isnum(event)" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Playlist over video  (only for flash):</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    
+                                    <input type="radio" name="playlistOverVid" id="playlistOverVid0" value="0" <?php cheched($row->playlistOverVid,0) ?> class="inputbox">
+                                    <label for="playlistOverVid0">No</label>
+                                    <input type="radio" name="playlistOverVid" id="playlistOverVid1" value="1" <?php cheched($row->playlistOverVid,1) ?> class="inputbox">
+                                    <label for="playlistOverVid1">Yes</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Playlist auto hide:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    
+                                    <input type="radio" name="playlistAutoHide" id="playlistAutoHide0" value="0" <?php cheched($row->playlistAutoHide,0) ?> class="inputbox">
+                                    <label for="playlistAutoHide0">No</label>
+                                    <input type="radio" name="playlistAutoHide" id="playlistAutoHide1" value="1" <?php cheched($row->playlistAutoHide,1) ?> class="inputbox">
+                                    <label for="playlistAutoHide1">Yes</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Playlist text size:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    <input type="text" name="playlistTextSize" id="playlistTextSize" value="<?php echo $row->playlistTextSize; ?>" class="text_area" onkeypress="return check_isnum(event)">pixels
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Library colums:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    <input type="text" name="libCols" id="libCols" value="<?php echo $row->libCols; ?>" class="text_area" onkeypress="return check_isnum(event)">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Library rows:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    <input type="text" name="libRows" id="libRows" value="<?php echo $row->libRows; ?>" class="text_area" onkeypress="return check_isnum(event)">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Library list text size:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    <input type="text" name="libListTextSize" id="libListTextSize" value="<?php echo $row->libListTextSize; ?>" class="text_area" onkeypress="return check_isnum(event)">pixels
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Library details text size:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    <input type="text" name="libDetailsTextSize" id="libDetailsTextSize" value="<?php echo $row->libDetailsTextSize; ?>" class="text_area" onkeypress="return check_isnum(event)">pixels
+                                </td>
+                            </tr>
+                
+                        
+                        
+                        </table>
+</fieldset>
+</div>
+<div style="float:left; width:390px;">
 <fieldset class="adminform">
 						<legend>Playback Parameters</legend>
                         <table class="admintable">
@@ -1214,118 +1327,8 @@ This section allows you to create themes to customize the design of the player. 
                         </table>
 </fieldset>
 </div>
-
-<div style="width:35%; float:left; min-width:390px"">
-<fieldset class="adminform">
-						<legend>Playlist and Library Parameters</legend>
-                        <table class="admintable">
-                       		 <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Playlist Position:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    <input type="radio" id="playlistPos1" name="playlistPos" value="1" <?php cheched($row->playlistPos,1) ?>><label for="playlistPos1">Left</label> 
-                                    <input type="radio" id="playlistPos2" name="playlistPos" value="2" <?php cheched($row->playlistPos,2) ?>><label for="playlistPos2">Right</label> 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label id="playlistWidth-lbl" for="playlistWidth">Width of playlist:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    <input type="text" name="playlistWidth" id="playlistWidth" value="<?php echo $row->playlistWidth; ?>" class="text_area"  onkeypress="return check_isnum(event)" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Playlist over video:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    
-                                    <input type="radio" name="playlistOverVid" id="playlistOverVid0" value="0" <?php cheched($row->playlistOverVid,0) ?> class="inputbox">
-                                    <label for="playlistOverVid0">No</label>
-                                    <input type="radio" name="playlistOverVid" id="playlistOverVid1" value="1" <?php cheched($row->playlistOverVid,1) ?> class="inputbox">
-                                    <label for="playlistOverVid1">Yes</label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Playlist auto hide:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    
-                                    <input type="radio" name="playlistAutoHide" id="playlistAutoHide0" value="0" <?php cheched($row->playlistAutoHide,0) ?> class="inputbox">
-                                    <label for="playlistAutoHide0">No</label>
-                                    <input type="radio" name="playlistAutoHide" id="playlistAutoHide1" value="1" <?php cheched($row->playlistAutoHide,1) ?> class="inputbox">
-                                    <label for="playlistAutoHide1">Yes</label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Playlist text size:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    <input type="text" name="playlistTextSize" id="playlistTextSize" value="<?php echo $row->playlistTextSize; ?>" class="text_area" onkeypress="return check_isnum(event)">pixels
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Library colums:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    <input type="text" name="libCols" id="libCols" value="<?php echo $row->libCols; ?>" class="text_area" onkeypress="return check_isnum(event)">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Library rows:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    <input type="text" name="libRows" id="libRows" value="<?php echo $row->libRows; ?>" class="text_area" onkeypress="return check_isnum(event)">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Library list text size:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    <input type="text" name="libListTextSize" id="libListTextSize" value="<?php echo $row->libListTextSize; ?>" class="text_area" onkeypress="return check_isnum(event)">pixels
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Library details text size:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    <input type="text" name="libDetailsTextSize" id="libDetailsTextSize" value="<?php echo $row->libDetailsTextSize; ?>" class="text_area" onkeypress="return check_isnum(event)">pixels
-                                </td>
-                            </tr>
-                
-                        
-                        
-                        </table>
-</fieldset>
-</div>
 <div style="width:100%;">
-<fieldset class="adminform">
+<fieldset class="adminform" style="width: 100%;">
 						<legend>Video Control Parameters</legend>
                         <table class="admintable">
                         <tr>
@@ -1359,7 +1362,7 @@ This section allows you to create themes to customize the design of the player. 
                         <tr>
                             <td  class="paramlist_key">
                                 <span class="editlinktip">
-                                    <label>Volume control by mouse scroll:</label>
+                                    <label>Volume control by mouse scroll  (only for flash):</label>
                             </span>
                             </td>
                            <td class="paramlist_value">
@@ -1485,6 +1488,7 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
     <script language="JavaScript">
 
 </script>
+
     <form method="post" onkeypress="doNothing()"  action="admin.php?page=Spider_Video_Player_Themes" id="admin_form" name="admin_form">
 	<table cellspacing="10" width="100%">
         <tr>   
@@ -1498,9 +1502,16 @@ This section allows you to create themes to customize the design of the player. 
     </td>
    
 
+	<td colspan="7" align="right" style="font-size:16px;">
+  		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
+		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
+		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
+		</a>
+        </td>
     </tr>
     </table>
     <?php
+	
 	if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=$_POST['search_events_by_title']; }else{$serch_value="";}} 
 	$serch_fields='<div class="alignleft actions" style="width:180px;">
     	<label for="search_events_by_title" style="font-size:14px">Title: </label>
@@ -1715,6 +1726,7 @@ jQuery(function() {
     <style type="text/css">
 .admintable
 {
+
 border-right:1px solid #cccccc;
 border-top:1px solid #cccccc;
 }
@@ -2340,7 +2352,7 @@ This section allows you to create themes to customize the design of the player. 
  
  
  
- <div style="width:35%; float:left; min-width:390px"">
+ <div style="float:left; width:390px"">
  <fieldset class="adminform">
 						<legend>General Parameters</legend>
                         <table class="admintable">
@@ -2390,7 +2402,7 @@ This section allows you to create themes to customize the design of the player. 
                        <tr>
                             <td class="paramlist_key">
                                 <span class="editlinktip">
-                                    <label>Show Track Id</label>
+                                    <label>Show Track Id (only for flash)</label>
                             </span>
                             </td>
                             <td class="paramlist_value">
@@ -2426,7 +2438,7 @@ This section allows you to create themes to customize the design of the player. 
                          <tr>
                             <td  class="paramlist_key">
                                 <span class="editlinktip">
-                                    <label>Control bar over video:</label>
+                                    <label>Control bar over video (only for flash):</label>
                             </span>
                             </td>
                             <td class="paramlist_value">
@@ -2440,7 +2452,7 @@ This section allows you to create themes to customize the design of the player. 
                          <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Watermark image:</label>
+                                        <label>Watermark image (only for flash):</label>
                                 </span>
                                 </td>
                                 <td>
@@ -2462,7 +2474,7 @@ This section allows you to create themes to customize the design of the player. 
                             <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Watermark Position:</label>
+                                        <label>Watermark Position (only for flash):</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -2475,7 +2487,7 @@ This section allows you to create themes to customize the design of the player. 
                           <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Watermark size:</label>
+                                        <label>Watermark size (only for flash):</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -2485,7 +2497,7 @@ This section allows you to create themes to customize the design of the player. 
                              <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Watermark Margin:</label>
+                                        <label>Watermark Margin (only for flash):</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -2495,7 +2507,7 @@ This section allows you to create themes to customize the design of the player. 
                              <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Watermark transparency:</label>
+                                        <label>Watermark transparency (only for flash):</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -2508,7 +2520,7 @@ This section allows you to create themes to customize the design of the player. 
                         </table>
 </fieldset>
 </div>
-<div style="width:35%; float:left; min-width:390px"">
+<div style="float:left; width:390px"">
 <fieldset class="adminform">
 						<legend>Style Parameters</legend>
                         <table class="admintable">
@@ -2516,7 +2528,7 @@ This section allows you to create themes to customize the design of the player. 
                             <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Center button transparency:</label>
+                                        <label>Center button transparency (only for flash):</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -2665,7 +2677,7 @@ This section allows you to create themes to customize the design of the player. 
                 <tr>
                     <td  class="paramlist_key">
                         <span class="editlinktip">
-                            <label>Loading animation type:</label>
+                            <label>Loading animation type (only for flash):</label>
                     </span>
                     </td>
                     <td class="paramlist_value">
@@ -2678,7 +2690,118 @@ This section allows you to create themes to customize the design of the player. 
                         </table>
 </fieldset>
 </div>
-<div style="width:35%; float:left; min-width:390px"">
+
+
+<div style="float:left; width:390px;">
+<fieldset class="adminform">
+						<legend>Playlist and Library Parameters</legend>
+                        <table class="admintable">
+                       		 <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Playlist Position:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    <input type="radio" name="playlistPos" id="playlistPos1" value="1" <?php cheched($row->playlistPos,1) ?>><label for="show_trackid1"> Left</label>
+                                    <input type="radio" name="playlistPos" id="playlistPos2" value="2" <?php cheched($row->playlistPos,2) ?>><label for="show_trackid1">Right</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label id="playlistWidth-lbl" for="playlistWidth">Width of playlist:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    <input type="text" name="playlistWidth" id="playlistWidth" value="<?php echo $row->playlistWidth; ?>" class="text_area"  onkeypress="return check_isnum(event)" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Playlist over video (only for flash):</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    
+                                    <input type="radio" name="playlistOverVid" id="playlistOverVid0" value="0" <?php cheched($row->playlistOverVid,0) ?> class="inputbox">
+                                    <label for="playlistOverVid0">No</label>
+                                    <input type="radio" name="playlistOverVid" id="playlistOverVid1" value="1" <?php cheched($row->playlistOverVid,1) ?> class="inputbox">
+                                    <label for="playlistOverVid1">Yes</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Playlist auto hide:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    
+                                    <input type="radio" name="playlistAutoHide" id="playlistAutoHide0" value="0" <?php cheched($row->playlistAutoHide,0) ?> class="inputbox">
+                                    <label for="playlistAutoHide0">No</label>
+                                    <input type="radio" name="playlistAutoHide" id="playlistAutoHide1" value="1" <?php cheched($row->playlistAutoHide,1) ?> class="inputbox">
+                                    <label for="playlistAutoHide1">Yes</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Playlist text size:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    <input type="text" name="playlistTextSize" id="playlistTextSize" value="<?php echo $row->playlistTextSize; ?>" class="text_area" onkeypress="return check_isnum(event)">pixels
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Library colums:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    <input type="text" name="libCols" id="libCols" value="<?php echo $row->libCols; ?>" class="text_area" onkeypress="return check_isnum(event)">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Library rows:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    <input type="text" name="libRows" id="libRows" value="<?php echo $row->libRows; ?>" class="text_area" onkeypress="return check_isnum(event)">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Library list text size:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    <input type="text" name="libListTextSize" id="libListTextSize" value="<?php echo $row->libListTextSize; ?>" class="text_area" onkeypress="return check_isnum(event)">pixels
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Library details text size:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    <input type="text" name="libDetailsTextSize" id="libDetailsTextSize" value="<?php echo $row->libDetailsTextSize; ?>" class="text_area" onkeypress="return check_isnum(event)">pixels
+                                </td>
+                            </tr>
+                
+                        
+                        
+                        </table>
+</fieldset>
+</div>
+<div style="float:left; width:390px;">
 <fieldset class="adminform">
 						<legend>Playback Parameters</legend>
                         <table class="admintable">
@@ -2777,118 +2900,8 @@ This section allows you to create themes to customize the design of the player. 
                         </table>
 </fieldset>
 </div>
-
-<div style="width:35%; float:left; min-width:390px"">
-<fieldset class="adminform">
-						<legend>Playlist and Library Parameters</legend>
-                        <table class="admintable">
-                       		 <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Playlist Position:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    <input type="radio" name="playlistPos" id="playlistPos1" value="1" <?php cheched($row->playlistPos,1) ?>><label for="show_trackid1"> Left</label>
-                                    <input type="radio" name="playlistPos" id="playlistPos2" value="2" <?php cheched($row->playlistPos,2) ?>><label for="show_trackid1">Right</label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label id="playlistWidth-lbl" for="playlistWidth">Width of playlist:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    <input type="text" name="playlistWidth" id="playlistWidth" value="<?php echo $row->playlistWidth; ?>" class="text_area"  onkeypress="return check_isnum(event)" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Playlist over video:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    
-                                    <input type="radio" name="playlistOverVid" id="playlistOverVid0" value="0" <?php cheched($row->playlistOverVid,0) ?> class="inputbox">
-                                    <label for="playlistOverVid0">No</label>
-                                    <input type="radio" name="playlistOverVid" id="playlistOverVid1" value="1" <?php cheched($row->playlistOverVid,1) ?> class="inputbox">
-                                    <label for="playlistOverVid1">Yes</label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Playlist auto hide:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    
-                                    <input type="radio" name="playlistAutoHide" id="playlistAutoHide0" value="0" <?php cheched($row->playlistAutoHide,0) ?> class="inputbox">
-                                    <label for="playlistAutoHide0">No</label>
-                                    <input type="radio" name="playlistAutoHide" id="playlistAutoHide1" value="1" <?php cheched($row->playlistAutoHide,1) ?> class="inputbox">
-                                    <label for="playlistAutoHide1">Yes</label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Playlist text size:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    <input type="text" name="playlistTextSize" id="playlistTextSize" value="<?php echo $row->playlistTextSize; ?>" class="text_area" onkeypress="return check_isnum(event)">pixels
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Library colums:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    <input type="text" name="libCols" id="libCols" value="<?php echo $row->libCols; ?>" class="text_area" onkeypress="return check_isnum(event)">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Library rows:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    <input type="text" name="libRows" id="libRows" value="<?php echo $row->libRows; ?>" class="text_area" onkeypress="return check_isnum(event)">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Library list text size:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    <input type="text" name="libListTextSize" id="libListTextSize" value="<?php echo $row->libListTextSize; ?>" class="text_area" onkeypress="return check_isnum(event)">pixels
-                                </td>
-                            </tr>
-                            <tr>
-                                <td  class="paramlist_key">
-                                    <span class="editlinktip">
-                                        <label>Library details text size:</label>
-                                </span>
-                                </td>
-                                <td class="paramlist_value">
-                                    <input type="text" name="libDetailsTextSize" id="libDetailsTextSize" value="<?php echo $row->libDetailsTextSize; ?>" class="text_area" onkeypress="return check_isnum(event)">pixels
-                                </td>
-                            </tr>
-                
-                        
-                        
-                        </table>
-</fieldset>
-</div>
 <div style="width:100%;">
-<fieldset class="adminform">
+<fieldset class="adminform"  style="width: 100%;">
 						<legend>Video Control Parameters</legend>
                         <table class="admintable">
                         <tr>
@@ -2922,7 +2935,7 @@ This section allows you to create themes to customize the design of the player. 
                         <tr>
                             <td  class="paramlist_key">
                                 <span class="editlinktip">
-                                    <label>Volume control by mouse scroll:</label>
+                                    <label>Volume control by mouse scroll (only for flash):</label>
                             </span>
                             </td>
                            <td class="paramlist_value">

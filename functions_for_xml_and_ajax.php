@@ -192,7 +192,7 @@ function spider_video_preview_settings(){
 	$ctrlsStack	=str_replace("[", "", $_GET['ctrlsStack']);
 $ctrlsStack	=str_replace(", :", ", +:", $ctrlsStack);
 $new="";
-
+$single=$_GET["single"];
 if($ctrlsStack)
 {
 	$ctrls = explode(",", $ctrlsStack);
@@ -201,6 +201,14 @@ if($ctrlsStack)
 			$y = explode(":", $x);
 			$ctrl	=$y[0];
 			$active	=$y[1];
+			if($single==1)
+			{
+				if($ctrl=='playlist')
+				$active=0;
+				
+				if($ctrl=='lib')
+				$active=0;
+			}
 			if($active==1)
 			if($new=="")
 				$new=$y[0];
@@ -873,10 +881,12 @@ function checkAll( n, fldName ) {
 
 
 
-
 function generete_sp_video_playlist_xml(){
 	
 global $wpdb;
+$single=$_GET["single"];
+
+if($single==0){
 $id_for_playlist=$_GET["playlist"];
 $playerr=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=%d",$id_for_playlist));
 $playlists=array();
@@ -961,11 +971,39 @@ echo '</library>' ;
 exit;
 	
 	
-	}
 
+}
+else{
+$track_ID=$_GET["trackID"];
+$single_vid=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=%d",$track_ID));
+
+
+	echo '<library>
+';
+		
+			
+echo	'	<albumFree title="Single Video" thumb="" id="0">
+';
+            if($single_vid->type!='youtube')				
+echo '<track id="'.$single_vid->id.'" type="'.$single_vid->type.'" url="'.htmlspecialchars($single_vid->url).'" thumb="'.htmlspecialchars($single_vid->thumb).'">'.$single_vid->title.'</track>';
+else
+echo '<track id="'.$single_vid->id.'" type="'.$single_vid->type.'" url="'.htmlspecialchars($single_vid->url).'" thumb="'.htmlspecialchars($single_vid->thumb).'">'.$single_vid->title.'</track>';
+			
+			
+			
+
+				
+				
+echo '	</albumFree>';
+
+echo '</library>' ;
+exit;	
+	}
+}
 function generete_sp_video_settings_xml(){
 	
 global $wpdb;
+$single=$_GET["single"];
 $id_theme=$_GET["theme"];
 $params=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=%d",$id_theme));
 //$new	=str_replace("#", "0x", $params->textColor'));
@@ -978,6 +1016,16 @@ if($params->ctrlsStack)
 			$y = explode(":", $x);
 			$ctrl	=$y[0];
 			$active	=$y[1];
+			if($single==1)
+			{
+				if($ctrl=='playlist')
+				$active=0;				
+				if($ctrl=='lib')
+				$active=0;
+				$embed_url=admin_url('admin-ajax.php?action=spiderVeideoPlayervideoonly').'&single=1&trackID='.$_GET['s_v_player_id'].'&theme='.$_GET['theme'].'&priority='.$_GET['priority'];
+			}else{
+			    $embed_url=admin_url('admin-ajax.php?action=spiderVeideoPlayervideoonly').'&single=0&id_player='.$_GET['s_v_player_id'];
+			}
 			if($active==1)
 			if($new=="")
 				$new=$y[0];
@@ -985,6 +1033,7 @@ if($params->ctrlsStack)
 				$new=$new.','.$y[0];
 		 }
 };
+
 $playlist=$_GET["playlist"];
 $theme=$_GET["theme"];
 	echo '<settings>
@@ -1053,14 +1102,18 @@ $theme=$_GET["theme"];
 	<textColor>'."0x".$params->textColor.'</textColor>
 	<textHoverColor>'."0x".$params->textHoverColor.'</textHoverColor>
 	<textSelectedColor>'."0x".$params->textSelectedColor.'</textSelectedColor>
-	<embed>'.admin_url('admin-ajax.php?action=spiderVeideoPlayervideoonly').'&id_player='.$_GET['s_v_player_id'].'</embed>
+	<embed>'.$embed_url.'</embed>
 
 	</settings>';
 	exit;
 	}
-function viewe_sp_video_only(){
+
+function viewe_sp_video_only() {
+  
 	 global $wpdb;
 	 global $post;
+	 $single=$_GET['single'];
+	 if($single==0){
 	 $id=$_GET['id_player'];
 	 $id_for_posts = $post->ID;
 	 $all_player_ids=$wpdb->get_col($wpdb->prepare("SELECT id FROM ".$wpdb->prefix."Spider_Video_Player_player"));
@@ -1074,7 +1127,7 @@ function viewe_sp_video_only(){
 				echo "<h2>Error svpv_31</h2>";
 				return "";
 				}
-				
+			
 				$Spider_Video_Player_front_end="";
 		
 		
@@ -1096,9 +1149,9 @@ function viewe_sp_video_only(){
 			$show_trackid=$params->show_trackid;
 		?>
 		<?php
-		global $many_players;
+	
 		$Spider_Video_Player_front_end="<script type=\"text/javascript\" src=\"".plugins_url("swfobject.js",__FILE__)."\"></script>
-		  <div id=\"".$id_for_posts."_".$many_players."_flashcontent\"  style=\"width: ".($width+20)."px; height:".($height+20)."px; margin-top:-40px; margin-left:-40px;\"></div>
+		  <div id=\"".$id_for_posts."_flashcontent\"  style=\"width: ".($width+20)."px; height:".($height+20)."px; margin-top:-40px; margin-left:0px;\"></div>
 			<script type=\"text/javascript\">
 function flashShare(type,b,c)	
 {
@@ -1129,9 +1182,98 @@ function flashShare(type,b,c)
 		   so.addParam(\"wmode\", \"transparent\");
 		   so.addParam(\"loop\", \"false\");
 		   so.addParam(\"allowfullscreen\", \"true\");
-		   so.write(\"".$id_for_posts."_".$many_players."_flashcontent\");
+		   so.write(\"".$id_for_posts."_flashcontent\");
 			</script>";
+			
 			echo $Spider_Video_Player_front_end;
+			
 			exit;
+	}
+	
+	else{
+	$theme_id=$_GET['theme'];
+	$track=$_GET['trackID'];
+	$priority=$_GET['priority'];
+	if($priority==0){	
+	 $id_for_posts = $post->ID;
+	 $all_player_ids=$wpdb->get_col($wpdb->prepare("SELECT id FROM ".$wpdb->prefix."Spider_Video_Player_video"));
+				$b=false;
+				foreach($all_player_ids as $all_player_id)
+				{
+					if($all_player_id==$track)
+					$b=true;
+					
+				}
+				if(!$b){
+				
+				echo "<h2>Error svpv_31</h2>";
+				return "";
+				}
+				
+				$Spider_Video_Player_front_end="";
+		
+		
+		$row=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=%d",$track));
+		
+		$params=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=%d",$theme_id));
+		
+
+		if($params->appWidth!="")
+			$width=$params->appWidth;
+		else
+			$width='700';
+		
+		if($params->appHeight!="")
+			$height=$params->appHeight;
+		else
+			$height='400';
+			
+			$show_trackid=$params->show_trackid;
+		?>
+		<?php
+		
+		$Spider_Video_Player_front_end="<script type=\"text/javascript\" src=\"".plugins_url("swfobject.js",__FILE__)."\"></script>
+		  <div id=\"".$id_for_posts."_flashcontent\"  style=\"width: ".($width+20)."px; height:".($height+20)."px; margin-top:-40px; margin-left:0px;\"></div>
+			<script type=\"text/javascript\">
+function flashShare(type,b,c)	
+{
+	u=location.href;
+	u=u.replace('/?','/index.php?');
+	if(!location.search)
+			u=u+'?';
+		else
+			u=u+'&';
+	t=document.title;
+	switch (type)
+	{
+	case 'fb':	
+		window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u+'AlbumId='+b+'&TrackId='+c)+'&t='+encodeURIComponent(t), \"Facebook\",\"menubar=1,resizable=1,width=350,height=250\");
+		break;
+	case 'g':
+		window.open('http://plus.google.com/share?url='+encodeURIComponent(u+'AlbumId='+b+'&TrackId='+c)+'&t='+encodeURIComponent(t), \"Google\",\"menubar=1,resizable=1,width=350,height=250\");
+		break;
+	case 'tw':
+		window.open('http://twitter.com/home/?status='+encodeURIComponent(u+'&AlbumId='+b+'&TrackId='+c), \"Twitter\",\"menubar=1,resizable=1,width=350,height=250\");
+		break;
+	}
+}		
+		   var so = new SWFObject(\"".plugins_url("videoSpider_Video_Player.swf",__FILE__)."?wdrand=".mt_rand() ."\", \"Spider_Video_Player\", \"100%\", \"100%\", \"8\", \"#000000\");
+		   so.addParam(\"FlashVars\", \"settingsUrl=".str_replace("&","@",  str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml')."&playlist=".$playlist."&theme=".$theme_id."&s_v_player_id=".$track."&single=1"))."&playlistUrl=".str_replace("&","@",str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml')."&trackID=".$track."&single=1&show_trackid=".$show_trackid))."&defaultAlbumId=".$_GET['defaultAlbumId']."&defaultTrackId=".$_GET['defaultTrackId']."\");
+		   so.addParam(\"quality\", \"high\");
+		   so.addParam(\"menu\", \"false\");
+		   so.addParam(\"wmode\", \"transparent\");
+		   so.addParam(\"loop\", \"false\");
+		   so.addParam(\"allowfullscreen\", \"true\");
+		   so.write(\"".$id_for_posts."_flashcontent\");
+			</script>";
+			
+			echo $Spider_Video_Player_front_end;
+			
+			exit;
+	
+	}else{
+	 echo Spider_Single_Video_front_end($track, $theme_id, $priority);
+	}
+	}
 	}
 ?>
