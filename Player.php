@@ -3,7 +3,7 @@
 /*
 Plugin Name: Spider Video Player 
 Plugin URI: http://web-dorado.com/
-Version: 1.4.3
+Version: 1.4.4
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -410,7 +410,7 @@ echo '</div></td>
 <video  ontimeupdate="timeUpdate_<?php  echo $ident?>()"  ondurationchange="durationChange_<?php  echo $ident?>();" id="videoID_<?php  echo $ident?>" src="<?php echo $track_URL ?>"   style="width:100%; height:100% !important;margin:0px !important;position: absolute;" > 
 <p>Your browser does not support the video tag.</p>  
 </video>
-<a href="http://web-dorado.com/" target="_blank" id="dorado_mark_<?php echo $ident;?>" style="bottom: 30px;position: absolute;text-decoration: none;border: 0px !important;">
+<a href="http://web-dorado.com/" target="_blank" alt="WordPress plugins" id="dorado_mark_<?php echo $ident;?>" style="bottom: 30px;position: absolute;text-decoration: none;border: 0px !important;">
 <img src="<?php echo plugins_url('',__FILE__)?>/images/wd_logo.png" style="width: 140px;height: 73px; border: 0px !important;"/></a> 
 <div class="control_<?php echo $ident;?>" id="control_<?php echo $ident;?>" style="overflow:hidden;top: 5px;">
 <?php if($theme->ctrlsPos==2){ ?>
@@ -1923,7 +1923,7 @@ echo '</div></td>
 <video  ontimeupdate="timeUpdate_<?php  echo $ident?>()"  ondurationchange="durationChange_<?php  echo $ident?>();" id="videoID_<?php  echo $ident?>" src="<?php echo $videos[0]->urlHtml5; ?>"   style="width:100%; height:100% !important;margin:0px !important;position: absolute;" >  
 <p>Your browser does not support the video tag.</p> 
 </video>
-<a href="http://web-dorado.com/" target="_blank" id="dorado_mark_<?php echo $ident;?>" style="bottom: 30px;position: absolute;text-decoration: none;border: 0px !important;">
+<a href="http://web-dorado.com/" target="_blank" alt="WordPress plugins" id="dorado_mark_<?php echo $ident;?>" style="bottom: 30px;position: absolute;text-decoration: none;border: 0px !important;">
 <img src="<?php echo plugins_url('',__FILE__)?>/images/wd_logo.png" style="width: 140px;height: 73px; border: 0px !important;"/></a> 
 <div class="control_<?php echo $ident;?>" id="control_<?php echo $ident;?>" style="overflow:hidden;">
 <?php if($theme->ctrlsPos==2){ ?>
