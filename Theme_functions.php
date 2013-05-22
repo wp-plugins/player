@@ -76,7 +76,7 @@ function save_theme(){
 	 global $wpdb;
 	 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_theme', array(
 		'id'	=> NULL,
-        'title'     => $_POST["title"],
+        'title'     => stripslashes($_POST["title"]),
         'appWidth'     => $_POST["appWidth"],
 		'appHeight'     => $_POST["appHeight"],
 		'playlistWidth'     => $_POST["playlistWidth"],
@@ -198,7 +198,7 @@ function save_theme(){
 function apply_theme($id){
 	 global $wpdb;
 	 $save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_theme', array(
-        'title'     => $_POST["title"],
+        'title'     => stripslashes($_POST["title"]),
         'appWidth'     => $_POST["appWidth"],
 		'appHeight'     => $_POST["appHeight"],
 		'playlistWidth'     => $_POST["playlistWidth"],

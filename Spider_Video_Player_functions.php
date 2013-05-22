@@ -78,7 +78,7 @@ function save_Spider_Video_Player(){
 	global $wpdb;
 	$save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_player', array(
 		'id'	=> NULL,
-       'title'     => $_POST["title"],
+       'title'     => stripslashes($_POST["title"]),
         'playlist'    => $_POST["params"],
         'theme'  =>$_POST["params_theme"],
 		'priority' => $_POST["priority"]
@@ -112,7 +112,7 @@ function Apply_Spider_Video_Player($id)
 	global $wpdb;
 	$save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_player', array(
 		
-        'title'     => $_POST["title"],
+        'title'     => stripslashes($_POST["title"]),
         'playlist'    => $_POST["params"],
         'theme'  =>$_POST["params_theme"],
 		'priority' => $_POST["priority"]

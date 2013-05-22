@@ -191,7 +191,7 @@ function save_tag(){
 	$order=$wpdb->get_var("SELECT MAX(ordering) FROM ".$wpdb->prefix."Spider_Video_Player_tag")+1;
 	 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_tag', array(
 		'id'	=> NULL,
-        'name'     => $_POST["name"],
+        'name'     => stripslashes($_POST["name"]),
         'required'    => $_POST["required"],
         'published'  =>$_POST["published"],
         'ordering'   =>$order
@@ -408,7 +408,7 @@ function apply_tag($id)
 {
 	global $wpdb;
 			$savedd=$wpdb->update($wpdb->prefix.'Spider_Video_Player_tag', array(
-            'name'     => $_POST["name"],
+            'name'     => stripslashes($_POST["name"]),
 			'required'    => $_POST["required"],
 			'published'  =>$_POST["published"],
               ), 

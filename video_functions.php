@@ -143,7 +143,7 @@ function save_video(){
         'published'  =>$_POST["published"],
         'type'   => "http",
 		'params' =>$s,
-		'title'=>$_POST["title"],
+		'title'=>stripslashes($_POST["title"]),
 		'thumb'=>$_POST["post_image"]
                 ),
 				array(
@@ -185,7 +185,7 @@ function save_video(){
         'published'  =>$_POST["published"],
         'type'   => "http",
 		'params' =>$s,
-		'title'=>$_POST["title"],
+		'title'=>stripslashes($_POST["title"]),
 		'thumb'=>$_POST["post_image"],
 		'urlHtml5'     => '',
 		'urlHDHtml5'     => ''
@@ -226,7 +226,7 @@ function save_video(){
         'published'  =>$_POST["published"],
         'type'   => "youtube",
 		'params' =>$s,
-		'title'=>$_POST["title"],
+		'title'=>stripslashes($_POST["title"]),
 		'thumb'=>$_POST["post_image"],
 		'urlHtml5'     => '',
 		'urlHDHtml5'     => ''
@@ -403,7 +403,7 @@ function apply_type_http($s,$id)
         'published'  =>$_POST["published"],
         'type'   => "http",
 		'params' =>$s,
-		'title'=>$_POST["title"],
+		'title'=>stripslashes($_POST["title"]),
 		'thumb'=>$_POST["post_image"]
                 ),
 				array('id'=>$id),
@@ -438,7 +438,7 @@ function apply_type_http($s,$id)
         'published'  =>$_POST["published"],
         'type'   => "rtmp",
 		'params' =>$s,
-		'title'=>$_POST["title"],
+		'title'=>stripslashes($_POST["title"]),
 		'thumb'=>$_POST["post_image"],
 		'urlHtml5'     => '',
 		'urlHDHtml5'     => ''
@@ -475,7 +475,7 @@ function apply_type_http($s,$id)
         'published'  =>$_POST["published"],
         'type'   => "youtube",
 		'params' =>$s,
-		'title'=>$_POST["title"],
+		'title'=>stripslashes($_POST["title"]),
 		'thumb'=>$_POST["post_image"],
 		'urlHtml5'     => '',
 		'urlHDHtml5'     => ''

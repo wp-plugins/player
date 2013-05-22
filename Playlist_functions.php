@@ -94,7 +94,7 @@ function save_playlist(){
 	global $wpdb;
 	$save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_playlist', array(
 		'id'	=> NULL,
-        'title'     => $_POST["title"],
+        'title'     => stripslashes($_POST["title"]),
         'thumb'    => $_POST["thumb"],
         'published'  =>$_POST["published"],
         'videos'   =>$_POST["videos"]
@@ -128,7 +128,7 @@ function Apply_playlist($id)
 	global $wpdb;
 	$save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_playlist', array(
 		
-        'title'     => $_POST["title"],
+        'title'     => stripslashes($_POST["title"]),
         'thumb'    => $_POST["thumb"],
         'published'  =>$_POST["published"],
         'videos'   =>$_POST["videos"]
