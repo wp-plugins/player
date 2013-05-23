@@ -3,7 +3,7 @@
 /*
 Plugin Name: Spider Video Player 
 Plugin URI: http://web-dorado.com/
-Version: 1.4.5
+Version: 1.4.6
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -1355,21 +1355,103 @@ function current_playlist_videos_<?php  echo $ident?>(){
 current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
 video_urls_<?php  echo $ident?>=jQuery('#track_list_<?php  echo $ident?>_'+current_playlist_table_<?php  echo $ident?>).find('.vid_thumb_<?php echo $ident?>');
 }
-var vid_num_<?php  echo $ident?>=0;
+function in_array(needle, haystack, strict) {	// Checks if a value exists in an array
+	// 
+	// +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+
+	var found = false, key, strict = !!strict;
+
+	for (key in haystack) {
+		if ((strict && haystack[key] === needle) || (!strict && haystack[key] == needle)) {
+			found = true;
+			break;
+		}
+	}
+
+	return found;
+}
+
+
+var vid_num_<?php  echo $ident?>=0; //for set cur video number
+
+var used_track_<?php  echo $ident?> = new Array(); // played vido numbers 
+
 jQuery('.playPrev_<?php  echo $ident?>').on('click', function() {
+
+used_track_<?php  echo $ident?>[used_track_<?php  echo $ident?>.length] =vid_num_<?php  echo $ident?>; 
 vid_num_<?php  echo $ident?>--;
+
+if(used_track_<?php  echo $ident?>.length>=video_urls_<?php  echo $ident?>.length)
+{
+	// reset old list
+	used_track_<?php  echo $ident?>=[];
+	
+
 if(jQuery('#shuffle_<?php  echo $ident?>').val()==1)
-vid_num=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length+1 - 0) + 0);
+{
+// get new vido number out of used_tracks
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+while(in_array(vid_num_<?php  echo $ident?>,used_track_<?php  echo $ident?>) )
+{
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+}
+
+}
+
+}
+if(jQuery('#shuffle_<?php  echo $ident?>').val()==1)
+{
+// get new vido number out of used_tracks
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+while(in_array(vid_num_<?php  echo $ident?>,used_track_<?php  echo $ident?>) )
+{
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+}
+
+}
+
 if(vid_num_<?php  echo $ident?><0)
 {
 vid_num_<?php  echo $ident?>=video_urls_<?php  echo $ident?>.length-1;
 }
 video_urls_<?php  echo $ident?>[vid_num_<?php  echo $ident?>].click()
 });
+
+
 jQuery('#global_body_<?php echo $ident;?> .playNext_<?php echo $ident;?>').on('click', function() {
+
+used_track_<?php  echo $ident?>[used_track_<?php  echo $ident?>.length] =vid_num_<?php  echo $ident?>; 
 vid_num_<?php  echo $ident?>++;
+
+if(used_track_<?php  echo $ident?>.length>=video_urls_<?php  echo $ident?>.length)
+{
+	// reset old list
+	used_track_<?php  echo $ident?>=[];
+	
+
 if(jQuery('#shuffle_<?php  echo $ident?>').val()==1)
-vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length+1 - 0) + 0);
+{
+// get new vido number out of used_tracks
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+while(in_array(vid_num_<?php  echo $ident?>,used_track_<?php  echo $ident?>) )
+{
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+}
+
+}
+
+}
+if(jQuery('#shuffle_<?php  echo $ident?>').val()==1)
+{
+// get new vido number out of used_tracks
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+while(in_array(vid_num_<?php  echo $ident?>,used_track_<?php  echo $ident?>) )
+{
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+}
+
+}
+
 jQuery('#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>').css('width', '0%');
 if(vid_num_<?php  echo $ident?>==video_urls_<?php  echo $ident?>.length)
 {
@@ -2938,21 +3020,103 @@ function current_playlist_videos_<?php  echo $ident?>(){
 current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
 video_urls_<?php  echo $ident?>=jQuery('#track_list_<?php  echo $ident?>_'+current_playlist_table_<?php  echo $ident?>).find('.vid_thumb_<?php echo $ident?>');
 }
-var vid_num_<?php  echo $ident?>=0;
+function in_array(needle, haystack, strict) {	// Checks if a value exists in an array
+	// 
+	// +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+
+	var found = false, key, strict = !!strict;
+
+	for (key in haystack) {
+		if ((strict && haystack[key] === needle) || (!strict && haystack[key] == needle)) {
+			found = true;
+			break;
+		}
+	}
+
+	return found;
+}
+
+
+var vid_num_<?php  echo $ident?>=0; //for set cur video number
+
+var used_track_<?php  echo $ident?> = new Array(); // played vido numbers 
+
 jQuery('.playPrev_<?php  echo $ident?>').on('click', function() {
+
+used_track_<?php  echo $ident?>[used_track_<?php  echo $ident?>.length] =vid_num_<?php  echo $ident?>; 
 vid_num_<?php  echo $ident?>--;
+
+if(used_track_<?php  echo $ident?>.length>=video_urls_<?php  echo $ident?>.length)
+{
+	// reset old list
+	used_track_<?php  echo $ident?>=[];
+	
+
 if(jQuery('#shuffle_<?php  echo $ident?>').val()==1)
-vid_num=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length+1 - 0) + 0);
+{
+// get new vido number out of used_tracks
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+while(in_array(vid_num_<?php  echo $ident?>,used_track_<?php  echo $ident?>) )
+{
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+}
+
+}
+
+}
+if(jQuery('#shuffle_<?php  echo $ident?>').val()==1)
+{
+// get new vido number out of used_tracks
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+while(in_array(vid_num_<?php  echo $ident?>,used_track_<?php  echo $ident?>) )
+{
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+}
+
+}
+
 if(vid_num_<?php  echo $ident?><0)
 {
 vid_num_<?php  echo $ident?>=video_urls_<?php  echo $ident?>.length-1;
 }
 video_urls_<?php  echo $ident?>[vid_num_<?php  echo $ident?>].click()
 });
+
+
 jQuery('#global_body_<?php echo $ident;?> .playNext_<?php echo $ident;?>').on('click', function() {
+
+used_track_<?php  echo $ident?>[used_track_<?php  echo $ident?>.length] =vid_num_<?php  echo $ident?>; 
 vid_num_<?php  echo $ident?>++;
+
+if(used_track_<?php  echo $ident?>.length>=video_urls_<?php  echo $ident?>.length)
+{
+	// reset old list
+	used_track_<?php  echo $ident?>=[];
+	
+
 if(jQuery('#shuffle_<?php  echo $ident?>').val()==1)
-vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length+1 - 0) + 0);
+{
+// get new vido number out of used_tracks
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+while(in_array(vid_num_<?php  echo $ident?>,used_track_<?php  echo $ident?>) )
+{
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+}
+
+}
+
+}
+if(jQuery('#shuffle_<?php  echo $ident?>').val()==1)
+{
+// get new vido number out of used_tracks
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+while(in_array(vid_num_<?php  echo $ident?>,used_track_<?php  echo $ident?>) )
+{
+	vid_num_<?php  echo $ident?>=parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
+}
+
+}
+
 jQuery('#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>').css('width', '0%');
 if(vid_num_<?php  echo $ident?>==video_urls_<?php  echo $ident?>.length)
 {
