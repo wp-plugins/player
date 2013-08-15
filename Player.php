@@ -3,7 +3,7 @@
 /*
 Plugin Name: Spider Video Player 
 Plugin URI: http://web-dorado.com/
-Version: 1.4.6
+Version: 1.4.7
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -28,6 +28,9 @@ function Spider_Video_Player_shotrcode($atts) {
      extract(shortcode_atts(array(
 	      'id' => 'no Spider Video Player',
      ), $atts));
+	if(!(is_numeric($atts['id'])))
+	return 'insert numerical value in `id`';
+	
      return front_end_Spider_Video_Player($id);
 }
 add_shortcode('Spider_Video_Player', 'Spider_Video_Player_shotrcode');
@@ -39,6 +42,13 @@ function Spider_Single_Video_shotrcode($atts) {
 		  'theme_id' => '1',
 		  'priority' => '1'
      ), $atts));
+	if(!(is_numeric($atts['track'])))
+	return 'insert numerical value in `track`';
+	if(!(is_numeric($atts['theme_id'])))
+	return 'insert numerical value in `theme_id`';
+	if(!($atts['priority']==1 || $atts['priority']==0))
+	return 'insert valid `priority`';
+	 
      return front_end_Spider_Single_Video($atts['track'],$atts['theme_id'],$atts['priority']);
 }
 
@@ -48,8 +58,8 @@ add_shortcode('Spider_Single_Video', 'Spider_Single_Video_shotrcode');
 function   front_end_Spider_Single_Video($track, $theme_id, $priority){
 	  global $wpdb;	
       global $ident;
-    $row=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=".$track);
-	$params=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$theme_id);
+    $row=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=%d",$track));
+	$params=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=%d",$theme_id));
 
 	if($priority==0){ 
 	 $scripttt='    <script type="text/javascript"> 
@@ -82,7 +92,7 @@ spidervideoplayerflash_'.$ident.'.style.display=\'\';
 				if(!$b)
 				return "";					
 				$Spider_Single_Video_front_end="";
-	     $params=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$theme_id);
+	     $params=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=%d",$theme_id));
 		$playlist='';
 		if($params->appWidth!="")
 			$width=$params->appWidth;
@@ -161,14 +171,16 @@ u=location.href;
 function Spider_Single_Video_front_end($track, $theme_id, $priority){
 ob_start();
 global $ident;
-?>	
+
+
+?>
 <div id="spidervideoplayerhtml5_<?php echo $ident?>" style="display:none">	
 <?php	
-	
+if($priority==1){
 	global $wpdb; 
 
 	$playlist_array='';
-	$trackk=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=".$track);
+	$trackk=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=%d",$track));
 
 	global $many_players;
     $track_URL='';
@@ -179,12 +191,8 @@ global $ident;
 	$track_URL=$trackk->urlHtml5;
 
 
-$theme=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$theme_id);
-	
-
-	$params1=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$theme_id);
-$display=$_POST['display'];
-	$videos = $wpdb->get_results("SELECT urlHtml5,type,title FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=".$track."");	
+   $theme=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=%d",$theme_id));
+	$videos = $wpdb->get_results($wpdb->prepare("SELECT urlHtml5,type,title FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=%d",$track));	
 	$video_urls='';
 	for($i=0;$i<count($videos);$i++)
 	{
@@ -212,13 +220,16 @@ else{
 $ctrl_top='5px';
 $share_top='-'.$theme->appHeight+25 .'px';
 }
+if(isset($_POST['AlbumId']))
 $AlbumId=$_POST['AlbumId'];
+else
+$AlbumId='';
+if(isset($_POST['TrackId']))
 $TrackId=$_POST['TrackId'];
+else
+$TrackId='';
 ?>
 <style>
-a#dorado_mark_<?php echo $ident;?>:hover{
- background:none !important;
-}
 #album_table_<?php  echo $ident?> td, 
 #album_table_<?php  echo $ident?> tr,
 #album_table_<?php  echo $ident?> img{
@@ -347,11 +358,11 @@ margin-top: -5px;
 	}	 
 </style>
 <?php 
-$player_id=$wpdb->get_var("SELECT id FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$track);
+$player_id=$wpdb->get_var($wpdb->prepare("SELECT id FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=%d",$track));
 ?>
 <div id="global_body_<?php echo $ident;?>" style="width:<?php echo $theme->appWidth; ?>px;height:<?php echo $theme->appHeight; ?>px; position:relative;">
 <?php
-$row1=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$theme_id);
+$row1=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=%d",$theme_id));
 $start_lib = $row1->startWithLib; 
 ?>
 <div id="video_div_<?php echo $ident;?>"  style="display:block;width:<?php echo $theme->appWidth; ?>px;height:<?php echo $theme->appHeight; ?>px;background-color:<?php echo "#".$theme->vidBgColor;  ?>">
@@ -410,8 +421,7 @@ echo '</div></td>
 <video  ontimeupdate="timeUpdate_<?php  echo $ident?>()"  ondurationchange="durationChange_<?php  echo $ident?>();" id="videoID_<?php  echo $ident?>" src="<?php echo $track_URL ?>"   style="width:100%; height:100% !important;margin:0px !important;position: absolute;" > 
 <p>Your browser does not support the video tag.</p>  
 </video>
-<a href="http://web-dorado.com/" target="_blank" alt="WordPress plugins" id="dorado_mark_<?php echo $ident;?>" style="bottom: 30px;position: absolute;text-decoration: none;border: 0px !important;">
-<img src="<?php echo plugins_url('',__FILE__)?>/images/wd_logo.png" style="width: 140px;height: 73px; border: 0px !important;"/></a> 
+<img src="<?php echo plugins_url('',__FILE__)?>/images/wd_logo.png" style="bottom: 30px;position: absolute;width: 140px;height: 73px; border: 0px !important;"/>
 <div class="control_<?php echo $ident;?>" id="control_<?php echo $ident;?>" style="overflow:hidden;top: 5px;">
 <?php if($theme->ctrlsPos==2){ ?>
 <div class="progressBar_<?php echo $ident;?>">
@@ -638,7 +648,7 @@ $admin_url=admin_url('admin-ajax.php?action=spiderVeideoPlayervideoonly');
 <input type="hidden" id="shuffle_<?php echo $ident;?>" value="<?php echo $shuffle ?>"/>
 <input type="hidden" id="scroll_height_<?php  echo $ident?>" value="0"/>
 <input type="hidden" id="scroll_height2_<?php echo $ident;?>" value="0"/>
-<input type="hidden" value="<?php echo $l ?>" id="lib_table_count_<?php  echo $ident?>"/>
+<input type="hidden" value="" id="lib_table_count_<?php  echo $ident?>"/>
 <input type="hidden" value="" id="current_lib_table_<?php  echo $ident?>"/>
 <input type="hidden" value="0" id="current_playlist_table_<?php echo $ident;?>"/>
 <input type="hidden" value="<?php echo $theme->defaultRepeat ?>" id="repeat_<?php  echo $ident?>"/>
@@ -1077,9 +1087,9 @@ video_<?php echo $ident;?>.on('loadedmetadata', function() {
 });
 video_<?php echo $ident;?>.on('timeupdate', function() {
    var progress_<?php  echo $ident?> = jQuery('#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>');
-   var currentPos_<?php  echo $ident?> = video_<?php echo $ident;?>[0].currentTime; //Get currenttime
-   var maxduration_<?php  echo $ident?> = video_<?php echo $ident;?>[0].duration; //Get video duration  
-   var percentage_<?php  echo $ident?> = 100 * currentPos_<?php  echo $ident?> / maxduration_<?php echo $ident;?>; //in %
+   var currentPos_<?php  echo $ident?> = video_<?php echo $ident;?>[0].currentTime; 
+   var maxduration_<?php  echo $ident?> = video_<?php echo $ident;?>[0].duration;  
+   var percentage_<?php  echo $ident?> = 100 * currentPos_<?php  echo $ident?> / maxduration_<?php echo $ident;?>; 
    var position_<?php  echo $ident?> = (<?php echo $theme->appWidth; ?> * percentage_<?php  echo $ident?> / 100)-progress_<?php  echo $ident?>.offset().left; 
    jQuery('#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>').css('width', percentage_<?php  echo $ident?>+'%'); 
 });
@@ -1606,6 +1616,9 @@ jQuery(window).load(function(){getPixels_<?php  echo $ident?>();changeColor_<?ph
 jQuery('.volume_<?php  echo $ident?>')[0].style.width='<?php echo $theme->defaultVol?>%';
 video_<?php echo $ident;?>[0].volume=<?php echo $theme->defaultVol/100 ;?>;
 </script>
+<?php
+}
+?>
 </div><br />
 <?php 
 $many_players++;
@@ -1621,14 +1634,11 @@ $ident++;
  function   front_end_Spider_Video_Player($id){
 	  global $wpdb;
 	  global $ident; 
-	 $find_priority=$wpdb->get_row("SELECT priority FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
+	 $find_priority=$wpdb->get_row($wpdb->prepare("SELECT priority FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=%d",$id));
 	$priority=$find_priority->priority;
-	
-	
-
-	  
-	 $row=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
-	$params=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$row->theme);
+  
+	 $row=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=%d",$id));
+	$params=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=%d",$row->theme));
 	if($priority==0){ 
 	 $scripttt='    <script type="text/javascript"> 
 var html5_'.$ident.' = document.getElementById("spidervideoplayerhtml5_'.$ident.'");
@@ -1663,9 +1673,9 @@ spidervideoplayerflash_'.$ident.'.style.display=\'\';
 				return "";	
 				
 				$Spider_Video_Player_front_end="";		
-		$row=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
+		$row=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=%d",$id));
 		
-		$params=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$row->theme);
+		$params=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=%d",$row->theme));
 		$theme=$row->theme;
 		$playlist=$row->id;
 		if($params->appWidth!="")
@@ -1748,12 +1758,15 @@ u=location.href;
 function Spider_Video_Player_front_end($id){
 ob_start();
 global $ident;
+global $wpdb; 
+	$find_priority=$wpdb->get_row($wpdb->prepare("SELECT priority FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=%d",$id));
+	$priority=$find_priority->priority;	
 ?>	
 <div id="spidervideoplayerhtml5_<?php echo $ident?>" style="display:none">	
 <?php		
-	global $wpdb; 
-	$theme_id=$wpdb->get_row("SELECT theme FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
-	$playlist=$wpdb->get_row("SELECT playlist FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
+	if($priority==1){
+	$theme_id=$wpdb->get_row($wpdb->prepare("SELECT theme FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=%d",$id));
+	$playlist=$wpdb->get_row($wpdb->prepare("SELECT playlist FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=%d",$id));
 	$playlist_array=explode(',',$playlist->playlist);	
 	global $many_players;
 	if(isset($_POST['playlist_id'])){
@@ -1766,13 +1779,14 @@ $playlistID	= $playlist->playlist;
 }
 else $playlistID=1;
 $key=$playlistID-1;
-$row=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist WHERE id=".$playlist_array[$key]);
-$theme=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$theme_id->theme);	
-	$row1=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
-	$params1=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$row1->theme);
+$row=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist WHERE id=%d",$playlist_array[$key]));
+$theme=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=%d",$theme_id->theme));	
+	$row1=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=%d",$id));
 	$themeid=$row1->theme;
-$display=$_POST['display'];
-$video_ids=substr($row->videos,0,-1);
+if(isset($row->videos))
+    $video_ids=substr($row->videos,0,-1);
+	else
+	$video_ids=0;
 	$videos = $wpdb->get_results("SELECT urlHtml5,type,title FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id IN ($video_ids)");	
 	$video_urls='';
 	for($i=0;$i<count($videos);$i++)
@@ -1808,13 +1822,16 @@ else{
 $ctrl_top='5px';
 $share_top='-'.$theme->appHeight+20 .'px';
 }
+if(isset($_POST['AlbumId']))
 $AlbumId=$_POST['AlbumId'];
+else
+$AlbumId='';
+if(isset($_POST['TrackId']))
 $TrackId=$_POST['TrackId'];
+else
+$TrackId='';
 ?>
 <style>
-a#dorado_mark_<?php echo $ident;?>:hover{
- background:none !important;
-}
 #album_table_<?php  echo $ident?> td, 
 #album_table_<?php  echo $ident?> tr,
 #album_table_<?php  echo $ident?> img{
@@ -1941,11 +1958,11 @@ margin-top: -5px;
 		} 
 </style>
 <?php 
-$player_id=$wpdb->get_var("SELECT theme FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
+$player_id=$wpdb->get_var($wpdb->prepare("SELECT theme FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=%d",$id));
 ?>
 <div id="global_body_<?php echo $ident;?>" style="width:<?php echo $theme->appWidth; ?>px;height:<?php echo $theme->appHeight; ?>px; position:relative;">
 <?php
-$row1=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=".$player_id);
+$row1=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=%d",$player_id));
 $start_lib = $row1->startWithLib; 
 ?>
 <div id="video_div_<?php echo $ident;?>"  style="display:<?php if($start_lib == 1) echo 'none'; else echo 'block'?>;width:<?php echo $theme->appWidth; ?>px;height:<?php echo $theme->appHeight; ?>px;background-color:<?php echo "#".$theme->vidBgColor;  ?>">
@@ -1959,7 +1976,7 @@ $start_lib = $row1->startWithLib;
 //echo '<p onclick="document.getElementById("videoID").src="'.$videos[$i]["url"].'" ">'.$videos[$i]['title'].'</p>';
 for($i=0;$i<count($playlist_array)-1;$i++)
 {
-$playy = $wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist WHERE id=".$playlist_array[$i]);
+$playy = $wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist WHERE id=%d",$playlist_array[$i]));
 $v_ids=explode(',',$playy->videos);
 $vi_ids=substr($playy->videos,0,-1);
 	if($i!=0)
@@ -1972,7 +1989,7 @@ echo '<tr style="background:transparent ">
 $jj=0;
 for($j=0;$j<count($v_ids)-1;$j++)
 {
-$vdss=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=".$v_ids[$j]);
+$vdss=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=%d",$v_ids[$j]));
 	if($vdss->type=="http")
 		{
 		if($vdss->urlHtml5!=""){	
@@ -2005,8 +2022,7 @@ echo '</div></td>
 <video  ontimeupdate="timeUpdate_<?php  echo $ident?>()"  ondurationchange="durationChange_<?php  echo $ident?>();" id="videoID_<?php  echo $ident?>" src="<?php echo $videos[0]->urlHtml5; ?>"   style="width:100%; height:100% !important;margin:0px !important;position: absolute;" >  
 <p>Your browser does not support the video tag.</p> 
 </video>
-<a href="http://web-dorado.com/" target="_blank" alt="WordPress plugins" id="dorado_mark_<?php echo $ident;?>" style="bottom: 30px;position: absolute;text-decoration: none;border: 0px !important;">
-<img src="<?php echo plugins_url('',__FILE__)?>/images/wd_logo.png" style="width: 140px;height: 73px; border: 0px !important;"/></a> 
+<img src="<?php echo plugins_url('',__FILE__)?>/images/wd_logo.png" style="top: <?php echo $theme->appHeight-100 ?>px;position: absolute !important;height: 90px !important;"/>
 <div class="control_<?php echo $ident;?>" id="control_<?php echo $ident;?>" style="overflow:hidden;">
 <?php if($theme->ctrlsPos==2){ ?>
 <div class="progressBar_<?php echo $ident;?>">
@@ -2743,9 +2759,9 @@ video_<?php echo $ident;?>.on('loadedmetadata', function() {
 });
 video_<?php echo $ident;?>.on('timeupdate', function() {
    var progress_<?php  echo $ident?> = jQuery('#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>');
-   var currentPos_<?php  echo $ident?> = video_<?php echo $ident;?>[0].currentTime; //Get currenttime
-   var maxduration_<?php  echo $ident?> = video_<?php echo $ident;?>[0].duration; //Get video duration  
-   var percentage_<?php  echo $ident?> = 100 * currentPos_<?php  echo $ident?> / maxduration_<?php echo $ident;?>; //in %
+   var currentPos_<?php  echo $ident?> = video_<?php echo $ident;?>[0].currentTime; 
+   var maxduration_<?php  echo $ident?> = video_<?php echo $ident;?>[0].duration;  
+   var percentage_<?php  echo $ident?> = 100 * currentPos_<?php  echo $ident?> / maxduration_<?php echo $ident;?>; 
    var position_<?php  echo $ident?> = (<?php echo $theme->appWidth; ?> * percentage_<?php  echo $ident?> / 100)-progress_<?php  echo $ident?>.offset().left; 
    jQuery('#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>').css('width', percentage_<?php  echo $ident?>+'%'); 
 });
@@ -3271,6 +3287,9 @@ jQuery(window).load(function(){getPixels_<?php  echo $ident?>();changeColor_<?ph
 jQuery('.volume_<?php  echo $ident?>')[0].style.width='<?php echo $theme->defaultVol?>%';
 video_<?php echo $ident;?>[0].volume=<?php echo $theme->defaultVol/100 ;?>;
 </script>
+<?php
+}
+?>
 </div><br />
 <?php 
 $many_players++;
@@ -3977,7 +3996,10 @@ function Uninstall_Spider_Video_Player(){
 global $wpdb;
 $base_name = plugin_basename('Spider_Video_Player');
 $base_page = 'admin.php?page='.$base_name;
+if(isset($_GET['mode']))
 $mode = trim($_GET['mode']);
+else
+$mode ='';
 
 
 if(!empty($_POST['do'])) {

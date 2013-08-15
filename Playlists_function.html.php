@@ -1,4 +1,11 @@
 <?php   
+if(function_exists('current_user_can')){
+	if(!current_user_can('manage_options')) {
+	die('Access Denied');
+}	
+} else {
+	die('Access Denied');
+}
 function html_add_playlist($lists){
 	
 	
@@ -248,7 +255,7 @@ This section allows you to create video playlists. <a href="http://web-dorado.co
 						</label>
 					</td>
                 	<td>
-					<input type="text" value="<?php if($row->thumb )echo htmlspecialchars($row->thumb); ?>" name="thumb" id="post_image" class="text_input" style="width:137px"/><a class="button lu_upload_button" href="#" />Select</a><br />
+					<input type="text" value="" name="thumb" id="post_image" class="text_input" style="width:137px"/><a class="button lu_upload_button" href="#" />Select</a><br />
                         <a href="javascript:removeImage();">Remove Image</a><br />
                                      <div style="height:150px;">
                                                <img style="display:none;border:none;" height="150" id="imagebox" src="" />     
@@ -327,12 +334,13 @@ This section allows you to create video playlists. <a href="http://web-dorado.co
     <td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
-		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
+				Get the full version&nbsp;&nbsp;&nbsp;&nbsp;<br />Without a watermark&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
         </td>
     </tr>
     </table>
     <?php
+	$serch_value='';
 	if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=$_POST['search_events_by_title']; }else{$serch_value="";}} 
 	$serch_fields='<div class="alignleft actions" style="width:180px;">
     	<label for="search_events_by_title" style="font-size:14px">Title: </label>

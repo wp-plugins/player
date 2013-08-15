@@ -1,5 +1,11 @@
 <?php
-
+if(function_exists('current_user_can')){
+	if(!current_user_can('manage_options')) {
+	die('Access Denied');
+}	
+} else {
+	die('Access Denied');
+}
 
 function add_tag(){
 	global $wpdb;
@@ -37,6 +43,12 @@ function add_tag(){
 function show_tag(){
 	global $wpdb;
 	$sort["default_style"]="manage-column column-autor sortable desc";
+	$sort["custom_style"]='manage-column column-autor sortable desc';
+	$sort["1_or_2"]=1;
+	$where='';
+	$order='';
+	$search_tag='';
+	$sort["sortid_by"]='name';
 	if(isset($_POST['page_number']))
 	{
 			
@@ -47,13 +59,13 @@ function show_tag(){
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
 					$sort["1_or_2"]="2";
-					$order="ORDER BY ".$sort["sortid_by"]." ASC";
+					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." ASC";
 				}
 				else
 				{
 					$sort["custom_style"]="manage-column column-title sorted desc";
 					$sort["1_or_2"]="1";
-					$order="ORDER BY ".$sort["sortid_by"]." DESC";
+					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." DESC";
 				}
 			}
 			
@@ -79,7 +91,7 @@ function show_tag(){
 		$search_tag="";
 		}
 	if ( $search_tag ) {
-		$where= ' WHERE name LIKE "%'.$search_tag.'%"';
+		$where= ' WHERE name LIKE "%'.$wpdb->escape($search_tag).'%"';
 	}
 	if(isset($_POST['saveorder']))
 	{
@@ -139,8 +151,8 @@ function show_tag(){
 	if(isset($_POST["oreder_move"]))
 	{
 		$ids=explode(",",$_POST["oreder_move"]);
-		$this_order=$wpdb->get_var("SELECT ordering FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE id=".$ids[0]);
-		$next_order=$wpdb->get_var("SELECT ordering FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE id=".$ids[1]);	
+		$this_order=$wpdb->get_var($wpdb->prepare("SELECT ordering FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE id=%d",$ids[0]));
+		$next_order=$wpdb->get_var($wpdb->prepare("SELECT ordering FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE id=%d",$ids[1]));	
 		$wpdb->update($wpdb->prefix.'Spider_Video_Player_tag', array(
 		'ordering'    =>$next_order,
           ), 
@@ -191,7 +203,7 @@ function save_tag(){
 	$order=$wpdb->get_var("SELECT MAX(ordering) FROM ".$wpdb->prefix."Spider_Video_Player_tag")+1;
 	 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_tag', array(
 		'id'	=> NULL,
-        'name'     => stripslashes($_POST["name"]),
+        'name'     => esc_html(stripslashes($_POST["name"])),
         'required'    => $_POST["required"],
         'published'  =>$_POST["published"],
         'ordering'   =>$order
@@ -251,7 +263,7 @@ function edit_tag($id){
 	{
 		$id=$wpdb->get_var("SELECT MAX( id ) FROM ".$wpdb->prefix."Spider_Video_Player_tag");
 	}
-	$query = "SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE `id`=".$id;
+	$query = $wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE `id`=%d",$id);
 	$row=$wpdb->get_row($query);
 	$published0="";
 	$published1="";
@@ -302,7 +314,7 @@ function edit_tag($id){
 
 function remove_tag($id){
   global $wpdb;
- $sql_remov_tag="DELETE FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE id='".$id."'";
+ $sql_remov_tag=$wpdb->prepare("DELETE FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE id=%d",$id);
  if(!$wpdb->query($sql_remov_tag))
  {
 	  ?>
@@ -335,7 +347,7 @@ function remove_tag($id){
 
 function change_tag( $id ){
   global $wpdb;
-  $published=$wpdb->get_var("SELECT published FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE `id`=".$id );
+  $published=$wpdb->get_var($wpdb->prepare("SELECT published FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE `id`=%d",$id ));
   if($published)
    $published=0;
   else
@@ -371,7 +383,7 @@ function change_tag( $id ){
 
 function required_tag($id){
   global $wpdb;
-  $requerid=$wpdb->get_var("SELECT required FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE `id`=".$id );
+  $requerid=$wpdb->get_var($wpdb->prepare("SELECT required FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE `id`=%d",$id ));
   if($requerid)
    $requerid=0;
   else
@@ -407,8 +419,8 @@ function required_tag($id){
 function apply_tag($id)
 {
 	global $wpdb;
-			$savedd=$wpdb->update($wpdb->prefix.'Spider_Video_Player_tag', array(
-            'name'     => stripslashes($_POST["name"]),
+			$save_or_no=$wpdb->update($wpdb->prefix.'Spider_Video_Player_tag', array(
+            'name'     => esc_html(stripslashes($_POST["name"])),
 			'required'    => $_POST["required"],
 			'published'  =>$_POST["published"],
               ), 

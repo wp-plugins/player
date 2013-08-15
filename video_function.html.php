@@ -1,5 +1,11 @@
 	<?php			
-
+if(function_exists('current_user_can')){
+	if(!current_user_can('manage_options')) {
+	die('Access Denied');
+}	
+} else {
+	die('Access Denied');
+}
 function html_add_video($lists, $tags){
 		?>
 <script language="javascript" type="text/javascript">
@@ -294,7 +300,7 @@ border-bottom:1px solid #cccccc;
                         </td>
                         <td id="td_urlHtml5" style="background:#E8E8E8 ;">
                         <div id="div_urlHtml5">
-                        <input type="text" value="<?php if($row->type=="http") echo htmlspecialchars($row->urlHtml5); ?>" name="http_post_video_html5" id="http_post_video_html5" class="text_input" style="width:417px; border:1px solid #CCCCCC;"/><a class="button lu_upload_button" href="#" />Select</a><br>
+                        <input type="text" value="" name="http_post_video_html5" id="http_post_video_html5" class="text_input" style="width:417px; border:1px solid #CCCCCC;"/><a class="button lu_upload_button" href="#" />Select</a><br>
                         <a href="javascript:removeurl();">Remove url</a>
                          <script type="text/javascript">    
                                     function removeurl()
@@ -317,13 +323,13 @@ border-bottom:1px solid #cccccc;
                         <td  id="td_urlHD" style="background:#E8E8E8 ;">
                       
                         <div id="div_urlHD" >
-                       <input type="text" style="border:1px solid #CCCCCC; width:417px;" value="<?php if($row->type=="http") echo htmlspecialchars($row->urlHD); ?>" name="http_post_video_UrlHD" id="http_post_video_UrlHD" class="text_input"/>
+                       <input type="text" style="border:1px solid #CCCCCC; width:417px;" value="" name="http_post_video_UrlHD" id="http_post_video_UrlHD" class="text_input"/>
                        
                        
                        <a class="button lu_upload_button" href="#" />Select</a><br>
                         </div>
                         <input type="hidden" name="urlHD" id="urlHD" style="border:1px solid #CCCCCC;"/>
-                        <input type="<?php if($row->type=="rtmp" || $row->type=="0") echo "text"; else echo "hidden";?>" name="urlHD_rtmp" id="urlHD_rtmp" style="border:1px solid #CCCCCC;" size="80" value="<?php if($row->type=="rtmp" || $row->type=="0") echo htmlspecialchars($row->urlHD); ?>"/>
+                        <input type="hidden" name="urlHD_rtmp" id="urlHD_rtmp" style="border:1px solid #CCCCCC;" size="80" value=""/>
                         <a id="removehd" href="javascript:removeurl1();">Remove url</a>
                          <script type="text/javascript">    
                                     function removeurl1()
@@ -344,7 +350,7 @@ border-bottom:1px solid #cccccc;
                         <td  id="td_urlHdHtml5" style="background:#E8E8E8 ;">
                       
                         <div id="div_urlHdHtml5">
-                       <input type="text" style="border:1px solid #CCCCCC; width:417px;" value="<?php if($row->type=="http" )echo htmlspecialchars($row->urlHDHtml5); ?>" name="http_post_video_UrlHD_html5" id="http_post_video_UrlHD_html5" class="text_input" /><a class="button lu_upload_button" href="#" />Select</a><br />
+                       <input type="text" style="border:1px solid #CCCCCC; width:417px;" value="" name="http_post_video_UrlHD_html5" id="http_post_video_UrlHD_html5" class="text_input" /><a class="button lu_upload_button" href="#" />Select</a><br />
                        <a href="javascript:removeurl2();">Remove url</a>
                          <script type="text/javascript">    
                                     function removeurl2()
@@ -462,7 +468,7 @@ This section allows you to upload videos or add videos from the Internet. <a hre
 	<td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
-		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
+				Get the full version&nbsp;&nbsp;&nbsp;&nbsp;<br />Without a watermark&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
         </td>
  
@@ -486,6 +492,7 @@ This section allows you to upload videos or add videos from the Internet. <a hre
     </div>
 </div>
     <?php
+	$serch_value='';
 	if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=$_POST['search_events_by_title']; }else{$serch_value="";}} 
 	$serch_fields='<div class="alignleft actions" style="width:180px;">
     	<label for="search_events_by_title" style="font-size:14px">Title: </label>
@@ -763,7 +770,7 @@ This section allows you to upload videos or choose YouTube videos.<a href="http:
 						</label>
 					</td>
 					<td style="background:#E8E8E8;">
-                                    <input type="text" name="title" id="title" size="80" value="<?php echo htmlspecialchars($row->title) ?>"  style="border:1px solid #CCCCCC;"/>
+                                    <input type="text" name="title" id="title" size="80" value="<?php echo $row->title ?>"  style="border:1px solid #CCCCCC;"/>
 					</td>
 				</tr>
                 

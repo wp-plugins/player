@@ -1,14 +1,22 @@
 <?php   
+	if(function_exists('current_user_can')){
+	if(!current_user_can('manage_options')) {
+	die('Access Denied');
+}	
+} else {
+	die('Access Denied');
+}
+
 function html_add_Spider_Video_Player(){
 	global $wpdb;
 	$themes=$wpdb->get_results("SELECT `id`,`title`,`default` FROM ".$wpdb->prefix."Spider_Video_Player_theme");
-	
+	$priority=0;
 	if(isset($_GET["id"]))
 	{
-		$row=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$_GET["id"]);
+		$row=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=%d",$_GET["id"]));
 		$value=$row->playlist;
 		$title=$row->title;
-		$id_for_team=$row->theme;
+		$id_for_team=$row->theme;		
 		$priority=$row->priority;
 		$id=$_GET["id"];
 	}
@@ -19,8 +27,9 @@ function html_add_Spider_Video_Player(){
 			if($_GET["task"]=="Apply")
 			{
 		$id=$wpdb->get_var("SELECT MAX( id ) FROM ".$wpdb->prefix."Spider_Video_Player_player");
-		$row=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=".$id);
+		$row=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=%d",$id));
 		$value=$row->playlist;
+		$priority=$row->priority;
 		$title=$row->title;
 		$id_for_team=$row->theme;
 			}
@@ -300,7 +309,7 @@ This section allows you to create players, providing them with playlist(s) and a
 <td>Priority</td>
 <td>
 
-<input type="radio" name="priority" value="0" <?php if($priority == 0) echo 'checked="checked"';?> <?php if($priority=="") echo 'checked="checked"';?>>Flash</input>
+<input type="radio" name="priority" value="0" <?php if($priority == 0) echo 'checked="checked"';?>>Flash</input>
 <input type="radio" name="priority" value="1" <?php if($priority == 1) echo 'checked="checked"';?>>HTML5</input>
 </td>
 </tr>
@@ -418,12 +427,13 @@ This section allows you to create players, providing them with playlist(s) and a
  	<td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
-		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
+				Get the full version&nbsp;&nbsp;&nbsp;&nbsp;<br />Without a watermark&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
         </td>
     </tr>
     </table>
     <?php
+	$serch_value='';
 	if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=$_POST['search_events_by_title']; }else{$serch_value="";}} 
 	$serch_fields='<div class="alignleft actions" style="width:180px;">
     	<label for="search_events_by_title" style="font-size:14px">Title: </label>

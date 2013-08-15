@@ -1,5 +1,11 @@
 <?php
-
+if(function_exists('current_user_can')){
+	if(!current_user_can('manage_options')) {
+	die('Access Denied');
+}	
+} else {
+	die('Access Denied');
+}
 function html_add_theme($row){
 	if($row->ctrlsStack)
 			$value=$row->ctrlsStack;
@@ -1505,13 +1511,13 @@ This section allows you to create themes to customize the design of the player. 
 	<td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
-		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
+				Get the full version&nbsp;&nbsp;&nbsp;&nbsp;<br />Without a watermark&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
         </td>
     </tr>
     </table>
     <?php
-	
+	$serch_value='';
 	if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=$_POST['search_events_by_title']; }else{$serch_value="";}} 
 	$serch_fields='<div class="alignleft actions" style="width:180px;">
     	<label for="search_events_by_title" style="font-size:14px">Title: </label>

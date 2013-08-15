@@ -1,4 +1,5 @@
 <?php
+
 function spider_Veideo_Player_Prewieve()
 {
 	
@@ -320,6 +321,9 @@ else
 	
 		global $wpdb;
 	$sort["default_style"]="manage-column column-autor sortable desc";
+	$sort["sortid_by"]='title';
+	$sort["custom_style"]='manage-column column-autor sortable desc';
+    $sort["1_or_2"]=1;
 	if(isset($_POST['page_number']))
 	{
 			
@@ -330,13 +334,13 @@ else
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
 					$sort["1_or_2"]="2";
-					$order="ORDER BY ".$sort["sortid_by"]." ASC";
+					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." ASC";
 				}
 				else
 				{
 					$sort["custom_style"]="manage-column column-title sorted desc";
 					$sort["1_or_2"]="1";
-					$order="ORDER BY ".$sort["sortid_by"]." DESC";
+					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." DESC";
 				}
 			}
 			
@@ -363,7 +367,7 @@ else
 		}
 
 	if ( $search_tag ) {
-		$whereee= ' WHERE published=1 AND title LIKE "%'.$search_tag.'%"';
+		$whereee= ' WHERE published=1 AND title LIKE "%'.$wpdb->escape($search_tag).'%"';
 	}
 	else
 	{
@@ -478,6 +482,7 @@ function checkAll( n, fldName ) {
 		</table>    
     
         <?php 
+		
         if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=$_POST['search_events_by_title']; }else{$serch_value="";}} 
 	$serch_fields='<div class="alignleft actions" style="width:180px;">
     	<label for="search_events_by_title" style="font-size:14px">Title: </label>
@@ -531,8 +536,8 @@ function checkAll( n, fldName ) {
 	}
 	?>
     </table>
-    <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php echo $_POST['asc_or_desc'] ?>"  />
- 	<input type="hidden" name="order_by" id="order_by" value="<?php echo $_POST['order_by'] ?>"  />
+    <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php if(isset($_POST['asc_or_desc'])) { echo $_POST['asc_or_desc']; } ?>"  />
+ 	<input type="hidden" name="order_by" id="order_by" value="<?php if(isset($_POST['order_by'])) { echo $_POST['order_by']; } ?>"  />
     <input type="hidden" name="option" value="com_Spider_Video_Player">
     <input type="hidden" name="task" value="select_playlist">    
     <input type="hidden" name="boxchecked" value="0"> 
@@ -582,6 +587,12 @@ else
 	global $wpdb;
 		
 	$sort["default_style"]="manage-column column-autor sortable desc";
+	$sort["custom_style"]='manage-column column-autor sortable desc';
+	$sort["1_or_2"]=1;
+	$where='';
+	$order='';
+	$search_tag='';
+	$sort["sortid_by"]='title';
 	if(isset($_POST['page_number']))
 	{
 			
@@ -592,13 +603,13 @@ else
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
 					$sort["1_or_2"]="2";
-					$order="ORDER BY ".$sort["sortid_by"]." ASC";
+					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." ASC";
 				}
 				else
 				{
 					$sort["custom_style"]="manage-column column-title sorted desc";
 					$sort["1_or_2"]="1";
-					$order="ORDER BY ".$sort["sortid_by"]." DESC";
+					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." DESC";
 				}
 			}
 			
@@ -616,7 +627,7 @@ else
 			$limit=0;
 		}
 	if(isset($_POST['search_video'])){
-		$where=' WHERE title LIKE "%'.$_POST['search_video'].'%" AND published=1 ';
+		$where=' WHERE title LIKE "%'.$wpdb->escape($_POST['search_video']).'%" AND published=1 ';
 		
 		}
 		
@@ -849,11 +860,11 @@ function checkAll( n, fldName ) {
             <input type="hidden" id="type_<?php echo $i?>" value="<?php echo  $row->type?>" />
             <input type="hidden" id="url_<?php echo $i?>" value="<?php echo  htmlspecialchars($row->url);?>" />
             <input type="hidden" id="thumb_<?php echo $i?>" value="<?php echo  htmlspecialchars($row->thumb);?>" />
-            <input type="hidden" id="trackId_<?php echo $i?>" value="<?php echo  $row->trackId?>" />
+            <input type="hidden" id="trackId_<?php echo $i?>" value="<?php echo  $row->id?>" />
 
             </th>
         	<td align="center"><?php echo $row->id?></td>
-        	<td><a style="cursor: pointer;" onclick="window.parent.jSelectVideoS(['<?php echo $row->id?>'],['<?php echo htmlspecialchars(addslashes($row->title))?>'],['<?php echo $row->type?>'],['<?php echo htmlspecialchars(addslashes($row->url))?>'],['<?php echo htmlspecialchars(addslashes($row->thumb))?>'],['<?php echo $row->trackId?>'])"><?php echo $row->title?></a></td>            
+        	<td><a style="cursor: pointer;" onclick="window.parent.jSelectVideoS(['<?php echo $row->id?>'],['<?php echo htmlspecialchars(addslashes($row->title))?>'],['<?php echo $row->type?>'],['<?php echo htmlspecialchars(addslashes($row->url))?>'],['<?php echo htmlspecialchars(addslashes($row->thumb))?>'],['<?php echo $row->id?>'])"><?php echo $row->title?></a></td>            
         	<td><?php echo $row->type ?></td>    
         	<td><?php echo $row->url ?></td>    
         	<td><?php echo $row->urlHD ?></td>

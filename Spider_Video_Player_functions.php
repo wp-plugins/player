@@ -1,5 +1,11 @@
 <?php 
-
+	if(function_exists('current_user_can')){
+	if(!current_user_can('manage_options')) {
+	die('Access Denied');
+}	
+} else {
+	die('Access Denied');
+}
 function add_Spider_Video_Player(){
 
   wp_admin_css('thickbox');
@@ -16,6 +22,12 @@ function add_Spider_Video_Player(){
 function show_Spider_Video_Player(){
 	global $wpdb;
 	$sort["default_style"]="manage-column column-autor sortable desc";
+	$sort["custom_style"]='manage-column column-autor sortable desc';
+	$sort["1_or_2"]=1;
+	$where='';
+	$order='';
+	$search_tag='';
+	$sort["sortid_by"]='title';
 	if(isset($_POST['page_number']))
 	{
 			
@@ -26,13 +38,13 @@ function show_Spider_Video_Player(){
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
 					$sort["1_or_2"]="2";
-					$order="ORDER BY ".$sort["sortid_by"]." ASC";
+					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." ASC";
 				}
 				else
 				{
 					$sort["custom_style"]="manage-column column-title sorted desc";
 					$sort["1_or_2"]="1";
-					$order="ORDER BY ".$sort["sortid_by"]." DESC";
+					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." DESC";
 				}
 			}
 			
@@ -58,7 +70,7 @@ function show_Spider_Video_Player(){
 		$search_tag="";
 		}
 	if ( $search_tag ) {
-		$where= ' WHERE title LIKE "%'.$search_tag.'%"';
+		$where= ' WHERE title LIKE "%'.$wpdb->escape($search_tag).'%"';
 	}
 	
 	
@@ -78,10 +90,10 @@ function save_Spider_Video_Player(){
 	global $wpdb;
 	$save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_player', array(
 		'id'	=> NULL,
-       'title'     => stripslashes($_POST["title"]),
-        'playlist'    => $_POST["params"],
-        'theme'  =>$_POST["params_theme"],
-		'priority' => $_POST["priority"]
+        'title'       => esc_html(stripslashes($_POST["title"])),
+        'playlist'    => esc_html($_POST["params"]),
+        'theme'       => $_POST["params_theme"],
+		'priority'    => $_POST["priority"]
                 ),
 				array(
 				'%d',
@@ -112,10 +124,10 @@ function Apply_Spider_Video_Player($id)
 	global $wpdb;
 	$save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_player', array(
 		
-        'title'     => stripslashes($_POST["title"]),
-        'playlist'    => $_POST["params"],
-        'theme'  =>$_POST["params_theme"],
-		'priority' => $_POST["priority"]
+        'title'       => esc_html(stripslashes($_POST["title"])),
+        'playlist'    => esc_html($_POST["params"]),
+        'theme'       =>$_POST["params_theme"],
+		'priority'    => $_POST["priority"]
                 ),
 				array('id'	=> $id),
 				array(
@@ -140,7 +152,7 @@ function Apply_Spider_Video_Player($id)
 
 function remove_Spider_Video_Player($id){
    global $wpdb;
- $sql_remov_tag="DELETE FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id='".$id."'";
+ $sql_remov_tag=$wpdb->prepare("DELETE FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=%d",$id);
  if(!$wpdb->query($sql_remov_tag))
  {
 	  ?>
