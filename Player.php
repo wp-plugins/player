@@ -3,7 +3,7 @@
 /*
 Plugin Name: Spider Video Player 
 Plugin URI: http://web-dorado.com/
-Version: 1.4.7
+Version: 1.4.8
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -184,6 +184,7 @@ if($priority==1){
 
 	global $many_players;
     $track_URL='';
+	$track_poster=$trackk->thumb;
 	if($trackk->urlHtml5==""){
 	$track_URL=$trackk->url;
 	}
@@ -192,7 +193,7 @@ if($priority==1){
 
 
    $theme=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=%d",$theme_id));
-	$videos = $wpdb->get_results($wpdb->prepare("SELECT urlHtml5,type,title FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=%d",$track));	
+	$videos = $wpdb->get_results($wpdb->prepare("SELECT urlHtml5,type,title,thumb FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=%d",$track));	
 	$video_urls='';
 	for($i=0;$i<count($videos);$i++)
 	{
@@ -404,7 +405,7 @@ $vdss=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video W
 			echo '<div id="thumb_'.$jj.'_'.$ident.'"  onclick="jQuery(\'#HD_on_'.$ident.'\').val(0);document.getElementById(\'videoID_'.$ident.'\').src=\''.$html5Url.'\';play_'.$ident.'();vid_select_'.$ident.'(this);vid_num='.$jj.';jQuery(\'#current_track_'.$ident.'\').val('.$jj.');" class="vid_thumb_'.$ident.'" style="color:#'.$theme->textColor .';cursor:pointer;width:'.$theme->playlistWidth.'px;text-align:center; "  >';
 			if($vdss->thumb)
 			echo '<img   src="'.$vidsTHUMB.'" width="90px" style="display:none;  border:none;"  />';
-			echo '<p style="font-size:'.$theme->playlistTextSize.'px !important;line-height:30px;cursor:pointer;" >'.($jj+1).'-'.$vdss->title.'</p></div>';
+			echo '<p style="font-size:'.$theme->playlistTextSize.'px !important;line-height:30px;cursor:pointer;" >'.($theme->show_trackid ? ($jj+1).'-' : '').$vdss->title.'</p></div>';
 			echo '<input type="hidden" id="urlHD_'.$jj.'_'.$ident.'" value="'.$html5UrlHD.'" />';
 			echo '<input type="hidden" id="vid_type_'.$jj.'_'.$ident.'" value="'.$vdss->type.'" />';
 			$jj=$jj+1;
@@ -418,7 +419,7 @@ echo '</div></td>
 <div onmousedown="scrollBot2=setInterval('scrollBottom2_<?php echo $ident;?>()', 30)" onmouseup="clearInterval(scrollBot2)" style="position:absolute;overflow:hidden; text-align:center;width:<?php echo $theme->playlistWidth; ?>px; height:20px" id="divulushka_<?php echo $ident;?>"><img  src="<?php echo plugins_url('',__FILE__)?>/images/bot.png" style="cursor:pointer;  border:none;" id="button21_<?php  echo $ident?>" /></div>
 </div>
 </div>
-<video  ontimeupdate="timeUpdate_<?php  echo $ident?>()"  ondurationchange="durationChange_<?php  echo $ident?>();" id="videoID_<?php  echo $ident?>" src="<?php echo $track_URL ?>"   style="width:100%; height:100% !important;margin:0px !important;position: absolute;" > 
+<video  ontimeupdate="timeUpdate_<?php  echo $ident?>()"  ondurationchange="durationChange_<?php  echo $ident?>();" id="videoID_<?php  echo $ident?>" src="<?php echo $track_URL ?>" poster="<?php echo $track_poster ?>"   style="width:100%; height:100%;margin:0px;position: absolute;" > 
 <p>Your browser does not support the video tag.</p>  
 </video>
 <img src="<?php echo plugins_url('',__FILE__)?>/images/wd_logo.png" style="bottom: 30px;position: absolute;width: 140px;height: 73px; border: 0px !important;"/>
@@ -1787,7 +1788,7 @@ if(isset($row->videos))
     $video_ids=substr($row->videos,0,-1);
 	else
 	$video_ids=0;
-	$videos = $wpdb->get_results("SELECT urlHtml5,type,title FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id IN ($video_ids)");	
+	$videos = $wpdb->get_results("SELECT urlHtml5,type,title,thumb FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id IN ($video_ids)");	
 	$video_urls='';
 	for($i=0;$i<count($videos);$i++)
 	{
@@ -1987,6 +1988,7 @@ echo '<tr style="background:transparent ">
 <td id="td_ik_'.$ident.'" style="text-align:left;border:0px solid grey;width:100%;vertical-align:top;">
 <div id="scroll_div2_'.$i.'_'.$ident.'" class="playlist_values_'.$ident.'" style="position:relative">';
 $jj=0;
+$vtttt='';
 for($j=0;$j<count($v_ids)-1;$j++)
 {
 $vdss=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=%d",$v_ids[$j]));
@@ -1997,6 +1999,7 @@ $vdss=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video
 		}
 		else $html5Url=$vdss->url;
 		$vidsTHUMB=$vdss->thumb;
+		$vtttt = (!$j || (j && ! $vtttt) ? $vidsTHUMB : $vtttt);
 		if($vdss->urlHDHtml5!=""){
 		$html5UrlHD=$vdss->urlHDHtml5;
 		}
@@ -2004,7 +2007,7 @@ $vdss=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video
 			echo '<div id="thumb_'.$jj.'_'.$ident.'"  onclick="jQuery(\'#HD_on_'.$ident.'\').val(0);document.getElementById(\'videoID_'.$ident.'\').src=\''.$html5Url.'\';play_'.$ident.'();vid_select_'.$ident.'(this);vid_num='.$jj.';jQuery(\'#current_track_'.$ident.'\').val('.$jj.');" class="vid_thumb_'.$ident.'" style="color:#'.$theme->textColor .';cursor:pointer;width:'.$theme->playlistWidth.'px;text-align:center; "  >';
 			if($vdss->thumb)
 			echo '<img   src="'.$vidsTHUMB.'" width="90px" style="display:none;  border:none;"  />';
-			echo '<p style="font-size:'.$theme->playlistTextSize.'px !important;line-height:30px !important;cursor:pointer;margin: 0px !important;padding:0px !important" >'.($jj+1).'-'.$vdss->title.'</p></div>';
+			echo '<p style="font-size:'.$theme->playlistTextSize.'px !important;line-height:30px !important;cursor:pointer;margin: 0px !important;padding:0px !important" >'.($theme->show_trackid ? ($jj+1).'-' : '').$vdss->title.'</p></div>';
 
 			echo '<input type="hidden" id="urlHD_'.$jj.'_'.$ident.'" value="'.$html5UrlHD.'" />';
 			echo '<input type="hidden" id="vid_type_'.$jj.'_'.$ident.'" value="'.$vdss->type.'" />';
@@ -2019,7 +2022,7 @@ echo '</div></td>
 <div onmousedown="scrollBot2=setInterval('scrollBottom2_<?php echo $ident;?>()', 30)" onmouseup="clearInterval(scrollBot2)" style="position:absolute;overflow:hidden; text-align:center;width:<?php echo $theme->playlistWidth; ?>px; height:20px" id="divulushka_<?php echo $ident;?>"><img  src="<?php echo plugins_url('',__FILE__)?>/images/bot.png" style="cursor:pointer;  border:none;" id="button21_<?php  echo $ident?>" /></div>
 </div>
 </div>
-<video  ontimeupdate="timeUpdate_<?php  echo $ident?>()"  ondurationchange="durationChange_<?php  echo $ident?>();" id="videoID_<?php  echo $ident?>" src="<?php echo $videos[0]->urlHtml5; ?>"   style="width:100%; height:100% !important;margin:0px !important;position: absolute;" >  
+<video  ontimeupdate="timeUpdate_<?php  echo $ident?>()"  ondurationchange="durationChange_<?php  echo $ident?>();" id="videoID_<?php  echo $ident?>" src="<?php echo $videos[0]->urlHtml5; ?>" poster="<?php echo $vtttt ?>" style="width:100%; height:100%;margin:0px;position: absolute;" >  
 <p>Your browser does not support the video tag.</p> 
 </video>
 <img src="<?php echo plugins_url('',__FILE__)?>/images/wd_logo.png" style="top: <?php echo $theme->appHeight-100 ?>px;position: absolute !important;height: 90px !important;"/>
@@ -2129,6 +2132,7 @@ for($i=0;$i<count($ctrls);$i++)
 						echo '<img  style="vertical-align: middle;cursor:pointer;max-width:7px; border:none;opacity:'.$theme->ctrlsMainAlpha/100 .';" id="button'.$y.'_'.$ident.'" class="'.$ctrl[0].'_'.$ident.'"  src="'.plugins_url('',__FILE__).'/images/'.$ctrl[0].'.png" />';						
 						}
 				$y=$y+1;
+				#echo "<script>jQuery(document).ready(show_hide_playlist);</script>";
 				}
 			echo '</td>';	
 		}
@@ -2927,7 +2931,38 @@ yy=yy+1;
 					}, 300 );
 					/*jQuery("#space").animate({
 	paddingLeft:<?php echo (($theme->appWidth*20)/100) ?>+"px"},300)*/  
-                      <?php }?>
+                      		
+				<?php if($theme->playlistOverVid==0 && $theme->playlistPos==1){ ?>
+                jQuery("#videoID_<?php echo $ident;?>").animate({
+                    width: <?php echo $theme->appWidth ?>+"px",
+                    marginLeft: '0px'
+                }, 300);
+                <?php } ?>
+
+				<?php if($theme->playlistOverVid==0 && $theme->playlistPos==2){ ?>
+                jQuery("#videoID_<?php echo $ident;?>").animate({
+                    width: <?php echo $theme->appWidth ?>+"px",
+                }, 300);
+                <?php } ?>
+
+				<?php if($theme->ctrlsSlideOut==1){ ?>
+                jQuery('.control').hide("slide", { direction: "<?php if($theme->ctrlsPos==1) echo 'up'; else echo 'down'; ?>" }, 1000);
+                <?php } ?>
+
+                <?php if($theme->playlistOverVid==0 && $theme->playlistPos==1){ ?>
+                jQuery("#videoID_<?php echo $ident;?>").animate({
+                    width: <?php echo $theme->appWidth ?>+"px",
+                    marginLeft: '0px'
+                }, 300);
+                <?php } ?>
+
+
+                <?php if($theme->playlistOverVid==0 && $theme->playlistPos==2){ ?>
+                $("#videoID_<?php echo $ident;?>").animate({
+                    width: <?php echo $theme->appWidth ?>+"px",
+                }, 300);
+                <?php } ?>		
+<?php }?>
 					  <?php if($theme->ctrlsSlideOut==1){ ?>
 					jQuery('#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>').hide("slide", { direction: "<?php if($theme->ctrlsPos==1) echo 'up'; else echo 'down'; ?>" }, 1000);	
                       <?php } ?>					
@@ -2990,8 +3025,8 @@ width:'50px',
 },500);
 });
 })
-jQuery('#global_body_<?php echo $ident;?> .playlist_<?php  echo $ident?>').on('click', function() {
-  if(document.getElementById("play_list_<?php  echo $ident?>").style.width=="0px")
+function show_hide_playlist() {
+	if(document.getElementById("play_list_<?php  echo $ident?>").style.width=="0px")
  { 
   jQuery("#play_list_<?php  echo $ident?>").css('display','')
  jQuery("#play_list_<?php  echo $ident?>").animate({
@@ -3009,6 +3044,20 @@ jQuery('#global_body_<?php echo $ident;?> .playlist_<?php  echo $ident?>').on('c
    jQuery("#global_body_<?php echo $ident;?> #control_btns_<?php  echo $ident?>").animate({
   width: <?php echo $theme->appWidth-$theme->playlistWidth; ?>+"px",  
   }, 500 );
+	
+		<?php if($theme->playlistOverVid==0 && $theme->playlistPos==1){ ?>
+        jQuery("#videoID_<?php echo $ident;?>").animate({
+            width: <?php echo $theme->appWidth-$theme->playlistWidth; ?>+'px',
+            marginLeft: <?php echo $theme->playlistWidth; ?>+'px'
+        }, 500);
+        <?php } ?>
+
+
+        <?php if($theme->playlistOverVid==0 && $theme->playlistPos==2){ ?>
+        jQuery("#videoID_<?php echo $ident;?>").animate({
+            width: <?php echo $theme->appWidth-$theme->playlistWidth; ?>+"px",
+        }, 500);
+        <?php } ?>
  }  
   else  
   { 
@@ -3028,8 +3077,26 @@ jQuery('#global_body_<?php echo $ident;?> .playlist_<?php  echo $ident?>').on('c
   width: <?php echo $theme->appWidth?>+"px",
   }, 1500 );
  /*jQuery("#space").animate({paddingLeft:<?php echo (($theme->appWidth*20)/100)?>+'px'},1500)*/
+  
+		<?php if($theme->playlistOverVid==0 && $theme->playlistPos==1){ ?>
+        jQuery("#videoID_<?php echo $ident;?>").animate({
+            width: <?php echo $theme->appWidth ?>+"px",
+            marginLeft: '0px'
+        }, 1500);
+        <?php } ?>
+
+
+        <?php if($theme->playlistOverVid==0 && $theme->playlistPos==2){ ?>
+        jQuery("#videoID_<?php echo $ident;?>").animate({
+            width: <?php echo $theme->appWidth ?>+"px",
+        }, 1500);
+        <?php } ?>
+  
   }
-});
+	
+}
+jQuery('#global_body_<?php echo $ident;?> .playlist_<?php  echo $ident?>').on('click', show_hide_playlist);
+
 current_playlist_table_<?php  echo $ident?>=document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
 video_urls_<?php echo $ident;?>=jQuery('#track_list_<?php  echo $ident?>_'+current_playlist_table_<?php  echo $ident?>).find('.vid_thumb_<?php echo $ident?>');
 function current_playlist_videos_<?php  echo $ident?>(){
@@ -3292,6 +3359,8 @@ video_<?php echo $ident;?>[0].volume=<?php echo $theme->defaultVol/100 ;?>;
 ?>
 </div><br />
 <?php 
+if ($theme->openPlaylistAtStart)
+	echo "<script>jQuery(document).ready(show_hide_playlist);</script>";
 $many_players++;
 $ident++;
  $content=ob_get_contents();
@@ -4188,8 +4257,13 @@ $sql_theme="CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."Spider_Video_Player_the
   `ctrlsMainAlpha` double NOT NULL,
   `itemBgAlpha` double NOT NULL,
   `show_trackid` tinyint(1) DEFAULT NULL,
+  `openPlaylistAtStart` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ";
+
+$query = "SHOW COUNT(columns) FROM `".$wpdb->prefix."Spider_Video_Player_theme` LIKE 'openPlaylistAtStart'";
+$colExists = $wpdb -> get_var($query);
+$sql_alter_theme = "ALTER TABLE `".$wpdb->prefix."Spider_Video_Player_theme` ADD `openPlaylistAtStart` tinyint(1) NOT NULL";
 
 $sql_video="CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."Spider_Video_Player_video` (
   `id` int(11) NOT NULL auto_increment,
@@ -4215,13 +4289,13 @@ $sql_Spider_Video_Player="CREATE TABLE IF NOT EXISTS `".$wpdb->prefix."Spider_Vi
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1" ;
 
 $table_name=$wpdb->prefix."Spider_Video_Player_theme";
-$sql_theme1="INSERT INTO `".$table_name."` VALUES(1, 1, 'Theme 1', 650, 400, 100, 0, 1, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playlist:1,playPrev:1,playPause:1,playNext:1,lib:1,stop:0,time:1,vol:1,+:1,hd:1,repeat:1,shuffle:1,play:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 12, 3, 3, 16, 20, '001326', '001326', '3665A3', 'C0B8F2', '000000', '00A2FF', 'DAE858', '0C8A58', 'DEDEDE', '000000', 'FFFFFF', 50, 79, 50, 1)";
-$sql_theme2="INSERT INTO `".$table_name."` VALUES(2, 0, 'Theme 2', 650, 400, 60, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPrev:1,playPause:1,playNext:1,stop:0,playlist:1,lib:1,play:0,vol:1,+:1,time:1,hd:1,repeat:1,shuffle:1,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 0, 1, 6, 3, 3, 6, 8, 'FFBB00', '001326', 'FFA200', '030000', '595959', 'FF0000', 'E8E84D', 'FF5500', 'EBEBEB', '000000', 'FFFFFF', 82, 79, 0, 1)";
-$sql_theme3="INSERT INTO `".$table_name."` VALUES(3, 0, 'Theme 3', 650, 400, 100, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,play:0,playlist:1,lib:1,playPrev:1,playNext:1,stop:0,vol:1,+:1,time:1,hd:1,repeat:1,shuffle:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 0, 12, 3, 3, 16, 20, 'FF0000', '070801', 'D10000', 'FFFFFF', '00A2FF', '00A2FF', 'F0FF61', '00A2FF', 'DEDEDE', '000000', 'FFFFFF', 65, 99, 0, 1)";
-$sql_theme4="INSERT INTO `".$table_name."` VALUES(4, 0, 'Theme 4', 650, 400, 60, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 60, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,vol:1,playPrev:0,playNext:0,stop:0,+:1,hd:1,repeat:1,shuffle:0,play:0,pause:0,share:1,time:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 6, 4, 4, 6, 8, '239DC2', '000000', '2E6DFF', 'F5DA51', 'FFA64D', 'BFBA73', 'FF8800', 'FFF700', 'FFFFFF', 'FFFFFF', '000000', 71, 82, 0, 1)";
-$sql_theme5="INSERT INTO `".$table_name."` VALUES(5, 0, 'Theme 5', 650, 400, 100, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPrev:0,playPause:1,playlist:1,lib:1,playNext:0,stop:0,time:1,vol:1,+:1,hd:1,repeat:1,shuffle:1,play:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 14, 4, 4, 14, 16, '878787', '001326', 'FFFFFF', '000000', '525252', '14B1FF', 'CCCCCC', '14B1FF', '030303', '000000', 'FFFFFF', 100, 75, 0, 1)";
-$sql_theme6="INSERT INTO `".$table_name."` VALUES(6, 0, 'Theme 6', 650, 400, 100, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,vol:1,playPrev:0,playNext:0,stop:0,+:1,repeat:0,shuffle:0,play:0,pause:0,hd:1,share:1,time:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 14, 3, 3, 16, 16, '080808', '000000', '1C1C1C', 'FFFFFF', '40C6FF', '00A2FF', 'E8E8E8', '40C6FF', 'DEDEDE', '2E2E2E', 'FFFFFF', 61, 79, 0, 1)";
-$sql_theme7="INSERT INTO `".$table_name."` VALUES(7, 0, 'Theme  7', 650, 400, 100, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,playPrev:0,playNext:0,stop:0,vol:1,+:1,hd:0,repeat:0,shuffle:0,play:0,pause:0,share:1,fullScreen:1,time:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 12, 3, 3, 16, 16, '212121', '000000', '222424', 'FFCC00', 'FFFFFF', 'ABABAB', 'B8B8B8', 'EEFF00', 'DEDEDE', '000000', '000000', 90, 78, 0, 1)";
+$sql_theme1="INSERT INTO `".$table_name."` VALUES(1, 1, 'Theme 1', 650, 400, 100, 0, 1, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playlist:1,playPrev:1,playPause:1,playNext:1,lib:1,stop:0,time:1,vol:1,+:1,hd:1,repeat:1,shuffle:1,play:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 12, 3, 3, 16, 20, '001326', '001326', '3665A3', 'C0B8F2', '000000', '00A2FF', 'DAE858', '0C8A58', 'DEDEDE', '000000', 'FFFFFF', 50, 79, 50, 1, 0)";
+$sql_theme2="INSERT INTO `".$table_name."` VALUES(2, 0, 'Theme 2', 650, 400, 60, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPrev:1,playPause:1,playNext:1,stop:0,playlist:1,lib:1,play:0,vol:1,+:1,time:1,hd:1,repeat:1,shuffle:1,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 0, 1, 6, 3, 3, 6, 8, 'FFBB00', '001326', 'FFA200', '030000', '595959', 'FF0000', 'E8E84D', 'FF5500', 'EBEBEB', '000000', 'FFFFFF', 82, 79, 0, 1, 0)";
+$sql_theme3="INSERT INTO `".$table_name."` VALUES(3, 0, 'Theme 3', 650, 400, 100, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,play:0,playlist:1,lib:1,playPrev:1,playNext:1,stop:0,vol:1,+:1,time:1,hd:1,repeat:1,shuffle:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 0, 12, 3, 3, 16, 20, 'FF0000', '070801', 'D10000', 'FFFFFF', '00A2FF', '00A2FF', 'F0FF61', '00A2FF', 'DEDEDE', '000000', 'FFFFFF', 65, 99, 0, 1, 0)";
+$sql_theme4="INSERT INTO `".$table_name."` VALUES(4, 0, 'Theme 4', 650, 400, 60, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 60, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,vol:1,playPrev:0,playNext:0,stop:0,+:1,hd:1,repeat:1,shuffle:0,play:0,pause:0,share:1,time:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 6, 4, 4, 6, 8, '239DC2', '000000', '2E6DFF', 'F5DA51', 'FFA64D', 'BFBA73', 'FF8800', 'FFF700', 'FFFFFF', 'FFFFFF', '000000', 71, 82, 0, 1, 0)";
+$sql_theme5="INSERT INTO `".$table_name."` VALUES(5, 0, 'Theme 5', 650, 400, 100, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPrev:0,playPause:1,playlist:1,lib:1,playNext:0,stop:0,time:1,vol:1,+:1,hd:1,repeat:1,shuffle:1,play:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 14, 4, 4, 14, 16, '878787', '001326', 'FFFFFF', '000000', '525252', '14B1FF', 'CCCCCC', '14B1FF', '030303', '000000', 'FFFFFF', 100, 75, 0, 1, 0)";
+$sql_theme6="INSERT INTO `".$table_name."` VALUES(6, 0, 'Theme 6', 650, 400, 100, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,vol:1,playPrev:0,playNext:0,stop:0,+:1,repeat:0,shuffle:0,play:0,pause:0,hd:1,share:1,time:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 14, 3, 3, 16, 16, '080808', '000000', '1C1C1C', 'FFFFFF', '40C6FF', '00A2FF', 'E8E8E8', '40C6FF', 'DEDEDE', '2E2E2E', 'FFFFFF', 61, 79, 0, 1, 0)";
+$sql_theme7="INSERT INTO `".$table_name."` VALUES(7, 0, 'Theme  7', 650, 400, 100, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,playPrev:0,playNext:0,stop:0,vol:1,+:1,hd:0,repeat:0,shuffle:0,play:0,pause:0,share:1,fullScreen:1,time:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 12, 3, 3, 16, 16, '212121', '000000', '222424', 'FFCC00', 'FFFFFF', 'ABABAB', 'B8B8B8', 'EEFF00', 'DEDEDE', '000000', '000000', 90, 78, 0, 1, 0)";
 
 $table_name=$wpdb->prefix."Spider_Video_Player_video";
 
@@ -4262,6 +4336,8 @@ $wpdb->query($sql_playlist);
 $wpdb->query($sql_Spider_Video_Player);
 $wpdb->query($sql_tag);
 $wpdb->query($sql_theme);
+if (!$colExists)
+	$wpdb->query($sql_alter_theme);
 $wpdb->query($sql_video);
 
 ////// insert themt rows

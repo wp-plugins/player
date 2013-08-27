@@ -835,7 +835,7 @@ This section allows you to create themes to customize the design of the player. 
                        <tr>
                             <td class="paramlist_key">
                                 <span class="editlinktip">
-                                    <label>Show Track Id (only for flash):</label>
+                                    <label>Show Track Id:</label>
                             </span>
                             </td>
                             <td class="paramlist_value">
@@ -1153,7 +1153,7 @@ This section allows you to create themes to customize the design of the player. 
                             <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Playlist over video  (only for flash):</label>
+                                        <label>Playlist over video:</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -1162,6 +1162,20 @@ This section allows you to create themes to customize the design of the player. 
                                     <label for="playlistOverVid0">No</label>
                                     <input type="radio" name="playlistOverVid" id="playlistOverVid1" value="1" <?php cheched($row->playlistOverVid,1) ?> class="inputbox">
                                     <label for="playlistOverVid1">Yes</label>
+				</td>
+                            </tr>
+							<tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Open playlist at start:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    
+                                    <input type="radio" name="openPlaylistAtStart" id="openPlaylistAtStart0" value="0" <?php cheched($row->openPlaylistAtStart,0) ?> class="inputbox">
+                                    <label for="playlistAutoHide0">No</label>
+                                    <input type="radio" name="openPlaylistAtStart" id="openPlaylistAtStart1" value="1" <?php cheched($row->openPlaylistAtStart,1) ?> class="inputbox">
+                                    <label for="playlistAutoHide1">Yes</label>
                                 </td>
                             </tr>
                             <tr>
@@ -1511,7 +1525,7 @@ This section allows you to create themes to customize the design of the player. 
 	<td colspan="7" align="right" style="font-size:16px;">
   		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
 		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
-				Get the full version&nbsp;&nbsp;&nbsp;&nbsp;<br />Without a watermark&nbsp;&nbsp;&nbsp;&nbsp;
+		Get the full version&nbsp;&nbsp;&nbsp;&nbsp;
 		</a>
         </td>
     </tr>
@@ -2408,7 +2422,7 @@ This section allows you to create themes to customize the design of the player. 
                        <tr>
                             <td class="paramlist_key">
                                 <span class="editlinktip">
-                                    <label>Show Track Id (only for flash)</label>
+                                    <label>Show Track Id</label>
                             </span>
                             </td>
                             <td class="paramlist_value">
@@ -2726,7 +2740,7 @@ This section allows you to create themes to customize the design of the player. 
                             <tr>
                                 <td  class="paramlist_key">
                                     <span class="editlinktip">
-                                        <label>Playlist over video (only for flash):</label>
+                                        <label>Playlist over video:</label>
                                 </span>
                                 </td>
                                 <td class="paramlist_value">
@@ -2735,6 +2749,20 @@ This section allows you to create themes to customize the design of the player. 
                                     <label for="playlistOverVid0">No</label>
                                     <input type="radio" name="playlistOverVid" id="playlistOverVid1" value="1" <?php cheched($row->playlistOverVid,1) ?> class="inputbox">
                                     <label for="playlistOverVid1">Yes</label>
+				</td>
+                            </tr>
+							<tr>
+                                <td  class="paramlist_key">
+                                    <span class="editlinktip">
+                                        <label>Open playlist at start:</label>
+                                </span>
+                                </td>
+                                <td class="paramlist_value">
+                                    
+                                    <input type="radio" name="openPlaylistAtStart" id="openPlaylistAtStart0" value="0" <?php cheched($row->openPlaylistAtStart,0) ?> class="inputbox">
+                                    <label for="playlistAutoHide0">No</label>
+                                    <input type="radio" name="openPlaylistAtStart" id="openPlaylistAtStart1" value="1" <?php cheched($row->openPlaylistAtStart,1) ?> class="inputbox">
+                                    <label for="playlistAutoHide1">Yes</label>
                                 </td>
                             </tr>
                             <tr>

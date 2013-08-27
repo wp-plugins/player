@@ -69,6 +69,7 @@ function get_radio_value(name)
 	watermarkAlpha		=window.parent.document.getElementById('watermarkAlpha').value;
 	playlistPos			=get_radio_value('playlistPos');
 	playlistOverVid		=get_radio_value('playlistOverVid');
+	openPlaylistAtStart	=get_radio_value('openPlaylistAtStart');
 	playlistAutoHide	=get_radio_value('playlistAutoHide');
 	playlistTextSize	=window.parent.document.getElementById('playlistTextSize').value;
 	libCols				=window.parent.document.getElementById('libCols').value;
@@ -117,6 +118,7 @@ function get_radio_value(name)
 	+'@watermarkAlpha='+watermarkAlpha
 	+'@playlistPos='+playlistPos
 	+'@playlistOverVid='+playlistOverVid
+	+'@openPlaylistAtStart='+openPlaylistAtStart
 	+'@playlistAutoHide='+playlistAutoHide
 	+'@playlistTextSize='+playlistTextSize
 	+'@libCols='+libCols
@@ -246,6 +248,7 @@ if($ctrlsStack)
 	<watermarkAlpha>'.(($_GET["watermarkAlpha"]+0)/100).'</watermarkAlpha>
 	<playlistPos>'.$_GET["playlistPos"].'</playlistPos>
 	<playlistOverVid>'.change_to_str($_GET["playlistOverVid"]).'</playlistOverVid>
+	<openPlaylistAtStart>'.change_to_str($_GET["openPlaylistAtStart"]).'</openPlaylistAtStart>
 	<playlistAutoHide>'.change_to_str($_GET["playlistAutoHide"]).'</playlistAutoHide>
 	<playlistTextSize>'.$_GET["playlistTextSize"].'</playlistTextSize>
 	<libCols>'.$_GET["libCols"].'</libCols>
@@ -1076,6 +1079,7 @@ $theme=$_GET["theme"];
 	<watermarkAlpha>'.(($params->watermarkAlpha+0)/100).'</watermarkAlpha>
 	<playlistPos>'.$params->playlistPos.'</playlistPos>
 	<playlistOverVid>'.change_to_str($params->playlistOverVid).'</playlistOverVid>
+	<openPlaylistAtStart>'.change_to_str($params->openPlaylistAtStart).'</openPlaylistAtStart>
 	<playlistAutoHide>'.change_to_str($params->playlistAutoHide).'</playlistAutoHide>
 	<playlistTextSize>'.$params->playlistTextSize.'</playlistTextSize>
 	<libCols>'.$params->libCols.'</libCols>
