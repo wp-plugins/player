@@ -1,7 +1,7 @@
 === WordPress Video Player–Flash & HTML5 Video Player===
 Contributors: webdorado
 Donate link: http://web-dorado.com/products/wordpress-player.html
-Tags: player, video, video player, flash player, html5 player
+Tags: player, video, video player, flash player, html5 player, html5 video player
 Requires at least: 3.0
 Tested up to: 3.5
 Stable tag: 1.4.8
