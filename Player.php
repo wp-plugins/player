@@ -4,7 +4,7 @@
 Plugin Name: Spider Video Player 
 Plugin URI: http://web-dorado.com/products/wordpress-player.html
 Description:Spider Video Player supports both HTML5 and Flash, allowing you to play videos on any mobile device. Spider WordPress Video Player allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player.
-Version: 1.4.8
+Version: 1.4.9
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -3430,10 +3430,14 @@ function Spider_Video_Player_options_panel(){
   add_submenu_page( 'Spider_Video_Player', 'Videos', 'Videos', 'manage_options', 'Spider_Video_Player_Videos', 'Spider_Video_Player_Videos');
   add_submenu_page( 'Spider_Video_Player', 'Playlists', 'Playlists', 'manage_options', 'Spider_Video_Player_Playlists', 'Spider_Video_Player_Playlists');
   $page_theme=add_submenu_page( 'Spider_Video_Player', 'Themes', 'Themes', 'manage_options', 'Spider_Video_Player_Themes', 'Spider_Video_Player_Themes');
-
+  $Featured_Plugins = add_submenu_page('Spider_Video_Player', 'Featured Plugins', 'Featured Plugins', 'manage_options', 'player_Featured_Plugins', 'player_Featured_Plugins');
   add_submenu_page( 'Spider_Video_Player', 'Uninstall Spider_Video_Player ', 'Uninstall  Video Player', 'manage_options', 'Uninstall_Spider_Video_Player', 'Uninstall_Spider_Video_Player');
 	add_action('admin_print_styles-' . $page_theme, 'sp_video_player_admin_styles_scripts');
+	add_action('admin_print_styles-' . $Featured_Plugins, 'player_Featured_Plugins_styles');
 	
+  }
+  function player_Featured_Plugins_styles() {
+    wp_enqueue_style("Featured_Plugins", plugins_url("elements/featured_plugins.css", __FILE__));
   }
    function sp_video_player_admin_styles_scripts($id)
   {
@@ -4177,6 +4181,120 @@ switch($mode) {
 	
 	
 	
+}
+
+
+function player_Featured_Plugins() {
+  ?>
+	<div id="main_featured_plugins_page">
+		<table align="center" width="90%" style="margin-top: 0px;border-bottom: rgb(111, 111, 111) solid 2px;">
+			<tr>
+				<td colspan="2" style="height: 70px;"><h3 style="margin: 0px;font-family:Segoe UI;padding-bottom: 15px;color: rgb(111, 111, 111); font-size:18pt;">Featured Plugins</h3></td>
+				<td></td>
+			</tr>
+		</table>
+		<form method="post">
+			<ul id="featured-plugins-list">
+        <li class="form-maker">
+          <div class="product">
+            <div class="title">
+                   <strong class="heading">Form Maker</strong>
+                   <p>Wordpress form builder plugin</p>
+            </div>
+          </div>
+          <div class="description">
+            <p>Form Maker is a modern and advanced tool for creating WordPress forms easily and fast.</p>
+            <a target="_blank" href="http://web-dorado.com/products/wordpress-form.html" class="download">Download</a>
+          </div>
+        </li>
+				<li class="spider-calendar">
+					<div class="product">
+						<div class="title">
+							<strong class="heading">Spider Calendar</strong>
+							<p>WordPress event calendar plugin</p>
+						</div>
+					</div>
+					<div class="description">
+							<p>Spider Event Calendar is a highly configurable product which allows you to have multiple organized events.</p>
+							<a target="_blank" href="http://web-dorado.com/products/wordpress-calendar.html" class="download">Download</a>
+					</div>
+				</li>
+        <li class="catalog">
+					<div class="product">
+						<div class="title">
+							<strong class="heading">Spider Catalog</strong>
+							<p>WordPress product catalog plugin</p>
+						</div>
+					</div>
+					<div class="description">
+							<p>Spider Catalog for WordPress is a convenient tool for organizing the products represented on your website into catalogs.</p>
+							<a target="_blank" href="http://web-dorado.com/products/wordpress-catalog.html" class="download">Download</a>
+					</div>
+				</li>
+				<li class="contacts">
+					<div class="product">
+						<div class="title">
+							<strong class="heading">Spider Contacts</strong>
+							<p>Wordpress staff list plugin</p>
+						</div>
+					</div>
+					<div class="description">
+							<p>Spider Contacts helps you to display information about the group of people more intelligible, effective and convenient.</p>
+							<a target="_blank" href="http://web-dorado.com/products/wordpress-contacts-plugin.html" class="download">Download</a>
+					</div>
+				</li>
+        <li class="facebook">
+					<div class="product">
+						<div class="title">
+							<strong class="heading">Spider Facebook</strong>
+							<p>WordPress Facebook plugin</p>
+						</div>
+					</div>
+					<div class="description">
+							<p>Spider Facebook is a WordPress integration tool for Facebook.It includes all the available Facebook social plugins and widgets to be added to your web</p>
+							<a target="_blank" href="http://web-dorado.com/products/wordpress-facebook.html" class="download">Download</a>
+					</div>
+				</li>
+                <li class="faq">
+					<div class="product">
+						<div class="title">
+							<strong class="heading">Spider FAQ</strong>
+							<p>WordPress FAQ Plugin</p>
+						</div>
+					</div>
+					<div class="description">
+							<p>The Spider FAQ WordPress plugin is for creating an FAQ (Frequently Asked Questions) section for your website.</p>
+							<a target="_blank" href="http://web-dorado.com/products/wordpress-faq-plugin.html" class="download">Download</a>
+					</div>
+				</li>
+                <li class="zoom">
+					<div class="product">
+						<div class="title">
+							<strong class="heading">Zoom</strong>
+							<p>WordPress text zoom plugin</p>
+						</div>
+					</div>
+					<div class="description">
+							<p>Zoom enables site users to resize the predefined areas of the web site.</p>
+							<a target="_blank" href="http://web-dorado.com/products/wordpress-zoom.html" class="download">Download</a>
+					</div>
+				</li>
+				<li class="flash-calendar">
+					<div class="product">
+						<div class="title">
+							<strong class="heading">Flash Calendar</strong>
+							<p>WordPress flash calendar plugin</p>
+						</div>
+					</div>
+					<div class="description">
+							<p>Spider Flash Calendar is a highly configurable Flash calendar plugin which allows you to have multiple organized events.</p>
+							<a target="_blank" href="http://web-dorado.com/products/wordpress-events-calendar.html" class="download">Download</a>
+					</div>
+				</li>
+			</ul>
+		</form>
+	</div >
+  <?php
 }
 
 
