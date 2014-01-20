@@ -245,7 +245,7 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 = Publishing the created player =    
   
 To insert a player into a Page or a Post.  
-  6.1. Press the button named Insert Spider Video Player in a post or a page you want to show the player.  
+  6.1. Press the button named "Insert Spider Video Player" in a post or a page you want to show the player.  
   6.2. Select a player from the list.  
   6.3. Save the page or the post.  
   
