@@ -1,4 +1,4 @@
-=== WordPress Video Player ===
+=== WordPress Video Player  ===
 Contributors: webdorado
 Donate link: http://web-dorado.com/products/wordpress-player.html
 Tags: video , video player ,video gallery,video plugin, Video Player plugin, video widget, videos, player, flash,flash player, html5 video, html5 player, HTML5 video player, youtube, youtube player, youtube Video Player, youtube videos, embed youtube, youtube widget, youtube plugin, youtube gallery, youtube playlist, MP4, video embed,video blog,  playlist, playlists, video playlist, high definition Video Player, myvideo, m4v, flash video player, video sidebar widget, Wp flash Video Player, video sharing, share video, HTML5 video gallery, embed video,video ekleme
@@ -245,7 +245,7 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 = Publishing the created player =    
   
 To insert a player into a Page or a Post.  
-  6.1. Press the button named Insert Spider Video Player in a post or a page you want to show the player.  
+  6.1. Press the button named "Insert Spider Video Player" in a post or a page you want to show the player.  
   6.2. Select a player from the list.  
   6.3. Save the page or the post.  
   
