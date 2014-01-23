@@ -754,7 +754,7 @@ if($videos)
 		$v_types[]=$video->type;
 		$v_urls[]=addslashes($video->url);
 		$v_thumbs[]=addslashes($video->thumb);
-		$v_trackIds[]=$video->trackId;
+		$v_trackIds[]=isset($video->trackId) ? $video->trackId : "";
 	}
 
 	$v_id='["'.implode('","',$v_ids).'"]';

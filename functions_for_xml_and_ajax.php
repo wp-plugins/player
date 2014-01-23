@@ -300,7 +300,7 @@ function spider_video_select_playlist(){
 	require_once("nav_function/nav_html_func.php");
 if(get_bloginfo( 'version' )>3.3){
 	?>
-<link rel="stylesheet" href="<?php echo bloginfo("url") ?>/wp-admin/load-styles.php?c=0&amp;dir=ltr&amp;load=admin-bar,wp-admin&amp;ver=7f0753feec257518ac1fec83d5bced6a" type="text/css" media="all">
+<link rel="stylesheet" href="<?php echo bloginfo("url") ?>/wp-admin/load-styles.php?c=0&amp;dir=ltr&amp;load=admin-bar,dashicons,wp-admin&amp;ver=7f0753feec257518ac1fec83d5bced6a" type="text/css" media="all">
 <?php
 }
 else
@@ -311,7 +311,7 @@ else
 }
  ?>
 <link rel="stylesheet" id="thickbox-css" href="<?php echo bloginfo('url')?>/wp-includes/js/thickbox/thickbox.css?ver=20111117" type="text/css" media="all">
-<link rel="stylesheet" id="colors-css" href="<?php echo bloginfo('url')?>/wp-admin/css/colors-classic.css?ver=20111206" type="text/css" media="all">
+<link rel="stylesheet" id="colors-css" href="<?php echo bloginfo('url')?>/wp-admin/css/colors<?php echo ((get_bloginfo('version') < '3.8') ? '-classic' : '')?>.css?ver=20111206" type="text/css" media="all">
 
 
 <?php
@@ -337,13 +337,13 @@ else
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
 					$sort["1_or_2"]="2";
-					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." ASC";
+					$order="ORDER BY ".esc_sql($sort["sortid_by"])." ASC";
 				}
 				else
 				{
 					$sort["custom_style"]="manage-column column-title sorted desc";
 					$sort["1_or_2"]="1";
-					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." DESC";
+					$order="ORDER BY ".esc_sql($sort["sortid_by"])." DESC";
 				}
 			}
 			
@@ -370,7 +370,7 @@ else
 		}
 
 	if ( $search_tag ) {
-		$whereee= ' WHERE published=1 AND title LIKE "%'.$wpdb->escape($search_tag).'%"';
+		$whereee= ' WHERE published=1 AND title LIKE "%'.esc_sql($search_tag).'%"';
 	}
 	else
 	{
@@ -385,7 +385,7 @@ else
 	$pageNav['total'] =$total;
 	$pageNav['limit'] =	 $limit/20+1;
 	
-	$query = "SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist ".$whereee." ". $order." "." LIMIT ".$limit.",20";
+	$query = "SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist ".$whereee." ". (isset($order)? $order : "")." "." LIMIT ".$limit.",20";
 	if($sort["sortid_by"] == 'videos')
 	{
 		if($_POST['asc_or_desc'])
@@ -489,7 +489,7 @@ function checkAll( n, fldName ) {
         if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=$_POST['search_events_by_title']; }else{$serch_value="";}} 
 	$serch_fields='<div class="alignleft actions" style="width:180px;">
     	<label for="search_events_by_title" style="font-size:14px">Title: </label>
-        <input type="text" name="search_events_by_title" value="'.$serch_value.'" id="search_events_by_title" onchange="clear_serch_texts()">
+        <input type="text" name="search_events_by_title" value="'.(isset($serch_value) ? $serch_value : "").'" id="search_events_by_title" onchange="clear_serch_texts()">
     </div>
 	<div class="alignleft actions">
    		<input type="button" value="Search" onclick="document.getElementById(\'page_number\').value=\'1\'; document.getElementById(\'serch_or_not\').value=\'search\';
@@ -498,14 +498,14 @@ function checkAll( n, fldName ) {
     </div>';
 	 print_html_nav($pageNav['total'],$pageNav['limit'],$serch_fields);	
 	 ?>
-    <table class="wp-list-table widefat plugins" >
+    <table class="wp-list-table widefat fixed pages" >
     <thead>
     	<tr>
-            <th width="30"><?php echo '#'; ?></th>
-            <th width="20" class="manage-column column-cb check-column">
+            <th style="width:30px"><?php echo '#'; ?></th>
+            <th class="manage-column column-cb check-column">
             <input  type="checkbox" name="toggle" id="toggle" value="" onclick="checkAll(<?php echo count($rows)?>, 'v')">
             </th>
-           <th scope="col" id="id" class="<?php if($sort["sortid_by"]=="id") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:110px" ><a href="javascript:ordering('id',<?php if($sort["sortid_by"]=="id") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>ID</span><span class="sorting-indicator"></span></a></th>
+           <th scope="col" id="id" class="<?php if($sort["sortid_by"]=="id") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:50px" ><a href="javascript:ordering('id',<?php if($sort["sortid_by"]=="id") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>ID</span><span class="sorting-indicator"></span></a></th>
  <th scope="col" id="title" class="<?php if($sort["sortid_by"]=="title") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="" ><a href="javascript:ordering('title',<?php if($sort["sortid_by"]=="title") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Title</span><span class="sorting-indicator"></span></a></th>
  <th scope="col" id="videos" class="<?php if($sort["sortid_by"]=="videos") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:161px" ><a href="javascript:ordering('videos',<?php if($sort["sortid_by"]=="videos") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>The number of Videos</span><span class="sorting-indicator"></span></a></th>
   <th scope="col" id="published" class="<?php if($sort["sortid_by"]=="published") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:87px" ><a href="javascript:ordering('published',<?php if($sort["sortid_by"]=="published") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Published</span><span class="sorting-indicator"></span></a></th>
@@ -544,8 +544,8 @@ function checkAll( n, fldName ) {
     <input type="hidden" name="option" value="com_Spider_Video_Player">
     <input type="hidden" name="task" value="select_playlist">    
     <input type="hidden" name="boxchecked" value="0"> 
-    <input type="hidden" name="filter_order_playlist" value="<?php echo $lists['order']; ?>" />
-    <input type="hidden" name="filter_order_Dir_playlist" value="<?php echo $lists['order_Dir']; ?>" />       
+    <input type="hidden" name="filter_order_playlist" value="<?php echo (isset($lists['order']) ? $lists['order'] : ""); ?>" />
+    <input type="hidden" name="filter_order_Dir_playlist" value="<?php echo (isset($lists['order_Dir']) ? $lists['order_Dir'] : ""); ?>" />       
     </form>
     <?php
 }
@@ -565,7 +565,7 @@ function spider_video_select_video(){
 	require_once("nav_function/nav_html_func.php");
 if(get_bloginfo( 'version' )>3.3){
 	?>
-<link rel="stylesheet" href="<?php echo bloginfo("url") ?>/wp-admin/load-styles.php?c=0&amp;dir=ltr&amp;load=admin-bar,wp-admin&amp;ver=7f0753feec257518ac1fec83d5bced6a" type="text/css" media="all">
+<link rel="stylesheet" href="<?php echo bloginfo("url") ?>/wp-admin/load-styles.php?c=0&amp;dir=ltr&amp;load=admin-bar,dashicons,wp-admin&amp;ver=7f0753feec257518ac1fec83d5bced6a" type="text/css" media="all">
 <?php
 }
 else
@@ -578,7 +578,7 @@ else
  ?>
 
 <link rel="stylesheet" id="thickbox-css" href="<?php echo bloginfo('url')?>/wp-includes/js/thickbox/thickbox.css?ver=20111117" type="text/css" media="all">
-<link rel="stylesheet" id="colors-css" href="<?php echo bloginfo('url')?>/wp-admin/css/colors-classic.css?ver=20111206" type="text/css" media="all">
+<link rel="stylesheet" id="colors-css" href="<?php echo bloginfo('url')?>/wp-admin/css/colors<?php echo ((get_bloginfo('version') < '3.8') ? '-classic' : '')?>.css?ver=20111206" type="text/css" media="all">
 <?php
 	////////////////////////////////////////////////////////////////////////
 	
@@ -606,13 +606,13 @@ else
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
 					$sort["1_or_2"]="2";
-					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." ASC";
+					$order="ORDER BY ".esc_sql($sort["sortid_by"])." ASC";
 				}
 				else
 				{
 					$sort["custom_style"]="manage-column column-title sorted desc";
 					$sort["1_or_2"]="1";
-					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." DESC";
+					$order="ORDER BY ".esc_sql($sort["sortid_by"])." DESC";
 				}
 			}
 			
@@ -630,7 +630,7 @@ else
 			$limit=0;
 		}
 	if(isset($_POST['search_video'])){
-		$where=' WHERE title LIKE "%'.$wpdb->escape($_POST['search_video']).'%" AND published=1 ';
+		$where=' WHERE title LIKE "%'.esc_sql($_POST['search_video']).'%" AND published=1 ';
 		
 		}
 		
@@ -1036,7 +1036,7 @@ if($params->ctrlsStack)
 				$active=0;				
 				if($ctrl=='lib')
 				$active=0;
-				$embed_url=admin_url('admin-ajax.php?action=spiderVeideoPlayervideoonly').'&single=1&trackID='.$_GET['s_v_player_id'].'&theme='.$_GET['theme'].'&priority='.$_GET['priority'];
+				$embed_url=admin_url('admin-ajax.php?action=spiderVeideoPlayervideoonly').'&single=1&trackID='.$_GET['s_v_player_id'].'&theme='.$_GET['theme'].'&priority='.(isset($_GET['priority']) ? $_GET['priority'] : "");
 			}else{
 			    $embed_url=admin_url('admin-ajax.php?action=spiderVeideoPlayervideoonly').'&single=0&id_player='.$_GET['s_v_player_id'];
 			}

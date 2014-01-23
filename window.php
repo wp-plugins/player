@@ -43,7 +43,7 @@ require_once( WP_LOAD_PATH . 'wp-load.php')
     </style>
     <div class="panel_wrapper">
 			<div id="spider_player_panel" class="panel current">
-                <table>
+                <table style="font-size: 13px !important;">
               	  <tr>
                		 <td style=" width:100px; vertical-align:top;">
                 		Select a Player 
@@ -64,7 +64,7 @@ require_once( WP_LOAD_PATH . 'wp-load.php')
                 </table>
             </div>
 		    <div id="spider_single_panel" class="panel">
-                <table>
+                <table style="font-size: 13px !important;">
               	  <tr>
                		 <td style="width:100px; vertical-align:top;">
                 		Select a Video 
@@ -165,6 +165,6 @@ if(document.getElementById('spider_player_panel').className==='panel')
 
 </script>
 <?php 
-$player_Spider_Video_Player++;
+//$player_Spider_Video_Player++;
 ?>
 </body></html>
