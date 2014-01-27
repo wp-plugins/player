@@ -174,7 +174,7 @@ The Tag is a custom parameter of videos by which you can search videos while cre
   
 = 5.1 General Parameters of a theme in Spider Video Player =  
   
-5.1.1 On the left menu select  Video Player > Theme  
+5.1.1 On the left menu select  Video Player > Themes  
 5.1.2 In the upper right corner click on the "Add a Theme" button.  
 5.1.3 Title of theme. Choose a title for the theme.  
 5.1.4 Width of player. Define the width of the video player.  
@@ -212,13 +212,13 @@ The Tag is a custom parameter of videos by which you can search videos while cre
   
 5.3.1 Auto play. Choose whether the player automatically starts the playback on page opening or not.  
 5.3.2 Auto next song. Choose whether player automatically switches to the next track in the playlist when the previous one is finished or not.  
-5.3.3 Auto next album. Choose whether Spider Video Player automatically switches to the next playlists when the previous one is finished or not.  
+5.3.3 Auto next album. Choose whether  Video Player automatically switches to the next playlists when the previous one is finished or not.  
 5.3.4 Default volume. Define the default sound volume of the player.  
 5.3.5 Repeat. Choose whether the player repeats the current track or the whole playlist by default or not.  
     * Off: Do not repeat  
     * One: Repeat the current track  
     * All: Repeat the whole playlist  
-5.3.6 Shuffle. Choose whether Spider Video Player shuffles the tracks by default or not.  
+5.3.6 Shuffle. Choose whether Video Player shuffles the tracks by default or not.  
 5.3.7 Control bar auto hide. Enable or disable control bar auto hide of the Spider Video Player.  
   
 = 5.4 Playlist and Library Parameters of the Spider Video Player =  
