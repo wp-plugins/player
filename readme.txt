@@ -14,7 +14,7 @@ Spider Video Player for WordPress is a Flash & HTML5 video player plugin that al
 
 ###Spider Video [WordPress  Player](http://web-dorado.com/products/wordpress-player.html)
 
-Spider Video Player is a WordPress video plugin that allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player. Spider Video Player is one of the best WordPress video players available in WordPress plugin directory. This WordPress Video Player provides a convenient user interface, incorporating all the common features for video players including video quality selection, sharing, full screen, shuffle etc. Moreover, you have the option of designing different themes for the video player by customizing each feature available. This is an optimal video player solution for your WordPress website, providing effective integration and high level of customization.  
+Spider Video Player is a WordPress video plugin that allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player. Spider Video Player is one of the best WordPress video players available in WordPress plugin directory. This WordPress Video Player provides a convenient user interface, incorporating all the common features for video players including video quality selection, sharing, full screen, shuffle etc.  There is a possibility to edit the themes for the Video Player to make its appearance more relevant to your website design and color scheme.  This is an optimal video player solution for your WordPress website, providing effective integration and high level of customization.  
 
 Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordpress-player.html):  
 
@@ -40,7 +40,7 @@ Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordp
   
 Spider video [WordPress  Player](http://web-dorado.com/products/wordpress-player.html)  has wonderful flash effects. You can add several video players in one page with different parameters and playlists. With Spider video player you can have unlimited playlists with unlimited number of videos.
 
-
+The Video Player is fully integrated with the latest version of WordPress and gets perpetual updates.  
  
 ### Supported languages
 
