@@ -42,7 +42,7 @@ Spider video [WordPress  Player](http://web-dorado.com/products/wordpress-player
 
 The Video Player is fully integrated with the latest version of WordPress and gets perpetual updates.  
  
-###IMPORTANT: If you think you found a bug in Spider Cideo Player or have any problem/question concerning the plugin, please check out [Support Forum](http://web-dorado.com/forum/spider-video-player-wordpress.html) in our website. If you do not find a solution here, do not hesitate to contact us at [info@web-dorado.com](mailto:info@web-dorado.com).
+###IMPORTANT: If you think you found a bug in Spider Video Player or have any problem/question concerning the plugin, please check out [Support Forum](http://web-dorado.com/forum/spider-video-player-wordpress.html) in our website. If you do not find a solution here, do not hesitate to contact us at [info@web-dorado.com](mailto:info@web-dorado.com).
  
 ### Supported languages
 
