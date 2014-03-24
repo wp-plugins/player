@@ -40,7 +40,7 @@ Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordp
 * Possibility to display the player both in Video/playlist mode and Library mode (where library can host mutliple playlists).     
   
 
-Upgrade to [[WordPress  Player Pro](http://web-dorado.com/products/wordpress-player.html) to add features: 
+Upgrade to [WordPress Player Pro](http://web-dorado.com/products/wordpress-player.html) to add features: 
 
 * Possibility to add a watermark image for the video player and change the size, position and border spacing of watermark image (commercial version).  
  
