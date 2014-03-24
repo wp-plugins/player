@@ -38,7 +38,11 @@ Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordp
 * Possibility to change library, videos and frames background color on the video player.  
 * Possibility to shuffle and repeat videos in playlist on the video player.  
 * Possibility to display the player both in Video/playlist mode and Library mode (where library can host mutliple playlists).     
-* Possibility to add a watermark image for the video player and change the size, position and border spacing of watermark image (commercial version).    
+  
+
+Upgrade to [[WordPress  Player Pro](http://web-dorado.com/products/wordpress-player.html) to add features: 
+
+* Possibility to add a watermark image for the video player and change the size, position and border spacing of watermark image (commercial version).  
  
 Spider video [WordPress  Player](http://web-dorado.com/products/wordpress-player.html)  has wonderful flash effects. You can add several video players in one page with different parameters and playlists. With Spider video player you can have unlimited playlists with unlimited number of videos.
 
