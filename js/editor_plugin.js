@@ -16,6 +16,7 @@
             ed.addButton('Spider_Video_Player_mce', {
             title : 'Insert Spider Video Player',
 			cmd : 'mceSpider_Video_Player_mce',
+			image: svp_plugin_url + '/images/Spider_Video_PlayerLogo.png',
             });
         }
     });

@@ -4,7 +4,7 @@
 Plugin Name: Spider Video Player 
 Plugin URI: http://web-dorado.com/products/wordpress-player.html
 Description:Spider Video Player supports both HTML5 and Flash, allowing you to play videos on any mobile device. Spider WordPress Video Player allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player.
-Version: 1.5
+Version: 1.5.1
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -3420,11 +3420,7 @@ function Spider_Video_Player_register($plugin_array)
 
 function add_button_style_Spider_Video_Player()
 {
-    echo '<style type="text/css">
-.wp_themeSkin span.mce_Spider_Video_Player_mce {background:url(' . plugins_url('images/Spider_Video_PlayerLogo.png', __FILE__) . ') no-repeat !important;}
-.wp_themeSkin .mceButtonEnabled:hover span.mce_Spider_Video_Player_mce,.wp_themeSkin .mceButtonActive span.mce_Spider_Video_Player_mce
-{background:url(' . plugins_url('images/Spider_Video_PlayerLogoHover.png', __FILE__) . ') no-repeat !important;}
-</style>';
+   echo '<script>var svp_plugin_url = "' . plugins_url('', __FILE__) . '";</script>';
 }
 
 add_action('admin_head', 'add_button_style_Spider_Video_Player');
