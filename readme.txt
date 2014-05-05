@@ -8,32 +8,31 @@ Stable tag: 1.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Spider Video Player for WordPress is a Flash & HTML5 video player plugin that allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player.
+Spider Video Player is a WordPress video plugin that allows you to easily add videos to your website.
 
 == Description ==
 
 ###Spider Video [WordPress  Player](http://web-dorado.com/products/wordpress-player.html)
 
-Spider Video Player is a WordPress video plugin that allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player. Spider Video Player is one of the best WordPress video players available in WordPress plugin directory. This WordPress Video Player provides a convenient user interface, incorporating all the common features for video players including video quality selection, sharing, full screen, shuffle etc.  There is a possibility to edit the themes for the Spider Video Player to make its appearance more relevant to your website design and color scheme.  This is an optimal video player solution for your WordPress website, providing effective integration and high level of customization. 
+Spider Video Player is a WordPress video plugin that allows you to easily add videos to your website. It has the possibility of organizing videos into playlists and choosing a preferred layout for the player. Spider Video Player is one of the best WordPress video players available in WordPress plugin directory. Spider Video Player for WordPress provides a convenient user interface, incorporating all the common features for video players including video quality selection, sharing, full screen, shuffle and more.  There is a possibility to edit the themes for the Spider Video Player to make its appearance more relevant to your website design and color scheme.  This is an optimal video player solution for your WordPress website, providing effective integration and high level of customization. 
 Spider Video Player comes with a social media integration feature. The player supports HD videos, which is an essential feature for the high quality players. Thus the users visiting and watching the videos on your website will be able to share the videos on most of the popular media (Facebook, Google+ and Twiter).
 
 
 Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordpress-player.html):  
 
+* Spider Video Player supports Flash and HTML5.     
 * You can add the listed types of videos into Spider Video Player:  
     - Http: You can provide the URL of the video and its HD version (UrlHD) in the video player or select it from the uploaded videos.  (Note: Please provide direct link to the video and not the page containing the video)  
   
     - YouTube: Provide the YouTube link to the video in the URL field.  
   
     - rtmp: Fill in the Flash Media Server (FMS) URL of the video for the video player along with the regular URL and UrlHD (HD version).  
-* Each video in the Wordpress Video Player Plugin can have an image (thumb) representing it in the video player window. There is also an option for adding an image for the whole video playlist.  
+* Thumbnails can be added to each video in WordPress Video Player, and represent them in the video player window. There is also an option for adding an image for the whole video playlist.    
 * Multiple playlists for each video player. Possibility to add tags for each video. Parameters for sorting videos and creating video playlists.  
 * Possibility to define the height and width of the video player, also defining the video size adjustment options for the player window.  
-* Possibility to add a watermark image for the video player and change the size, position and border spacing of watermark image.  
-  
 * Possibility to watch videos in the full screen mode of the video player.  
 * Possibility to choose different playback options (auto play, auto next song, etc.) for the video player.  
-* You can also select the transparency level of some buttons on the video player.  
+* Options to set the transparency level of video player buttons.    
 * Possibility to change positions and colors of video control buttons on the video player.  
 * You can also show or hide video control buttons on the video player.  
 * Possibility to change library, videos and frames background color on the video player.  
