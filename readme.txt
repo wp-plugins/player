@@ -40,6 +40,8 @@ Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordp
 * Possibility to display the player both in Video/playlist mode and Library mode (where library can host mutliple playlists).     
 * HTML5 version of the Player has support for .mp4, .ogg and .webm format files, whereas for Flash option, there are extra file formats.       
 * Possibility to quickly switch to the library and back to the playlist changing the video.    
+* Possibility of adding either a large playlist or a single video for pages and posts.   
+
 Upgrade to [WordPress Player Pro](http://web-dorado.com/products/wordpress-player.html) to add features: 
 
 * Possibility to add a watermark image for the video player and change the size, position and border spacing of watermark image (commercial version).  
