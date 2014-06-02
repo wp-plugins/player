@@ -33,7 +33,7 @@ Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordp
     - rtmp: Fill in the Flash Media Server (FMS) URL of the video for the video player along with the regular URL and UrlHD (HD version).  
 * Thumbnails can be added to each video in WordPress Video Player, and represent them in the video player window. There is also an option for adding an image for the whole video playlist.    
 * Multiple playlists for each video player. Possibility to add tags for each video. Parameters for sorting videos and creating video playlists.  
-* Possibility to define the height and width of the video player, also defining the video size adjustment options for the player window.  
+* Possibility to choose the height and width of the video player. You can as well define the video size adjustment options for the player window.     
 * Possibility to watch videos in the full screen mode of the video player.  
 * Possibility to choose different playback options (auto play, auto next song, etc.) for the video player.  
 * Options to set the transparency level of video player buttons.    
