@@ -46,8 +46,9 @@ Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordp
 * Possibility to quickly switch to the library and back to the playlist changing the video.    
 * Possibility of adding either a large playlist or a single video for pages and posts.   
 * 7 default themes   
-* Possibility of creating new themes.
-* Possibility of displaying HD button in the front end for switching to the HD version of the video.
+* Possibility of creating new themes.   
+* Possibility of displaying HD button in the front end for switching to the HD version of the video.   
+* Possibility to embed the videos used with the player.   
 
 Upgrade to [WordPress Player Pro](http://web-dorado.com/products/wordpress-player.html) to add features: 
 
