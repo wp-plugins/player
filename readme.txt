@@ -49,6 +49,7 @@ Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordp
 * Possibility of creating new themes.   
 * Possibility of displaying HD button in the front end for switching to the HD version of the video.   
 * Possibility to embed the videos used with the player.   
+* Possibility to add social media sharing buttons- Facebook, Google+ and Twitter
 
 Upgrade to [WordPress Player Pro](http://web-dorado.com/products/wordpress-player.html) to add features: 
 
