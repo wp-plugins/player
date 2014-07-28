@@ -244,16 +244,18 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 5.3.7 Control bar auto hide. Enable or disable control bar auto hide of the Spider Video Player.  
   
 = 5.4 Playlist and Library Parameters of the Spider Video Player =  
-  
-5.4.1 Playlist position. Choose whether the playlist appears on the left or on the right side of the player.  
-5.4.2 Width of playlist. Define the width of the playlist in the Spider Video Player.  
-5.4.3 Playlist over video. Choose whether the Playlist appears on the video area or at the left/right side of Spider Video Player.  
-5.4.4 Playlist auto hide. Enable or disable the option of automatically hiding the playlist of the Spider Video Player.  
-5.4.5 Playlist text size. Define the size of the playlist text in the Spider Video Player.  
-5.4.6 Library columns. Define the number of columns in the library in Spider Video Player.  
-5.4.7 Library rows. Define the number of rows in the library in the Spider Video Player.  
-5.4.8 Library list text size. Define the size of the text in the library list.  
-5.4.9 Library details text size. Define the size of the text in the library details in the Spider Video Player.  
+
+5.4.1 Playlist position. Choose whether the playlist appears on the left or on the right side of the player.   
+5.4.2 Width of playlist. Define the width of the playlist.   
+5.4.3 Playlist over video. Choose whether the Playlist appears on the video area or at the left/right side of it.    
+5.4.4 Open Playlist at Start. Choose whether to automatically open the playlist after starting the player.    
+5.4.5 Playlist auto hide. Enable or disable the option of automatically hiding the playlist.   
+5.4.6 Playlist text size. Define the size of the playlist text.   
+5.4.7 Library columns. Define the number of columns in the library.   
+5.4.8 Library rows. Define the number of rows in the library.   
+5.4.9 Library list text size. Define the size of the text in the library list.   
+5.4.10 Library details text size. Define the size of the text in the library details.    
+
   
 = 5.5 Video Control Parameters of the Spider Video Player =  
   
