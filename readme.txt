@@ -264,17 +264,37 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 5.5.3 Volume control by mouse scroll. Enable or disable sound volume control of the Spider Video Player through the mouse scroll.  
 5.5.4 Control bar position. Choose whether the control bar is at the top or at the bottom of the [WordPress Video Plugin](http://wordpress.org/extend/plugins/player/) window.  
 5.5.5 Buttons order on control bar. Select the order of buttons on the control of the Spider Video Player bar by dragging and dropping them from one position to another. Click on a button to enable/disable it.  
-  
+ 
 == Spider Video Player Step by step guide Step 6 ==    
+= Adding a player = 
+
+6.1  On the left menu select. Video Player > Spider Video Player.   
+6.2  In the upper left corner click on the “Add player” button.    
+6.3 Priority. Choose if you want to add a Flash or HTML5 player. Note that if the device (e.g. mobile phone) does not support Flash, the player will automatically switch to HTML5 mode (videos of unsupported formats will not be displayed).   
+6.4 Title. Choose a title for the player.   
+6.5 Select Theme. Select a theme from the existing list.   
+6.6 Playlist. Use the “Add” button to add playlist to your player.   
+  
+
+
+ 
+== Spider Video Player Step by step guide Step 7 ==    
 = Publishing the created player =    
   
-To insert a player into a Page or a Post.  
-  6.1. Press the button named "Insert Spider Video Player" in a post or a page you want to show the player.  
-  6.2. Select a player from the list.  
-  6.3. Save the page or the post.  
-  
-Alternatively, you can use Spider Video Player without the button on the toolbar: Add the shortcode [Spider_Video_Player id="N"] (where N is the id of the player, for the player with id=2, the shortcode must be [Spider_Video_Player id="2"]) to the pages and posts, where you want the player to appear.
-For a single video, the shortcode is the following: [Spider_Single_Video track="Video ID" theme_id="Theme ID" priority="0/1"], where Video ID should be replaced with the ID number of the video and Theme ID should be replaced with the ID number of the theme. The value of the priority parameter can be either “0” (Flash) or “1” (HTML5).
+To insert a player into a Page or a Post. 
+
+7.1. Press the button named Insert Spider Video Player in a post or a page you want to show the player.   
+7.2. Select a player from the list and click on the Insert button.    
+Single Video
+7.3 Select a Video. Select the video you want to publish.   
+7.4 Select a Theme. Select a theme to be applied to the player.    
+7.5 Priority. Choose if you want to add a Flash or HTML5 player. Note that if the device (e.g. mobile phone) does not support Flash, the player will automatically switch to HTML5 mode (videos of unsupported formats will not be displayed).     
+7.6 Click on the Insert button.   
+7.7 Save the page or post.    
+
+Alternatively, you can use Spider Video Player without the button on the toolbar: Add the shortcode [Spider_Video_Player id="N"] (where N is the id of the player, for the player with id=2, the shortcode must be [Spider_Video_Player id="2"]) to the pages and posts, where you want the player to appear.   
+For a single video, the shortcode is the following: [Spider_Single_Video track="Video ID" theme_id="Theme ID" priority="0/1"], where Video ID should be replaced with the ID number of the video and Theme ID should be replaced with the ID number of the theme. The value of the priority parameter can be either "0" (Flash) or "1" (HTML5).   
+
   
 == Screenshots ==
 1.  Spider Video Player  - Theme parameters  
