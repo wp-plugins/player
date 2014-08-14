@@ -4,7 +4,7 @@
 Plugin Name: Spider Video Player 
 Plugin URI: http://web-dorado.com/products/wordpress-player.html
 Description:Spider Video Player supports both HTML5 and Flash, allowing you to play videos on any mobile device. Spider WordPress Video Player allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player.
-Version: 1.5.1
+Version: 1.5.2
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -148,7 +148,7 @@ u=location.href;
 	}
 }		
      var so = new SWFObject(\"" . plugins_url("videoSpider_Video_Player.swf", __FILE__) . "?wdrand=" . mt_rand() . "\", \"Spider_Video_Player\", \"100%\", \"100%\", \"8\", \"#000000\");
-	 so.addParam(\"FlashVars\", \"settingsUrl=" . str_replace("&", "@", str_replace("&amp;", "@", admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml') . "&playlist=" . $playlist . "&theme=" . $theme_id . "&s_v_player_id=" . $track . "&single=1")) . "&playlistUrl=" . str_replace("&", "@", str_replace("&amp;", "@", admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml') . "&priority=" . $priority . "&trackID=" . $track . "&single=1&show_trackid=" . $show_trackid)) . "&defaultAlbumId=" . (isset($_GET['AlbumId']) ? $_GET['AlbumId'] : "") . "&defaultTrackId=" . (isset($_GET['TrackId']) ? $_GET['TrackId'] : "") . "\");
+	 so.addParam(\"FlashVars\", \"settingsUrl=" . str_replace("&", "@", str_replace("&amp;", "@", admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml') . "&playlist=" . $playlist . "&theme=" . $theme_id . "&s_v_player_id=" . $track . "&single=1")) . "&playlistUrl=" . str_replace("&", "@", str_replace("&amp;", "@", admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml') . "&priority=" . $priority . "&trackID=" . $track . "&single=1&show_trackid=" . $show_trackid)) . "&defaultAlbumId=" . (isset($_GET['AlbumId']) ? htmlspecialchars($_GET['AlbumId']) : "") . "&defaultTrackId=" . (isset($_GET['TrackId']) ? htmlspecialchars($_GET['TrackId']) : "") . "\");
 		   so.addParam(\"quality\", \"high\");
 		   so.addParam(\"menu\", \"false\");
 		   so.addParam(\"wmode\", \"transparent\");
@@ -1753,7 +1753,7 @@ u=location.href;
 	}
 }		
      var so = new SWFObject(\"" . plugins_url("videoSpider_Video_Player.swf", __FILE__) . "?wdrand=" . mt_rand() . "\", \"Spider_Video_Player\", \"100%\", \"100%\", \"8\", \"#000000\");
-	 so.addParam(\"FlashVars\", \"settingsUrl=" . str_replace("&", "@", str_replace("&amp;", "@", admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml') . "&playlist=" . $playlist . "&theme=" . $theme . "&s_v_player_id=" . $id . "&single=0")) . "&playlistUrl=" . str_replace("&", "@", str_replace("&amp;", "@", admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml') . "&playlist=" . $playlist . "&single=0&show_trackid=" . $show_trackid)) . "&defaultAlbumId=" . (isset($_GET['AlbumId']) ? $_GET['AlbumId'] : "") . "&defaultTrackId=" . (isset($_GET['TrackId']) ? $_GET['TrackId'] : "") . "\");
+	 so.addParam(\"FlashVars\", \"settingsUrl=" . str_replace("&", "@", str_replace("&amp;", "@", admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml') . "&playlist=" . $playlist . "&theme=" . $theme . "&s_v_player_id=" . $id . "&single=0")) . "&playlistUrl=" . str_replace("&", "@", str_replace("&amp;", "@", admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml') . "&playlist=" . $playlist . "&single=0&show_trackid=" . $show_trackid)) . "&defaultAlbumId=" . (isset($_GET['AlbumId']) ? htmlspecialchars($_GET['AlbumId']) : "") . "&defaultTrackId=" . (isset($_GET['TrackId']) ? htmlspecialchars($_GET['TrackId']) : "") . "\");
 		   so.addParam(\"quality\", \"high\");
 		   so.addParam(\"menu\", \"false\");
 		   so.addParam(\"wmode\", \"transparent\");
@@ -3542,12 +3542,12 @@ function Spider_Video_Player_player()
     do_action('admin_print_styles');
 
     if (isset($_GET["task"])) {
-        $task = $_GET["task"];
+        $task = htmlspecialchars($_GET["task"]);
     } else {
         $task = "default";
     }
     if (isset($_GET["id"])) {
-        $id = $_GET["id"];
+        $id = htmlspecialchars($_GET["id"]);
     } else {
         $id = 0;
     }
@@ -3603,456 +3603,6 @@ function Spider_Video_Player_player()
             show_Spider_Video_Player();
             break;
     }
-}
-
-
-function Tags_Spider_Video_Player()
-{
-
-    global $wpdb;
-    require_once("tag_functions.php"); // add functions for Spider_Video_Player
-    require_once("tag_function.html.php"); // add functions for vive Spider_Video_Player 
-    if (isset($_GET["task"])) {
-        $task = $_GET["task"];
-    } else {
-        $task = "default";
-    }
-    if (isset($_GET["id"])) {
-        $id = $_GET["id"];
-    } else {
-        $id = 0;
-    }
-    switch ($task) {
-        case 'tag':
-            show_tag();
-            break;
-
-        case 'add_tag':
-            add_tag();
-            break;
-
-        case 'cancel_tag';
-            cancel_tag();
-            break;
-        case 'apply_tag':
-            if ($id == 0)
-                $save_or_no = save_tag();
-            else
-                $save_or_no = apply_tag($id);
-            if ($save_or_no) {
-                edit_tag($id);
-            } else {
-                show_tag();
-            }
-
-            break;
-
-        case 'save_tag':
-            if (!$id) {
-                save_tag();
-            } else {
-                apply_tag($id);
-            }
-            show_tag();
-            break;
-
-        case 'saveorder';
-            saveorder();
-            break;
-
-        case 'orderup' :
-            ordertag(-1);
-            break;
-
-        case 'orderdown' :
-            ordertag(1);
-            break;
-
-
-        case 'edit_tag':
-            edit_tag($id);
-            break;
-
-        case 'remove_tag':
-            remove_tag($id);
-            show_tag();
-            break;
-
-        case 'publish_tag':
-            change_tag($id);
-            show_tag();
-            break;
-        case 'unpublish_tag':
-            change_tag($id);
-            show_tag();
-            break;
-
-        case 'required_tag':
-            required_tag($id);
-            show_tag();
-            break;
-        case 'unrequired_tag':
-            required_tag($id);
-            show_tag();
-            break;
-        default:
-            show_tag();
-            break;
-
-    }
-}
-
-
-/////////////////////////////////// VIDEOS
-
-
-function Spider_Video_Player_Videos()
-{
-
-    wp_enqueue_script('media-upload');
-    wp_admin_css('thickbox');
-    require_once("video_functions.php"); // add functions for Spider_Video_Player
-    require_once("video_function.html.php"); // add functions for vive Spider_Video_Player
-    /*
-	?>
-   <form action="" method="post">
-    <input type="text" value="asdgadsfg" id="narek" />
-    <input type="button" onclick="alert(document.getElementById('narek').value);"  />
-	<a href="<?php echo plugins_url("video_function.html.php",__FILE__) ?>?TB_iframe=1&amp;width=640&amp;height=394" class="thickbox add_media" id="content-add_media" title="Add Video" onclick="return false;">Insert Video</a>
-	</form>
-	<?php
-	 */
-    if (isset($_GET["task"])) {
-        $task = $_GET["task"];
-    } else {
-        $task = "default";
-    }
-    if (isset($_GET["id"])) {
-        $id = $_GET["id"];
-    } else {
-        $id = 0;
-    }
-    switch ($task) {
-
-        case 'video':
-            show_video();
-            break;
-
-        case 'add_video':
-            add_video();
-            break;
-
-        case 'published';
-            published($id);
-            show_video();
-            break;
-
-        case 'Save':
-            if (!$id) {
-                save_video();
-            } else {
-                apply_video($id);
-            }
-            show_video();
-            break;
-        case 'Apply':
-            if (!$id) {
-                save_video();
-            } else {
-                apply_video($id);
-            }
-            edit_video($id);
-
-            break;
-
-        case 'edit_video':
-            edit_video($id);
-            break;
-
-        case 'remove_video':
-            remove_video($id);
-            show_video();
-            break;
-
-        case 'publish_video':
-            change_video(1);
-            break;
-        case 'unpublish_video':
-            change_video(0);
-            break;
-        default:
-            show_video();
-            break;
-
-    }
-
-
-}
-
-
-////////////////////////////////////////////// Playlists/////////////////////////////////////////////////////////
-
-
-function Spider_Video_Player_Playlists()
-{
-    require_once("Playlist_functions.php"); // add functions for Spider_Video_Player
-    require_once("Playlists_function.html.php"); // add functions for vive Spider_Video_Player	
-    if (isset($_GET["task"])) {
-        $task = $_GET["task"];
-    } else {
-        $task = "default";
-    }
-    if (isset($_GET["id"])) {
-        $id = $_GET["id"];
-    } else {
-        $id = 0;
-    }
-
-    switch ($task) {
-
-        case 'playlist':
-            show_playlist();
-            break;
-        case "unpublish_playlist":
-            change_tag($id);
-            show_playlist();
-
-            break;
-
-        case 'add_playlist':
-            add_playlist();
-            break;
-
-        case 'cancel_playlist';
-            cancel_playlist();
-            break;
-        case 'Save':
-            if ($id) {
-                Apply_playlist($id);
-            } else {
-                save_playlist();
-            }
-            show_playlist();
-            break;
-        case 'Apply':
-            if ($id == 0)
-                $save_or_no = save_playlist();
-            else
-                $save_or_no = Apply_playlist($id);
-            if ($save_or_no) {
-                edit_playlist($id);
-            } else {
-                show_playlist();
-            }
-            break;
-
-        case 'edit_playlist':
-            edit_playlist($id);
-            break;
-
-        case 'remove_playlist':
-            remove_playlist($id);
-            show_playlist();
-            break;
-
-        case 'select_playlist':
-            select_playlist();
-            break;
-        default:
-            show_playlist();
-            break;
-    }
-
-
-}
-
-
-////////////////////////////////////////////////////////////THEMS
-
-
-function Spider_Video_Player_Themes()
-{
-    wp_enqueue_script('media-upload');
-    wp_admin_css('thickbox');
-    require_once("Theme_functions.php"); // add functions for Spider_Video_Player
-    require_once("Themes_function.html.php"); // add functions for vive Spider_Video_Player
-
-
-    if (isset($_GET["task"])) {
-        $task = $_GET["task"];
-    } else {
-        $task = "";
-    }
-    if (isset($_GET["id"])) {
-        $id = $_GET["id"];
-    } else {
-        $id = 0;
-    }
-    switch ($task) {
-        case 'theme':
-            show_theme();
-            break;
-        case 'default':
-            default_theme($id);
-            show_theme();
-            break;
-
-        case 'add_theme':
-            add_theme();
-            break;
-
-        case 'Save':
-            if ($id) {
-                apply_theme($id);
-            } else {
-                save_theme();
-            }
-
-            show_theme();
-            break;
-
-        case 'Apply':
-            if ($id) {
-                apply_theme($id);
-            } else {
-                save_theme();
-            }
-
-            edit_theme($id);
-            break;
-
-        case 'edit_theme':
-            edit_theme($id);
-            break;
-
-        case 'remove_theme':
-            remove_theme($id);
-            show_theme();
-            break;
-        default:
-            show_theme();
-    }
-}
-
-
-function Uninstall_Spider_Video_Player()
-{
-
-    global $wpdb;
-    $base_name = plugin_basename('Spider_Video_Player');
-    $base_page = 'admin.php?page=' . $base_name;
-    if (isset($_GET['mode']))
-        $mode = trim($_GET['mode']);
-    else
-        $mode = '';
-
-
-    if (!empty($_POST['do'])) {
-
-        if ($_POST['do'] == "UNINSTALL Spider_Video_Player") {
-            check_admin_referer('Spider_Video_Player uninstall');
-            if (trim($_POST['Spider_Video_Player_yes']) == 'yes') {
-
-                echo '<div id="message" class="updated fade">';
-                echo '<p>';
-                echo "Table 'Spider_Video_Player_tag' has been deleted.";
-                $wpdb->query("DROP TABLE " . $wpdb->prefix . "Spider_Video_Player_playlist");
-                echo '<font style="color:#000;">';
-                echo '</font><br />';
-                echo '</p>';
-                echo '<p>';
-                echo "Table 'Spider_Video_Player_theme' has been deleted.";
-                $wpdb->query("DROP TABLE " . $wpdb->prefix . "Spider_Video_Player_tag");
-                echo '<font style="color:#000;">';
-                echo '</font><br />';
-                echo '</p>';
-                echo "Table 'Spider_Video_Player_video' has been deleted.";
-                $wpdb->query("DROP TABLE " . $wpdb->prefix . "Spider_Video_Player_theme");
-                echo '<font style="color:#000;">';
-                echo '</font><br />';
-                echo '</p>';
-                echo "Table 'Spider_Video_Player_playlist' has been deleted.";
-                $wpdb->query("DROP TABLE " . $wpdb->prefix . "Spider_Video_Player_video");
-                echo '<font style="color:#000;">';
-                echo '</font><br />';
-                echo '</p>';
-                echo "Table 'Spider_Video_Player_player' has been deleted.";
-                $wpdb->query("DROP TABLE " . $wpdb->prefix . "Spider_Video_Player_player");
-                echo '<font style="color:#000;">';
-                echo '</font><br />';
-                echo '</p>';
-                echo '</div>';
-
-                $mode = 'end-UNINSTALL';
-            }
-        }
-    }
-
-
-    switch ($mode) {
-
-        case 'end-UNINSTALL':
-            $deactivate_url = wp_nonce_url('plugins.php?action=deactivate&amp;plugin=' . plugin_basename(__FILE__), 'deactivate-plugin_' . plugin_basename(__FILE__));
-            echo '<div class="wrap">';
-            echo '<h2>Uninstall Spider Video Player</h2>';
-            echo '<p><strong>' . sprintf('<a href="%s">Click Here</a> To Finish The Uninstallation And Spider Video Player Will Be Deactivated Automatically.', $deactivate_url) . '</strong></p>';
-            echo '</div>';
-            break;
-        // Main Page
-        default:
-            ?>
-                <form method="post" action="<?php echo admin_url('admin.php?page=Uninstall_Spider_Video_Player'); ?>">
-                    <?php wp_nonce_field('Spider_Video_Player uninstall'); ?>
-                    <div class="wrap">
-                        <div id="icon-Spider_Video_Player" class="icon32"><br/></div>
-                        <h2><?php echo 'Uninstall Spider Video Player'; ?></h2>
-
-                        <p>
-                            <?php echo 'Deactivating Spider Video Player plugin does not remove any data that may have been created. To completely remove this plugin, you can uninstall it here.'; ?>
-                        </p>
-
-                        <p style="color: red">
-                            <strong><?php echo 'WARNING:'; ?></strong><br/>
-                            <?php echo 'Once uninstalled, this cannot be undone. You should use a Database Backup plugin of WordPress to back up all the data first.'; ?>
-                        </p>
-
-                        <p style="color: red">
-                            <strong><?php echo 'The following WordPress Options/Tables will be DELETED:'; ?></strong><br/>
-                        </p>
-                        <table class="widefat">
-                            <thead>
-                            <tr>
-                                <th><?php echo 'WordPress Tables'; ?></th>
-                            </tr>
-                            </thead>
-                            <tr>
-                                <td valign="top">
-                                    <ol>
-                                        <?php
-                                        echo '<li>Spider_Video_Player_playlist</li>' . "\n";
-                                        echo '<li>Spider_Video_Player_tag</li>' . "\n";
-                                        echo '<li>Spider_Video_Player_theme</li>' . "\n";
-                                        echo '<li>Spider_Video_Player_video</li>' . "\n";
-                                        echo '<li>Spider_Video_Player_player</li>' . "\n";
-                                        ?>
-                                    </ol>
-                                </td>
-                            </tr>
-                        </table>
-                        <p style="text-align: center;">
-                            <?php echo 'Do you really want to uninstall Spider Video Player?'; ?><br/><br/>
-                            <input type="checkbox" name="Spider_Video_Player_yes"
-                                   value="yes"/>&nbsp;<?php echo 'Yes'; ?><br/><br/>
-                            <input type="submit" name="do" value="<?php echo 'UNINSTALL Spider_Video_Player'; ?>"
-                                   class="button-primary"
-                                   onclick="return confirm('<?php echo 'You Are About To Uninstall Spider Video Player From WordPress.\nThis Action Is Not Reversible.\n\n Choose [Cancel] To Stop, [OK] To Uninstall.'; ?>')"/>
-                        </p>
-                    </div>
-                </form>
-            <?php
-    } // End switch($mode)
-
-
 }
 
 
@@ -4191,6 +3741,457 @@ function player_Featured_Plugins()
     </div>
 <?php
 }
+function Tags_Spider_Video_Player()
+{
+
+    global $wpdb;
+    require_once("tag_functions.php"); // add functions for Spider_Video_Player
+    require_once("tag_function.html.php"); // add functions for vive Spider_Video_Player 
+    if (isset($_GET["task"])) {
+        $task = htmlspecialchars($_GET["task"]);
+    } else {
+        $task = "default";
+    }
+    if (isset($_GET["id"])) {
+        $id = htmlspecialchars($_GET["id"]);
+    } else {
+        $id = 0;
+    }
+    switch ($task) {
+        case 'tag':
+            show_tag();
+            break;
+
+        case 'add_tag':
+            add_tag();
+            break;
+
+        case 'cancel_tag';
+            cancel_tag();
+            break;
+        case 'apply_tag':
+            if ($id == 0)
+                $save_or_no = save_tag();
+            else
+                $save_or_no = apply_tag($id);
+            if ($save_or_no) {
+                edit_tag($id);
+            } else {
+                show_tag();
+            }
+
+            break;
+
+        case 'save_tag':
+            if (!$id) {
+                save_tag();
+            } else {
+                apply_tag($id);
+            }
+            show_tag();
+            break;
+
+        case 'saveorder';
+            saveorder();
+            break;
+
+        case 'orderup' :
+            ordertag(-1);
+            break;
+
+        case 'orderdown' :
+            ordertag(1);
+            break;
+
+
+        case 'edit_tag':
+            edit_tag($id);
+            break;
+
+        case 'remove_tag':
+            remove_tag($id);
+            show_tag();
+            break;
+
+        case 'publish_tag':
+            change_tag($id);
+            show_tag();
+            break;
+        case 'unpublish_tag':
+            change_tag($id);
+            show_tag();
+            break;
+
+        case 'required_tag':
+            required_tag($id);
+            show_tag();
+            break;
+        case 'unrequired_tag':
+            required_tag($id);
+            show_tag();
+            break;
+        default:
+            show_tag();
+            break;
+
+    }
+}
+
+
+/////////////////////////////////// VIDEOS
+
+
+function Spider_Video_Player_Videos()
+{
+
+    wp_enqueue_script('media-upload');
+    wp_admin_css('thickbox');
+    require_once("video_functions.php"); // add functions for Spider_Video_Player
+    require_once("video_function.html.php"); // add functions for vive Spider_Video_Player
+    /*
+	?>
+   <form action="" method="post">
+    <input type="text" value="asdgadsfg" id="narek" />
+    <input type="button" onclick="alert(document.getElementById('narek').value);"  />
+	<a href="<?php echo plugins_url("video_function.html.php",__FILE__) ?>?TB_iframe=1&amp;width=640&amp;height=394" class="thickbox add_media" id="content-add_media" title="Add Video" onclick="return false;">Insert Video</a>
+	</form>
+	<?php
+	 */
+    if (isset($_GET["task"])) {
+        $task = htmlspecialchars($_GET["task"]);
+    } else {
+        $task = "default";
+    }
+    if (isset($_GET["id"])) {
+        $id = htmlspecialchars($_GET["id"]);
+    } else {
+        $id = 0;
+    }
+    switch ($task) {
+
+        case 'video':
+            show_video();
+            break;
+
+        case 'add_video':
+            add_video();
+            break;
+
+        case 'published';
+            published($id);
+            show_video();
+            break;
+
+        case 'Save':
+            if (!$id) {
+                save_video();
+            } else {
+                apply_video($id);
+            }
+            show_video();
+            break;
+        case 'Apply':
+            if (!$id) {
+                save_video();
+            } else {
+                apply_video($id);
+            }
+            edit_video($id);
+
+            break;
+
+        case 'edit_video':
+            edit_video($id);
+            break;
+
+        case 'remove_video':
+            remove_video($id);
+            show_video();
+            break;
+
+        case 'publish_video':
+            change_video(1);
+            break;
+        case 'unpublish_video':
+            change_video(0);
+            break;
+        default:
+            show_video();
+            break;
+
+    }
+
+
+}
+
+
+////////////////////////////////////////////// Playlists/////////////////////////////////////////////////////////
+
+
+function Spider_Video_Player_Playlists()
+{
+    require_once("Playlist_functions.php"); // add functions for Spider_Video_Player
+    require_once("Playlists_function.html.php"); // add functions for vive Spider_Video_Player	
+    if (isset($_GET["task"])) {
+        $task = htmlspecialchars($_GET["task"]);
+    } else {
+        $task = "default";
+    }
+    if (isset($_GET["id"])) {
+        $id = htmlspecialchars($_GET["id"]);
+    } else {
+        $id = 0;
+    }
+
+    switch ($task) {
+
+        case 'playlist':
+            show_playlist();
+            break;
+        case "unpublish_playlist":
+            change_tag($id);
+            show_playlist();
+
+            break;
+
+        case 'add_playlist':
+            add_playlist();
+            break;
+
+        case 'cancel_playlist';
+            cancel_playlist();
+            break;
+        case 'Save':
+            if ($id) {
+                Apply_playlist($id);
+            } else {
+                save_playlist();
+            }
+            show_playlist();
+            break;
+        case 'Apply':
+            if ($id == 0)
+                $save_or_no = save_playlist();
+            else
+                $save_or_no = Apply_playlist($id);
+            if ($save_or_no) {
+                edit_playlist($id);
+            } else {
+                show_playlist();
+            }
+            break;
+
+        case 'edit_playlist':
+            edit_playlist($id);
+            break;
+
+        case 'remove_playlist':
+            remove_playlist($id);
+            show_playlist();
+            break;
+
+        case 'select_playlist':
+            select_playlist();
+            break;
+        default:
+            show_playlist();
+            break;
+    }
+
+
+}
+
+
+////////////////////////////////////////////////////////////THEMS
+
+
+function Spider_Video_Player_Themes()
+{
+    wp_enqueue_script('media-upload');
+    wp_admin_css('thickbox');
+    require_once("Theme_functions.php"); // add functions for Spider_Video_Player
+    require_once("Themes_function.html.php"); // add functions for vive Spider_Video_Player
+
+
+    if (isset($_GET["task"])) {
+        $task = htmlspecialchars($_GET["task"]);
+    } else {
+        $task = "";
+    }
+    if (isset($_GET["id"])) {
+        $id = htmlspecialchars($_GET["id"]);
+    } else {
+        $id = 0;
+    }
+    switch ($task) {
+        case 'theme':
+            show_theme();
+            break;
+        case 'default':
+            default_theme($id);
+            show_theme();
+            break;
+
+        case 'add_theme':
+            add_theme();
+            break;
+
+        case 'Save':
+            if ($id) {
+                apply_theme($id);
+            } else {
+                save_theme();
+            }
+
+            show_theme();
+            break;
+
+        case 'Apply':
+            if ($id) {
+                apply_theme($id);
+            } else {
+                save_theme();
+            }
+
+            edit_theme($id);
+            break;
+
+        case 'edit_theme':
+            edit_theme($id);
+            break;
+
+        case 'remove_theme':
+            remove_theme($id);
+            show_theme();
+            break;
+        default:
+            show_theme();
+    }
+}
+
+
+function Uninstall_Spider_Video_Player()
+{
+
+    global $wpdb;
+    $base_name = plugin_basename('Spider_Video_Player');
+    $base_page = 'admin.php?page=' . $base_name;
+    if (isset($_GET['mode']))
+        $mode = trim(htmlspecialchars($_GET['mode']));
+    else
+        $mode = '';
+
+
+    if (!empty($_POST['do'])) {
+
+        if ($_POST['do'] == "UNINSTALL Spider_Video_Player") {
+            check_admin_referer('Spider_Video_Player uninstall');
+            if (trim($_POST['Spider_Video_Player_yes']) == 'yes') {
+
+                echo '<div id="message" class="updated fade">';
+                echo '<p>';
+                echo "Table 'Spider_Video_Player_tag' has been deleted.";
+                $wpdb->query("DROP TABLE " . $wpdb->prefix . "Spider_Video_Player_playlist");
+                echo '<font style="color:#000;">';
+                echo '</font><br />';
+                echo '</p>';
+                echo '<p>';
+                echo "Table 'Spider_Video_Player_theme' has been deleted.";
+                $wpdb->query("DROP TABLE " . $wpdb->prefix . "Spider_Video_Player_tag");
+                echo '<font style="color:#000;">';
+                echo '</font><br />';
+                echo '</p>';
+                echo "Table 'Spider_Video_Player_video' has been deleted.";
+                $wpdb->query("DROP TABLE " . $wpdb->prefix . "Spider_Video_Player_theme");
+                echo '<font style="color:#000;">';
+                echo '</font><br />';
+                echo '</p>';
+                echo "Table 'Spider_Video_Player_playlist' has been deleted.";
+                $wpdb->query("DROP TABLE " . $wpdb->prefix . "Spider_Video_Player_video");
+                echo '<font style="color:#000;">';
+                echo '</font><br />';
+                echo '</p>';
+                echo "Table 'Spider_Video_Player_player' has been deleted.";
+                $wpdb->query("DROP TABLE " . $wpdb->prefix . "Spider_Video_Player_player");
+                echo '<font style="color:#000;">';
+                echo '</font><br />';
+                echo '</p>';
+                echo '</div>';
+
+                $mode = 'end-UNINSTALL';
+            }
+        }
+    }
+
+
+    switch ($mode) {
+
+        case 'end-UNINSTALL':
+            $deactivate_url = wp_nonce_url('plugins.php?action=deactivate&amp;plugin=' . plugin_basename(__FILE__), 'deactivate-plugin_' . plugin_basename(__FILE__));
+            echo '<div class="wrap">';
+            echo '<h2>Uninstall Spider Video Player</h2>';
+            echo '<p><strong>' . sprintf('<a href="%s">Click Here</a> To Finish The Uninstallation And Spider Video Player Will Be Deactivated Automatically.', $deactivate_url) . '</strong></p>';
+            echo '</div>';
+            break;
+        // Main Page
+        default:
+            ?>
+                <form method="post" action="<?php echo admin_url('admin.php?page=Uninstall_Spider_Video_Player'); ?>">
+                    <?php wp_nonce_field('Spider_Video_Player uninstall'); ?>
+                    <div class="wrap">
+                        <div id="icon-Spider_Video_Player" class="icon32"><br/></div>
+                        <h2><?php echo 'Uninstall Spider Video Player'; ?></h2>
+
+                        <p>
+                            <?php echo 'Deactivating Spider Video Player plugin does not remove any data that may have been created. To completely remove this plugin, you can uninstall it here.'; ?>
+                        </p>
+
+                        <p style="color: red">
+                            <strong><?php echo 'WARNING:'; ?></strong><br/>
+                            <?php echo 'Once uninstalled, this cannot be undone. You should use a Database Backup plugin of WordPress to back up all the data first.'; ?>
+                        </p>
+
+                        <p style="color: red">
+                            <strong><?php echo 'The following WordPress Options/Tables will be DELETED:'; ?></strong><br/>
+                        </p>
+                        <table class="widefat">
+                            <thead>
+                            <tr>
+                                <th><?php echo 'WordPress Tables'; ?></th>
+                            </tr>
+                            </thead>
+                            <tr>
+                                <td valign="top">
+                                    <ol>
+                                        <?php
+                                        echo '<li>Spider_Video_Player_playlist</li>' . "\n";
+                                        echo '<li>Spider_Video_Player_tag</li>' . "\n";
+                                        echo '<li>Spider_Video_Player_theme</li>' . "\n";
+                                        echo '<li>Spider_Video_Player_video</li>' . "\n";
+                                        echo '<li>Spider_Video_Player_player</li>' . "\n";
+                                        ?>
+                                    </ol>
+                                </td>
+                            </tr>
+                        </table>
+                        <p style="text-align: center;">
+                            <?php echo 'Do you really want to uninstall Spider Video Player?'; ?><br/><br/>
+                            <input type="checkbox" name="Spider_Video_Player_yes"
+                                   value="yes"/>&nbsp;<?php echo 'Yes'; ?><br/><br/>
+                            <input type="submit" name="do" value="<?php echo 'UNINSTALL Spider_Video_Player'; ?>"
+                                   class="button-primary"
+                                   onclick="return confirm('<?php echo 'You Are About To Uninstall Spider Video Player From WordPress.\nThis Action Is Not Reversible.\n\n Choose [Cancel] To Stop, [OK] To Uninstall.'; ?>')"/>
+                        </p>
+                    </div>
+                </form>
+            <?php
+    } // End switch($mode)
+
+
+}
+
+
+
 
 
 function Spider_Video_Player_activate()

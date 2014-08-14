@@ -7,7 +7,7 @@ function spider_Veideo_Player_Prewieve()
 	
 	if(isset($_GET["appWidth"])){
 	if($_GET["appWidth"])
-	$width=$_GET["appWidth"];
+	$width=htmlspecialchars($_GET["appWidth"]);
 }
 else
 {
@@ -15,7 +15,7 @@ else
 }
 if(isset($_GET["appHeight"])){
 	if($_GET["appHeight"])
-	$height=$_GET["appHeight"];
+	$height=htmlspecialchars($_GET["appHeight"]);
 }
 else
 {
@@ -157,7 +157,7 @@ function get_radio_value(name)
 
 function spider_video_preview_playlist(){
 	
-	$show_trackid=$_GET['show_trackid'];
+	$show_trackid=htmlspecialchars($_GET['show_trackid']);
 	echo '
 
 
@@ -192,10 +192,10 @@ function change_to_str($x)
 	return 'false';
 }
 function spider_video_preview_settings(){
-	$ctrlsStack	=str_replace("[", "", $_GET['ctrlsStack']);
+	$ctrlsStack	=str_replace("[", "", htmlspecialchars($_GET['ctrlsStack']));
 $ctrlsStack	=str_replace(", :", ", +:", $ctrlsStack);
 $new="";
-$single=$_GET["single"];
+$single=htmlspecialchars($_GET["single"]);
 if($ctrlsStack)
 {
 	$ctrls = explode(",", $ctrlsStack);
@@ -220,41 +220,41 @@ if($ctrlsStack)
 		 }
 };
 	echo '<settings>
-	<appWidth>'.$_GET["appWidth"].'</appWidth>
-	<appHeight>'.$_GET["appHeight"].'</appHeight>
-	<playlistWidth>'.$_GET["playlistWidth"].'</playlistWidth>
-	<startWithLib>'.change_to_str($_GET["startWithLib"]).'</startWithLib>
-	<autoPlay>'.change_to_str($_GET["autoPlay"]).'</autoPlay>
-	<autoNext>'.change_to_str($_GET["autoNext"]).'</autoNext>
-	<autoNextAlbum>'.change_to_str($_GET["autoNextAlbum"]).'</autoNextAlbum>
-	<defaultVol>'.(($_GET["defaultVol"]+0)/100).'</defaultVol>
-	<defaultRepeat>'.$_GET["defaultRepeat"].'</defaultRepeat>
-	<defaultShuffle>'.$_GET["defaultShuffle"].'</defaultShuffle>
-	<autohideTime>'.$_GET["autohideTime"].'</autohideTime>
-	<centerBtnAlpha>'.(($_GET["centerBtnAlpha"]+0)/100).'</centerBtnAlpha>
-	<loadinAnimType>'.$_GET["loadinAnimType"].'</loadinAnimType>
-	<keepAspectRatio>'.change_to_str($_GET["keepAspectRatio"]).'</keepAspectRatio>
-	<clickOnVid>'.change_to_str($_GET["clickOnVid"]).'</clickOnVid>
-	<spaceOnVid>'.change_to_str($_GET["spaceOnVid"]).'</spaceOnVid>
-	<mouseWheel>'.change_to_str($_GET["mouseWheel"]).'</mouseWheel>
-	<ctrlsPos>'.$_GET["ctrlsPos"].'</ctrlsPos>
+	<appWidth>'.htmlspecialchars($_GET["appWidth"]).'</appWidth>
+	<appHeight>'.htmlspecialchars($_GET["appHeight"]).'</appHeight>
+	<playlistWidth>'.htmlspecialchars($_GET["playlistWidth"]).'</playlistWidth>
+	<startWithLib>'.change_to_str(htmlspecialchars($_GET["startWithLib"])).'</startWithLib>
+	<autoPlay>'.change_to_str(htmlspecialchars($_GET["autoPlay"])).'</autoPlay>
+	<autoNext>'.change_to_str(htmlspecialchars($_GET["autoNext"])).'</autoNext>
+	<autoNextAlbum>'.change_to_str(htmlspecialchars($_GET["autoNextAlbum"])).'</autoNextAlbum>
+	<defaultVol>'.((htmlspecialchars($_GET["defaultVol"])+0)/100).'</defaultVol>
+	<defaultRepeat>'.htmlspecialchars($_GET["defaultRepeat"]).'</defaultRepeat>
+	<defaultShuffle>'.htmlspecialchars($_GET["defaultShuffle"]).'</defaultShuffle>
+	<autohideTime>'.htmlspecialchars($_GET["autohideTime"]).'</autohideTime>
+	<centerBtnAlpha>'.((htmlspecialchars($_GET["centerBtnAlpha"])+0)/100).'</centerBtnAlpha>
+	<loadinAnimType>'.htmlspecialchars($_GET["loadinAnimType"]).'</loadinAnimType>
+	<keepAspectRatio>'.change_to_str(htmlspecialchars($_GET["keepAspectRatio"])).'</keepAspectRatio>
+	<clickOnVid>'.change_to_str(htmlspecialchars($_GET["clickOnVid"])).'</clickOnVid>
+	<spaceOnVid>'.change_to_str(htmlspecialchars($_GET["spaceOnVid"])).'</spaceOnVid>
+	<mouseWheel>'.change_to_str(htmlspecialchars($_GET["mouseWheel"])).'</mouseWheel>
+	<ctrlsPos>'.htmlspecialchars($_GET["ctrlsPos"]).'</ctrlsPos>
 	<ctrlsStack>'.$new.'</ctrlsStack>
-	<ctrlsOverVid>'.change_to_str($_GET["ctrlsOverVid"]).'</ctrlsOverVid>
-	<ctrlsAutoHide>'.change_to_str($_GET["ctrlsSlideOut"]).'</ctrlsAutoHide>
-	<watermarkUrl>'.$_GET["watermarkUrl"].'</watermarkUrl>
-	<watermarkPos>'.$_GET["watermarkPos"].'</watermarkPos>
-	<watermarkSize>'.$_GET["watermarkSize"].'</watermarkSize>
-	<watermarkSpacing>'.$_GET["watermarkSpacing"].'</watermarkSpacing>
-	<watermarkAlpha>'.(($_GET["watermarkAlpha"]+0)/100).'</watermarkAlpha>
-	<playlistPos>'.$_GET["playlistPos"].'</playlistPos>
-	<playlistOverVid>'.change_to_str($_GET["playlistOverVid"]).'</playlistOverVid>
-	<openPlaylistAtStart>'.change_to_str($_GET["openPlaylistAtStart"]).'</openPlaylistAtStart>
-	<playlistAutoHide>'.change_to_str($_GET["playlistAutoHide"]).'</playlistAutoHide>
-	<playlistTextSize>'.$_GET["playlistTextSize"].'</playlistTextSize>
-	<libCols>'.$_GET["libCols"].'</libCols>
-	<libRows>'.$_GET["libRows"].'</libRows>
-	<libListTextSize>'.$_GET["libListTextSize"].'</libListTextSize>
-	<libDetailsTextSize>'.$_GET["libDetailsTextSize"].'</libDetailsTextSize>
+	<ctrlsOverVid>'.change_to_str(htmlspecialchars($_GET["ctrlsOverVid"])).'</ctrlsOverVid>
+	<ctrlsAutoHide>'.change_to_str(htmlspecialchars($_GET["ctrlsSlideOut"])).'</ctrlsAutoHide>
+	<watermarkUrl>'.htmlspecialchars($_GET["watermarkUrl"]).'</watermarkUrl>
+	<watermarkPos>'.htmlspecialchars($_GET["watermarkPos"]).'</watermarkPos>
+	<watermarkSize>'.htmlspecialchars($_GET["watermarkSize"]).'</watermarkSize>
+	<watermarkSpacing>'.htmlspecialchars($_GET["watermarkSpacing"]).'</watermarkSpacing>
+	<watermarkAlpha>'.((htmlspecialchars($_GET["watermarkAlpha"])+0)/100).'</watermarkAlpha>
+	<playlistPos>'.htmlspecialchars($_GET["playlistPos"]).'</playlistPos>
+	<playlistOverVid>'.change_to_str(htmlspecialchars($_GET["playlistOverVid"])).'</playlistOverVid>
+	<openPlaylistAtStart>'.change_to_str(htmlspecialchars($_GET["openPlaylistAtStart"])).'</openPlaylistAtStart>
+	<playlistAutoHide>'.change_to_str(htmlspecialchars($_GET["playlistAutoHide"])).'</playlistAutoHide>
+	<playlistTextSize>'.htmlspecialchars($_GET["playlistTextSize"]).'</playlistTextSize>
+	<libCols>'.htmlspecialchars($_GET["libCols"]).'</libCols>
+	<libRows>'.htmlspecialchars($_GET["libRows"]).'</libRows>
+	<libListTextSize>'.htmlspecialchars($_GET["libListTextSize"]).'</libListTextSize>
+	<libDetailsTextSize>'.htmlspecialchars($_GET["libDetailsTextSize"]).'</libDetailsTextSize>
 	<playBtnHint>'. __('play','Player').'</playBtnHint>
 	<pauseBtnHint>'. __('pause','Player').'</pauseBtnHint>
 	<playPauseBtnHint>'. __('toggle pause','Player').'</playPauseBtnHint>
@@ -272,20 +272,20 @@ if($ctrlsStack)
 	<backBtnHint>'. __('back to list','Player').'</backBtnHint>
 	<replayBtnHint>'. __('Replay','Player').'</replayBtnHint>
 	<nextBtnHint>'.__('Next','Player').'</nextBtnHint>
-	<appBgColor>'."0x".$_GET["appBgColor"].'</appBgColor>
-	<vidBgColor>'."0x".$_GET["vidBgColor"].'</vidBgColor>
-	<framesBgColor>'."0x".$_GET["framesBgColor"].'</framesBgColor>
-	<framesBgAlpha>'.(($_GET["framesBgAlpha"]+0)/100).'</framesBgAlpha>
-	<ctrlsMainColor>'."0x".$_GET["ctrlsMainColor"].'</ctrlsMainColor>
-	<ctrlsMainHoverColor>'."0x".$_GET["ctrlsMainHoverColor"].'</ctrlsMainHoverColor>
-	<ctrlsMainAlpha>'.(($_GET["ctrlsMainAlpha"]+0)/100).'</ctrlsMainAlpha>
-	<slideColor>'."0x".$_GET["slideColor"].'</slideColor>
-	<itemBgHoverColor>'."0x".$_GET["itemBgHoverColor"].'</itemBgHoverColor>
-	<itemBgSelectedColor>'."0x".$_GET["itemBgSelectedColor"].'</itemBgSelectedColor>
-	<itemBgAlpha>'.(($_GET["framesBgAlpha"]+0)/100).'</itemBgAlpha>
-	<textColor>'."0x".$_GET["textColor"].'</textColor>
-	<textHoverColor>'."0x".$_GET["textHoverColor"].'</textHoverColor>
-	<textSelectedColor>'."0x".$_GET["textSelectedColor"].'</textSelectedColor>
+	<appBgColor>'."0x".htmlspecialchars($_GET["appBgColor"]).'</appBgColor>
+	<vidBgColor>'."0x".htmlspecialchars($_GET["vidBgColor"]).'</vidBgColor>
+	<framesBgColor>'."0x".htmlspecialchars($_GET["framesBgColor"]).'</framesBgColor>
+	<framesBgAlpha>'.((htmlspecialchars($_GET["framesBgAlpha"])+0)/100).'</framesBgAlpha>
+	<ctrlsMainColor>'."0x".htmlspecialchars($_GET["ctrlsMainColor"]).'</ctrlsMainColor>
+	<ctrlsMainHoverColor>'."0x".htmlspecialchars($_GET["ctrlsMainHoverColor"]).'</ctrlsMainHoverColor>
+	<ctrlsMainAlpha>'.((htmlspecialchars($_GET["ctrlsMainAlpha"])+0)/100).'</ctrlsMainAlpha>
+	<slideColor>'."0x".htmlspecialchars($_GET["slideColor"]).'</slideColor>
+	<itemBgHoverColor>'."0x".htmlspecialchars($_GET["itemBgHoverColor"]).'</itemBgHoverColor>
+	<itemBgSelectedColor>'."0x".htmlspecialchars($_GET["itemBgSelectedColor"]).'</itemBgSelectedColor>
+	<itemBgAlpha>'.((htmlspecialchars($_GET["framesBgAlpha"])+0)/100).'</itemBgAlpha>
+	<textColor>'."0x".htmlspecialchars($_GET["textColor"]).'</textColor>
+	<textHoverColor>'."0x".htmlspecialchars($_GET["textHoverColor"]).'</textHoverColor>
+	<textSelectedColor>'."0x".htmlspecialchars($_GET["textSelectedColor"]).'</textSelectedColor>
 	<embed></embed>
 
 	</settings>';
@@ -898,14 +898,14 @@ function checkAll( n, fldName ) {
 function generete_sp_video_playlist_xml(){
 	
 global $wpdb;
-$single=$_GET["single"];
+$single=htmlspecialchars($_GET["single"]);
 
 if($single==0){
-$id_for_playlist=$_GET["playlist"];
+$id_for_playlist=htmlspecialchars($_GET["playlist"]);
 $playerr=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=%d",$id_for_playlist));
 $playlists=array();
 $playlists_id=array();
-$show_trackid=$_GET['show_trackid'];
+$show_trackid=htmlspecialchars($_GET['show_trackid']);
 
 				$playlists_id=explode(',',$playerr->playlist);
 				$playlists_id= array_slice($playlists_id,0, count($playlists_id)-1); 
@@ -988,7 +988,7 @@ exit;
 
 }
 else{
-$track_ID=$_GET["trackID"];
+$track_ID=htmlspecialchars($_GET["trackID"]);
 $single_vid=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id=%d",$track_ID));
 
 
@@ -1017,8 +1017,8 @@ exit;
 function generete_sp_video_settings_xml(){
 	
 global $wpdb;
-$single=$_GET["single"];
-$id_theme=$_GET["theme"];
+$single=htmlspecialchars($_GET["single"]);
+$id_theme=htmlspecialchars($_GET["theme"]);
 $params=$wpdb->get_row($wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=%d",$id_theme));
 //$new	=str_replace("#", "0x", $params->textColor'));
 $new="";
@@ -1036,9 +1036,9 @@ if($params->ctrlsStack)
 				$active=0;				
 				if($ctrl=='lib')
 				$active=0;
-				$embed_url=admin_url('admin-ajax.php?action=spiderVeideoPlayervideoonly').'&single=1&trackID='.$_GET['s_v_player_id'].'&theme='.$_GET['theme'].'&priority='.(isset($_GET['priority']) ? $_GET['priority'] : "");
+				$embed_url=admin_url('admin-ajax.php?action=spiderVeideoPlayervideoonly').'&single=1&trackID='.htmlspecialchars($_GET['s_v_player_id']).'&theme='.htmlspecialchars($_GET['theme']).'&priority='.(isset($_GET['priority']) ? htmlspecialchars($_GET['priority']) : "");
 			}else{
-			    $embed_url=admin_url('admin-ajax.php?action=spiderVeideoPlayervideoonly').'&single=0&id_player='.$_GET['s_v_player_id'];
+			    $embed_url=admin_url('admin-ajax.php?action=spiderVeideoPlayervideoonly').'&single=0&id_player='.htmlspecialchars($_GET['s_v_player_id']);
 			}
 			if($active==1)
 			if($new=="")
@@ -1048,8 +1048,8 @@ if($params->ctrlsStack)
 		 }
 };
 
-$playlist=$_GET["playlist"];
-$theme=$_GET["theme"];
+$playlist=htmlspecialchars($_GET["playlist"]);
+$theme=htmlspecialchars($_GET["theme"]);
 	echo '<settings>
 	<appWidth>'.$params->appWidth.'</appWidth>
 	<appHeight>'.$params->appHeight.'</appHeight>
@@ -1127,9 +1127,9 @@ function viewe_sp_video_only() {
   
 	 global $wpdb;
 	 global $post;
-	 $single=$_GET['single'];
+	 $single=htmlspecialchars($_GET['single']);
 	 if($single==0){
-	 $id=$_GET['id_player'];
+	 $id=htmlspecialchars($_GET['id_player']);
 	 $id_for_posts = $post->ID;
 	 $all_player_ids=$wpdb->get_col($wpdb->prepare("SELECT id FROM ".$wpdb->prefix."Spider_Video_Player_player"));
 				$b=false;
@@ -1191,7 +1191,7 @@ function flashShare(type,b,c)
 	}
 }		
 		   var so = new SWFObject(\"".plugins_url("videoSpider_Video_Player.swf",__FILE__)."?wdrand=".mt_rand() ."\", \"Spider_Video_Player\", \"100%\", \"100%\", \"8\", \"#000000\");
-		   so.addParam(\"FlashVars\", \"settingsUrl=".str_replace("&","@",  str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml')."&playlist=".$playlist."&theme=".$theme."&s_v_player_id=".$id))."&playlistUrl=".str_replace("&","@",str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml')."&playlist=".$playlist."&show_trackid=".$show_trackid))."&defaultAlbumId=".$_GET['AlbumId']."&defaultTrackId=".$_GET['TrackId']."\");
+		   so.addParam(\"FlashVars\", \"settingsUrl=".str_replace("&","@",  str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml')."&playlist=".$playlist."&theme=".$theme."&s_v_player_id=".$id))."&playlistUrl=".str_replace("&","@",str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml')."&playlist=".$playlist."&show_trackid=".$show_trackid))."&defaultAlbumId=".htmlspecialchars($_GET['AlbumId'])."&defaultTrackId=".htmlspecialchars($_GET['TrackId'])."\");
 		   so.addParam(\"quality\", \"high\");
 		   so.addParam(\"menu\", \"false\");
 		   so.addParam(\"wmode\", \"transparent\");
@@ -1206,9 +1206,9 @@ function flashShare(type,b,c)
 	}
 	
 	else{
-	$theme_id=$_GET['theme'];
-	$track=$_GET['trackID'];
-	$priority=$_GET['priority'];
+	$theme_id=htmlspecialchars($_GET['theme']);
+	$track=htmlspecialchars($_GET['trackID']);
+	$priority=htmlspecialchars($_GET['priority']);
 	if($priority==0){	
 	 $id_for_posts = $post->ID;
 	 $all_player_ids=$wpdb->get_col($wpdb->prepare("SELECT id FROM ".$wpdb->prefix."Spider_Video_Player_video"));
@@ -1273,7 +1273,7 @@ function flashShare(type,b,c)
 	}
 }		
 		   var so = new SWFObject(\"".plugins_url("videoSpider_Video_Player.swf",__FILE__)."?wdrand=".mt_rand() ."\", \"Spider_Video_Player\", \"100%\", \"100%\", \"8\", \"#000000\");
-		   so.addParam(\"FlashVars\", \"settingsUrl=".str_replace("&","@",  str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml')."&playlist=".$playlist."&theme=".$theme_id."&s_v_player_id=".$track."&single=1"))."&playlistUrl=".str_replace("&","@",str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml')."&trackID=".$track."&single=1&show_trackid=".$show_trackid))."&defaultAlbumId=".$_GET['defaultAlbumId']."&defaultTrackId=".$_GET['defaultTrackId']."\");
+		   so.addParam(\"FlashVars\", \"settingsUrl=".str_replace("&","@",  str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayersettingsxml')."&playlist=".$playlist."&theme=".$theme_id."&s_v_player_id=".$track."&single=1"))."&playlistUrl=".str_replace("&","@",str_replace("&amp;","@",admin_url('admin-ajax.php?action=spiderVeideoPlayerplaylistxml')."&trackID=".$track."&single=1&show_trackid=".$show_trackid))."&defaultAlbumId=".htmlspecialchars($_GET['defaultAlbumId'])."&defaultTrackId=".htmlspecialchars($_GET['defaultTrackId'])."\");
 		   so.addParam(\"quality\", \"high\");
 		   so.addParam(\"menu\", \"false\");
 		   so.addParam(\"wmode\", \"transparent\");
