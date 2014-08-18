@@ -114,6 +114,19 @@ Turkish (tr_TR)
 Ukrainian (uk_UA)  
 Vietnamese (vi)  
 
+
+== Changelog ==
+
+= 1.5.2 =
+xss bug fixed
+
+= 1.5.1 =
+bug fixed in wp 3.9 editor
+
+= 1.5.0 =
+backend design problems in wp3.8, notices fixed
+
+
 == Installation ==
 
 ####Thank you for your interest in Spider Video [WordPress Player](http://web-dorado.com/products/wordpress-player.html).
@@ -307,13 +320,3 @@ For a single video, the shortcode is the following: [Spider_Single_Video track="
 8.  Spider Video Player  - Album view
  
  
-== Changelog ==
-
-= 1.5.2 =
-xss bug fixed
-
-= 1.5.1 =
-bug fixed in wp 3.9 editor
-
-= 1.5.0 =
-backend design problems in wp3.8, notices fixed
