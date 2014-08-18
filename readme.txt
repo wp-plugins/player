@@ -306,3 +306,14 @@ For a single video, the shortcode is the following: [Spider_Single_Video track="
 7.  Spider Video Player  - Album view
 8.  Spider Video Player  - Album view
  
+ 
+== Changelog ==
+
+= 1.5.2 =
+xss bug fixed
+
+= 1.5.1 =
+bug fixed in wp 3.9 editor
+
+= 1.5.0 =
+backend design problems in wp3.8, notices fixed
