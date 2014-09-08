@@ -3,7 +3,7 @@ Contributors: webdorado
 Donate link: http://web-dorado.com/products/wordpress-player.html
 Tags: video, video player ,video gallery,video plugin, Video Player plugin, video widget, videos, player, flash,flash player, html5 video, html5 player, HTML5 video player, youtube, youtube player, youtube Video Player, youtube videos, embed youtube, youtube widget, youtube plugin, youtube gallery, youtube playlist, MP4, video embed,video blog,  playlist, playlists, video playlist, high definition Video Player, myvideo, m4v, flash video player, video sidebar widget, Wp flash Video Player, video sharing, share video, HTML5 video gallery, embed video, video ekleme
 Requires at least: 3.0
-Tested up to: 3.9
+Tested up to: 4.0
 Stable tag: 1.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -12,7 +12,7 @@ Spider Video Player is a WordPress video plugin that allows you to easily add vi
 
 == Description ==
 
-###Spider Video [WordPress  Player](http://web-dorado.com/products/wordpress-player.html)
+Spider Video [WordPress  Player](http://web-dorado.com/products/wordpress-player.html)   
 [Demo](http://wpdemo.web-dorado.com/spider-video-player/)  
 [Demo Admin](http://wpdemo.web-dorado.com/wp-admin/admin.php?page=Spider_Video_Player)  
 [User Manual](http://web-dorado.com/spider-video-player-wordpress-guide-step-1.html)  
