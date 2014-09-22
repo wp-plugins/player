@@ -24,7 +24,7 @@ Spider Video Player comes with a social media integration feature. The player su
 
 Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordpress-player.html):  
 
-* Spider Video Player supports Flash and HTML5.     
+* Spider Video Player supports Flash and HTML5(supports only MP4, WebM, and Ogg formats).     
 * You can add the listed types of videos into Spider Video Player:  
     - Http: You can provide the URL of the video and its HD version (UrlHD) in the video player or select it from the uploaded videos.  (Note: Please provide direct link to the video and not the page containing the video)  
   
