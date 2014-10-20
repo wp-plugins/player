@@ -55,6 +55,7 @@ Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordp
 * Possibility to add tags and make them required/not required for adding custom tags for each video.   
 * Possibility to edit the columns/rows for the library, as well as its text size.   
 * Possibility to change the position of the control buttons using drag and drop feature.   
+* Possibility to choose the animation type for the load of the Flash player.   
 
 Upgrade to [WordPress Player Pro](http://web-dorado.com/products/wordpress-player.html) to add features: 
 
