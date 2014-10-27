@@ -28,7 +28,8 @@ Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordp
 * You can add the listed types of videos into Spider Video Player:  
     - Http: You can provide the URL of the video and its HD version (UrlHD) in the video player or select it from the uploaded videos.  (Note: Please provide direct link to the video and not the page containing the video)  
   
-    - YouTube: YouTube: Provide the YouTube link to the video in the URL field. Whenever adding the video use http:// option instead of https:// .YouTube videos will play in Flash mode unless the video also supports HTML5 feature.    
+    - YouTube: YouTube: Provide the YouTube link to the video in the URL field. Whenever adding the video use http:// option instead of https://.
+	YouTube videos will play in Flash mode unless the video also supports HTML5 feature.    
   
     - rtmp: Fill in the Flash Media Server (FMS) URL of the video for the video player along with the regular URL and UrlHD (HD version).  
 * Thumbnails can be added to each video in WordPress Video Player, and represent them in the video player window. There is also an option for adding an image for the whole video playlist.    
