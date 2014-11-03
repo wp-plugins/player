@@ -60,7 +60,7 @@ Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordp
 
 Upgrade to [WordPress Player Pro](http://web-dorado.com/products/wordpress-player.html) to add features: 
 
-* Possibility to add a watermark image for the video player and change the size, position and border spacing of watermark image (commercial version).  
+* Possibility to remove WebDorado watermark from the player, as well as possibility to add custom Watermark.  
  
 Spider video [WordPress  Player](http://web-dorado.com/products/wordpress-player.html)  has wonderful flash effects. You can add several video players in one page with different parameters and playlists. With Spider video player you can have unlimited playlists with unlimited number of videos.
 
