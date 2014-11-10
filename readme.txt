@@ -39,7 +39,7 @@ Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordp
 * Possibility to choose different playback options (auto play, auto next song, etc.) for the video player.  
 * Options to set the transparency level of video player buttons.    
 * Possibility to change positions and colors of video control buttons on the video player.  
-* You can also show or hide video control buttons on the video player.  
+* You can also show or hide video control buttons on the video player by click on the buttons from Themes section.  
 * Possibility to change library, videos and frames background color on the video player.  
 * Possibility to shuffle and repeat videos in playlist on the video player.  
 * Possibility to display the player both in Video/playlist mode and Library mode (where library can host mutliple playlists).     
