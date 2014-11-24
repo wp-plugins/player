@@ -124,6 +124,12 @@ Vietnamese (vi)
 
 == Changelog ==
 
+= 1.5.4 =
+bug fixed in HTML5
+
+= 1.5.3 =
+bug fixed in flash player
+
 = 1.5.2 =
 xss bug fixed
 
