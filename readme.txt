@@ -53,7 +53,7 @@ Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordp
 * Possibility to add social media sharing buttons- Facebook, Google+ and Twitter
 * Possibility to choose the location of the playlist (left/right).   
 * Possibility to choose the timing, when the playlist is hidden from the video.
-* Possibility to add tags and make them required/not required for adding custom tags for each video.   
+* Possibility of adding  required/not required tags for each video.      
 * Possibility to edit the columns/rows for the library, as well as its text size.   
 * Possibility to change the position of the control buttons using drag and drop feature.   
 * Possibility to choose the animation type for the load of the Flash player.   
