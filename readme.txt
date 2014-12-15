@@ -59,6 +59,7 @@ Features of Spider [WordPress Video Player](http://web-dorado.com/products/wordp
 * Possibility to choose the animation type for the load of the Flash player.   
 * An option of setting the format priority for the videos  
 * Possibility to add thumbnails for YouTube videos  
+* Option of changing control bar position (up/down)   
 
 Upgrade to [WordPress Player Pro](http://web-dorado.com/products/wordpress-player.html) to add features: 
 
