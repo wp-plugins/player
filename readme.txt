@@ -321,7 +321,7 @@ Single Video
 7.7 Save the page or post.    
 
 Alternatively, you can use Spider Video Player without the button on the toolbar: Add the shortcode [Spider_Video_Player id="N"] (where N is the id of the player, for the player with id=2, the shortcode must be [Spider_Video_Player id="2"]) to the pages and posts, where you want the player to appear.   
-For a single video, the shortcode is the following: [Spider_Single_Video track="Video ID" theme_id="Theme ID" priority="0/1"], where Video ID should be replaced with the ID number of the video and Theme ID should be replaced with the ID number of the theme. The value of the priority parameter can be either "0" (Flash) or "1" (HTML5).   
+For a single video, the shortcode is the following: [Spider_Single_Video track="Video ID" theme_id="Theme ID" priority="0/1"], where Video ID should be replaced with the ID number of the video and Theme ID should be replaced with the ID number of the theme. The value of the priority parameter can be either "0" for Flash or "1" for HTML5 player.   
 
   
 == Screenshots ==
