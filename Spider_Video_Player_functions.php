@@ -33,7 +33,7 @@ function show_Spider_Video_Player(){
 			
 			if($_POST['asc_or_desc'])
 			{
-				$sort["sortid_by"]=$_POST['order_by'];
+				$sort["sortid_by"]=esc_html(stripslashes($_POST['order_by']));
 				if($_POST['asc_or_desc']==1)
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
@@ -50,7 +50,7 @@ function show_Spider_Video_Player(){
 			
 	if($_POST['page_number'])
 		{
-			$limit=($_POST['page_number']-1)*20; 
+			$limit=(esc_html(stripslashes($_POST['page_number']))-1)*20;
 		}
 		else
 		{
@@ -62,7 +62,7 @@ function show_Spider_Video_Player(){
 			$limit=0;
 		}
 	if(isset($_POST['search_events_by_title'])){
-		$search_tag=$_POST['search_events_by_title'];
+		$search_tag=esc_html(stripslashes($_POST['search_events_by_title']));
 		}
 		
 		else
@@ -91,9 +91,9 @@ function save_Spider_Video_Player(){
 	$save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_player', array(
 		'id'	=> NULL,
         'title'       => esc_html(stripslashes($_POST["title"])),
-        'playlist'    => esc_html($_POST["params"]),
-        'theme'       => $_POST["params_theme"],
-		'priority'    => $_POST["priority"]
+        'playlist'    => esc_html(stripslashes($_POST["params"])),
+        'theme'       => esc_html(stripslashes($_POST["params_theme"])),
+		'priority'    => esc_html(stripslashes($_POST["priority"]))
                 ),
 				array(
 				'%d',
@@ -125,9 +125,9 @@ function Apply_Spider_Video_Player($id)
 	$save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_player', array(
 		
         'title'       => esc_html(stripslashes($_POST["title"])),
-        'playlist'    => esc_html($_POST["params"]),
-        'theme'       =>$_POST["params_theme"],
-		'priority'    => $_POST["priority"]
+        'playlist'    => esc_html(stripslashes($_POST["params"])),
+        'theme'       =>esc_html(stripslashes($_POST["params_theme"])),
+		'priority'    => esc_html(stripslashes($_POST["priority"]))
                 ),
 				array('id'	=> $id),
 				array(

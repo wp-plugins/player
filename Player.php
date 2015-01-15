@@ -4,7 +4,7 @@
 Plugin Name: Spider Video Player 
 Plugin URI: http://web-dorado.com/products/wordpress-player.html
 Description:Spider Video Player supports both HTML5 and Flash, allowing you to play videos on any mobile device.Spider WordPress Video Player allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player.
-Version: 1.5.4
+Version: 1.5.5
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -206,7 +206,7 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
         $video_urls = substr($video_urls, 0, -1);
         $playlists = $wpdb->get_results("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_playlist");
         if (isset($_POST['play'])) {
-            $p = $_POST['play'];
+            $p = esc_html(stripslashes($_POST['play']));
         } else $p = 0;
         $display = 'style="width:100%;height:100% !important;border-collapse: collapse; margin-left:8px !important;"';
         $table_count = 1;
@@ -221,11 +221,11 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
             $share_top = '-' .$theme->appHeight + 25 .'px';
         }
         if (isset($_POST['AlbumId']))
-            $AlbumId = $_POST['AlbumId'];
+            $AlbumId = esc_html(stripslashes($_POST['AlbumId']));
         else
             $AlbumId = '';
         if (isset($_POST['TrackId']))
-            $TrackId = $_POST['TrackId'];
+            $TrackId = esc_html(stripslashes($_POST['TrackId']));
         else
             $TrackId = '';
         ?>
@@ -1792,7 +1792,7 @@ function Spider_Video_Player_front_end($id)
         $playlist_array = explode(',', $playlist->playlist);
         global $many_players;
         if (isset($_POST['playlist_id'])) {
-            $playlistID = $_POST['playlist_id'];
+            $playlistID = esc_html(stripslashes($_POST['playlist_id']));
         } else $playlistID = 1;
         $key = $playlistID - 1;
         if (isset($playlist->playlist)) {
@@ -1824,7 +1824,7 @@ function Spider_Video_Player_front_end($id)
         // load the row from the db table
         $k = $libRows * $libCols;
         if (isset($_POST['play'])) {
-            $p = $_POST['play'];
+            $p = esc_html(stripslashes($_POST['play']));
         } else $p = 0;
         $display = 'style="width:100%;height:100% !important;border-collapse: collapse;"';
         $table_count = 1;
@@ -1839,11 +1839,11 @@ function Spider_Video_Player_front_end($id)
             $share_top = '-' .$theme->appHeight + 20 .'px';
         }
         if (isset($_POST['AlbumId']))
-            $AlbumId = $_POST['AlbumId'];
+            $AlbumId = esc_html(stripslashes($_POST['AlbumId']));
         else
             $AlbumId = '';
         if (isset($_POST['TrackId']))
-            $TrackId = $_POST['TrackId'];
+            $TrackId = esc_html(stripslashes($_POST['TrackId']));
         else
             $TrackId = '';
         ?>

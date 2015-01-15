@@ -332,7 +332,7 @@ else
 			
 			if($_POST['asc_or_desc'])
 			{
-				$sort["sortid_by"]=$_POST['order_by'];
+				$sort["sortid_by"]=esc_html(stripslashes($_POST['order_by']));
 				if($_POST['asc_or_desc']==1)
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
@@ -349,7 +349,7 @@ else
 			
 	if($_POST['page_number'])
 		{
-			$limit=($_POST['page_number']-1)*20; 
+			$limit=(esc_html(stripslashes($_POST['page_number'])-1))*20;
 		}
 		else
 		{
@@ -361,7 +361,7 @@ else
 			$limit=0;
 		}
 	if(isset($_POST['search_events_by_title'])){
-		$search_tag=$_POST['search_events_by_title'];
+		$search_tag=esc_html(stripslashes($_POST['search_events_by_title']));
 		}
 		
 		else
@@ -390,7 +390,7 @@ else
 	{
 		if($_POST['asc_or_desc'])
 			{
-				$sort["sortid_by"]=$_POST['order_by'];
+				$sort["sortid_by"]=esc_html(stripslashes($_POST['order_by']));
 				if($_POST['asc_or_desc']==1)
 				{
 					$order=" ASC";
@@ -486,7 +486,7 @@ function checkAll( n, fldName ) {
     
         <?php 
 		
-        if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=$_POST['search_events_by_title']; }else{$serch_value="";}} 
+        if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=esc_html(stripslashes($_POST['search_events_by_title'])); }else{$serch_value="";}}
 	$serch_fields='<div class="alignleft actions" style="width:180px;">
     	<label for="search_events_by_title" style="font-size:14px">Title: </label>
         <input type="text" name="search_events_by_title" value="'.(isset($serch_value) ? $serch_value : "").'" id="search_events_by_title" onchange="clear_serch_texts()">
@@ -539,8 +539,8 @@ function checkAll( n, fldName ) {
 	}
 	?>
     </table>
-    <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php if(isset($_POST['asc_or_desc'])) { echo $_POST['asc_or_desc']; } ?>"  />
- 	<input type="hidden" name="order_by" id="order_by" value="<?php if(isset($_POST['order_by'])) { echo $_POST['order_by']; } ?>"  />
+    <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php if(isset($_POST['asc_or_desc'])) { echo esc_html(stripslashes($_POST['asc_or_desc'])); } ?>"  />
+ 	<input type="hidden" name="order_by" id="order_by" value="<?php if(isset($_POST['order_by'])) { echo esc_html(stripslashes($_POST['order_by'])); } ?>"  />
     <input type="hidden" name="option" value="com_Spider_Video_Player">
     <input type="hidden" name="task" value="select_playlist">    
     <input type="hidden" name="boxchecked" value="0"> 
@@ -601,7 +601,7 @@ else
 			
 			if($_POST['asc_or_desc'])
 			{
-				$sort["sortid_by"]=$_POST['order_by'];
+				$sort["sortid_by"]=esc_html(stripslashes($_POST['order_by']));
 				if($_POST['asc_or_desc']==1)
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
@@ -618,7 +618,7 @@ else
 			
 	if($_POST['page_number'])
 		{
-			$limit=($_POST['page_number']-1)*20; 
+			$limit=(esc_html(stripslashes($_POST['page_number']))-1)*20;
 		}
 		else
 		{
@@ -660,7 +660,7 @@ else
 		if(isset($_POST['param_'.$tag->id]))
 		{
 		
-		$search_tags[$tag->id] = $_POST['param_'.$tag->id];
+		$search_tags[$tag->id] = esc_html(stripslashes($_POST['param_'.$tag->id]));
 		$search_tags[$tag->id] = strtolower( $search_tags[$tag->id] );	
 		}
 
@@ -802,7 +802,7 @@ function checkAll( n, fldName ) {
 				<?php echo  'Title' ; ?>:
             </td>
             <td>
-				<input type="text" name="search_video" id="search_video" value="<?php if(isset($_POST["search_video"])){echo $_POST["search_video"];} ?>" class="text_area" />
+				<input type="text" name="search_video" id="search_video" value="<?php if(isset($_POST["search_video"])){echo esc_html(stripslashes($_POST["search_video"]));} ?>" class="text_area" />
             </td>
             <td rowspan="50">
                 <button ><?php echo  'Go' ; ?></button>
@@ -825,7 +825,7 @@ function checkAll( n, fldName ) {
 		<?php echo $tag->name ; ?>:
          </td>
 		 <td align="left">
-             <input type="text" name="param_<?php echo $tag->id;?>" id="param_<?php echo $tag->id; ?>" value="<?php if(isset($_POST["param_".$tag->id])){echo $_POST["param_".$tag->id];} ?>" class="text_area" />
+             <input type="text" name="param_<?php echo $tag->id;?>" id="param_<?php echo $tag->id; ?>" value="<?php if(isset($_POST["param_".$tag->id])){echo esc_html(stripslashes($_POST["param_".$tag->id]));} ?>" class="text_area" />
          </td>
         </tr> 
 		<?php 
@@ -879,8 +879,8 @@ function checkAll( n, fldName ) {
 	}
 	?>
     </table>
-    <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php if(isset($_POST['asc_or_desc'])) echo $_POST['asc_or_desc'];?>"  />
- <input type="hidden" name="order_by" id="order_by" value="<?php if(isset($_POST['order_by'])) echo $_POST['order_by'];?>"  />
+    <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php if(isset($_POST['asc_or_desc'])) echo esc_html(stripslashes($_POST['asc_or_desc']));?>"  />
+ <input type="hidden" name="order_by" id="order_by" value="<?php if(isset($_POST['order_by'])) echo esc_html(stripslashes($_POST['order_by']));?>"  />
     <input type="hidden" name="option" value="com_Spider_Video_Player">
     <input type="hidden" name="task" value="select_video">    
     <input type="hidden" name="boxchecked" value="0">   

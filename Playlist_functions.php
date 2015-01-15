@@ -33,7 +33,7 @@ function show_playlist(){
 			
 			if($_POST['asc_or_desc'])
 			{
-				$sort["sortid_by"]=$_POST['order_by'];
+				$sort["sortid_by"]=esc_html(stripslashes($_POST['order_by']));
 				if($_POST['asc_or_desc']==1)
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
@@ -50,7 +50,7 @@ function show_playlist(){
 			
 	if($_POST['page_number'])
 		{
-			$limit=($_POST['page_number']-1)*20; 
+			$limit=(esc_html(stripslashes($_POST['page_number']))-1)*20;
 		}
 		else
 		{
@@ -62,7 +62,7 @@ function show_playlist(){
 			$limit=0;
 		}
 	if(isset($_POST['search_events_by_title'])){
-		$search_tag=$_POST['search_events_by_title'];
+		$search_tag=esc_html(stripslashes($_POST['search_events_by_title']));
 		}
 		
 		else
@@ -86,7 +86,7 @@ function show_playlist(){
 	{
 		if($_POST['asc_or_desc'])
 			{
-				$sort["sortid_by"]=$_POST['order_by'];
+				$sort["sortid_by"]=esc_html(stripslashes($_POST['order_by']));
 				if($_POST['asc_or_desc']==1)
 				{
 					$order=" ASC";
@@ -107,9 +107,9 @@ function save_playlist(){
 	$save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_playlist', array(
 		'id'	    => NULL,
         'title'     => esc_html(stripslashes($_POST["title"])),
-        'thumb'     => esc_html($_POST["thumb"]),
-        'published' =>$_POST["published"],
-        'videos'    =>esc_html($_POST["videos"])
+        'thumb'     => esc_html(stripslashes($_POST["thumb"])),
+        'published' =>esc_html(stripslashes($_POST["published"])),
+        'videos'    =>esc_html(stripslashes($_POST["videos"]))
                 ),
 				array(
 				'%d',
@@ -141,9 +141,9 @@ function Apply_playlist($id)
 	$save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_playlist', array(
 		
         'title'       => esc_html(stripslashes($_POST["title"])),
-        'thumb'       => esc_html($_POST["thumb"]),
-        'published'   =>$_POST["published"],
-        'videos'      =>esc_html($_POST["videos"])
+        'thumb'       => esc_html(stripslashes($_POST["thumb"])),
+        'published'   =>esc_html(stripslashes($_POST["published"])),
+        'videos'      =>esc_html(stripslashes($_POST["videos"]))
                 ),
 				array('id'	=> $id),
 				array(

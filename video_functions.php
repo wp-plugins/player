@@ -38,7 +38,7 @@ function show_video(){
 			
 			if($_POST['asc_or_desc'])
 			{
-				$sort["sortid_by"]=$_POST['order_by'];
+				$sort["sortid_by"]=esc_html(stripslashes($_POST['order_by']));
 				if($_POST['asc_or_desc']==1)
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
@@ -55,7 +55,7 @@ function show_video(){
 			
 	if($_POST['page_number'])
 		{
-			$limit=($_POST['page_number']-1)*20; 
+			$limit=(esc_html(stripslashes($_POST['page_number']))-1)*20;
 		}
 		else
 		{
@@ -67,7 +67,7 @@ function show_video(){
 			$limit=0;
 		}
 	if(isset($_POST['search_events_by_title'])){
-		$search_tag=$_POST['search_events_by_title'];
+		$search_tag=esc_html(stripslashes($_POST['search_events_by_title']));
 		}
 		
 		else
@@ -118,7 +118,7 @@ function save_video(){
 	if(isset($_POST["params"]))
 	foreach($_POST["params"] as $key=> $param )
 	{
-		$s=$s.$key.'#===#'.$param.'#***#';
+		$s=$s.$key.'#===#'.esc_html(stripslashes($param)).'#***#';
 	}
 	switch($_POST["type"]){
 	case 'http':
@@ -147,15 +147,15 @@ function save_video(){
 	
 		$save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_video', array(
 		'id'	     => NULL,
-        'url'        => esc_html($_POST["http_post_video"]),
-		'urlHtml5'   => esc_html($_POST["http_post_video_html5"]),
-        'urlHD'      => esc_html($_POST["http_post_video_UrlHD"]),
-		'urlHDHtml5' => esc_html($_POST["http_post_video_UrlHD_html5"]),
-        'published'  =>$_POST["published"],
+        'url'        => esc_html(stripslashes($_POST["http_post_video"])),
+		'urlHtml5'   => esc_html(stripslashes($_POST["http_post_video_html5"])),
+        'urlHD'      => esc_html(stripslashes($_POST["http_post_video_UrlHD"])),
+		'urlHDHtml5' => esc_html(stripslashes($_POST["http_post_video_UrlHD_html5"])),
+        'published'  =>esc_html(stripslashes($_POST["published"])),
         'type'       => "http",
 		'params'     =>esc_html($s),
 		'title'      =>esc_html(stripslashes($_POST["title"])),
-		'thumb'      =>esc_html($_POST["post_image"])
+		'thumb'      =>esc_html(stripslashes($_POST["post_image"]))
                 ),
 				array(
 				'%d',
@@ -190,14 +190,14 @@ function save_video(){
 		 global $wpdb;
 	 	 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_video', array(
 		'id'	   => NULL,
-		'urlHD'    => esc_html($_POST["fmsUrl"]),
-        'url'      => esc_html($_POST["url_rtmp"]),
-        'urlHD'    => esc_html($_POST["urlHD_rtmp"]),
-        'published' =>$_POST["published"],
+		'urlHD'    => esc_html(stripslashes($_POST["fmsUrl"])),
+        'url'      => esc_html(stripslashes($_POST["url_rtmp"])),
+        'urlHD'    => esc_html(stripslashes($_POST["urlHD_rtmp"])),
+        'published' =>esc_html(stripslashes($_POST["published"])),
         'type'      => "http",
 		'params'   =>esc_html($s),
 		'title'    =>esc_html(stripslashes($_POST["title"])),
-		'thumb'    =>esc_html($_POST["post_image"]),
+		'thumb'    =>esc_html(stripslashes($_POST["post_image"])),
 		'urlHtml5'   => '',
 		'urlHDHtml5' => ''
                 ),
@@ -233,12 +233,12 @@ function save_video(){
 		 global $wpdb;
 		 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_video', array(
 		'id'	     => NULL,
-        'url'        => esc_html($_POST["url_youtube"]),
-        'published'  =>$_POST["published"],
+        'url'        => esc_html(stripslashes($_POST["url_youtube"])),
+        'published'  =>esc_html(stripslashes($_POST["published"])),
         'type'       => "youtube",
 		'params'     =>esc_html($s),
 		'title'      =>esc_html(stripslashes($_POST["title"])),
-		'thumb'      =>esc_html($_POST["post_image"]),
+		'thumb'      =>esc_html(stripslashes($_POST["post_image"])),
 		'urlHtml5'   => '',
 		'urlHDHtml5' => ''
                 ),
@@ -374,7 +374,7 @@ global $wpdb;
 	if(isset($_POST["params"]))
 	foreach($_POST["params"] as $key=> $param )
 	{
-		$s=$s.$key.'#===#'.$param.'#***#';
+		$s=$s.$key.'#===#'.esc_html(stripslashes($param)).'#***#';
 	}
 	switch($_POST["type"]){
 	case 'http':
@@ -407,15 +407,15 @@ function apply_type_http($s,$id)
 	 $save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_video', array(
 	 
 	    'fmsUrl'      =>"",
-        'url'         => esc_html($_POST["http_post_video"]),
-		'urlHtml5'    => esc_html($_POST["http_post_video_html5"]),
-        'urlHD'       => esc_html($_POST["http_post_video_UrlHD"]),
-		'urlHDHtml5'  => esc_html($_POST["http_post_video_UrlHD_html5"]),
-        'published'   =>$_POST["published"],
+        'url'         => esc_html(stripslashes($_POST["http_post_video"])),
+		'urlHtml5'    => esc_html(stripslashes($_POST["http_post_video_html5"])),
+        'urlHD'       => esc_html(stripslashes($_POST["http_post_video_UrlHD"])),
+		'urlHDHtml5'  => esc_html(stripslashes($_POST["http_post_video_UrlHD_html5"])),
+        'published'   =>esc_html(stripslashes($_POST["published"])),
         'type'        => "http",
 		'params'      =>esc_html($s),
 		'title'       =>esc_html(stripslashes($_POST["title"])),
-		'thumb'       =>esc_html($_POST["post_image"])
+		'thumb'       =>esc_html(stripslashes($_POST["post_image"]))
                 ),
 				array('id'=>$id),
 				array(
@@ -443,14 +443,14 @@ function apply_type_http($s,$id)
  {
 		 global $wpdb;
 	 	 $save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_video', array(
-		'fmsUrl'      => esc_html($_POST["fmsUrl"]),
-        'url'         => esc_html($_POST["url_rtmp"]),
-        'urlHD'       => esc_html($_POST["urlHD_rtmp"]),
-        'published'   =>$_POST["published"],
+		'fmsUrl'      => esc_html(stripslashes($_POST["fmsUrl"])),
+        'url'         => esc_html(stripslashes($_POST["url_rtmp"])),
+        'urlHD'       => esc_html(stripslashes($_POST["urlHD_rtmp"])),
+        'published'   =>esc_html(stripslashes($_POST["published"])),
         'type'        => "rtmp",
 		'params'      =>esc_html($s),
 		'title'       =>esc_html(stripslashes($_POST["title"])),
-		'thumb'       =>esc_html($_POST["post_image"]),
+		'thumb'       =>esc_html(stripslashes($_POST["post_image"])),
 		'urlHtml5'    => '',
 		'urlHDHtml5'  => ''
                 ),
@@ -480,14 +480,14 @@ function apply_type_http($s,$id)
  {
 		 global $wpdb;
 		 $save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_video', array(
-        'url'        => esc_html($_POST["url_youtube"]),
-		'urlHD'      => esc_html($_POST["urlHD"]),
-		'fmsUrl'     => esc_html($_POST["fmsUrl"]),
-        'published'  =>$_POST["published"],
+        'url'        => esc_html(stripslashes($_POST["url_youtube"])),
+		'urlHD'      => esc_html(stripslashes($_POST["urlHD"])),
+		'fmsUrl'     => esc_html(stripslashes($_POST["fmsUrl"])),
+        'published'  =>esc_html(stripslashes($_POST["published"])),
         'type'       => "youtube",
 		'params'     =>esc_html($s),
 		'title'      =>esc_html(stripslashes($_POST["title"])),
-		'thumb'      =>esc_html($_POST["post_image"]),
+		'thumb'      =>esc_html(stripslashes($_POST["post_image"])),
 		'urlHtml5'   => '',
 		'urlHDHtml5' => ''
                 ),

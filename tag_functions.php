@@ -54,7 +54,7 @@ function show_tag(){
 			
 			if($_POST['asc_or_desc'])
 			{
-				$sort["sortid_by"]=$_POST['order_by'];
+				$sort["sortid_by"]=esc_html(stripslashes($_POST['order_by']));
 				if($_POST['asc_or_desc']==1)
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
@@ -71,7 +71,7 @@ function show_tag(){
 			
 	if($_POST['page_number'])
 		{
-			$limit=($_POST['page_number']-1)*20; 
+			$limit=(esc_html(stripslashes($_POST['page_number']))-1)*20;
 		}
 		else
 		{
@@ -83,7 +83,7 @@ function show_tag(){
 			$limit=0;
 		}
 	if(isset($_POST['search_events_by_title'])){
-		$search_tag=$_POST['search_events_by_title'];
+		$search_tag=esc_html(stripslashes($_POST['search_events_by_title']));
 		}
 		
 		else
@@ -150,7 +150,7 @@ function show_tag(){
 	
 	if(isset($_POST["oreder_move"]))
 	{
-		$ids=explode(",",$_POST["oreder_move"]);
+		$ids=explode(",",esc_html(stripslashes($_POST["oreder_move"])));
 		$this_order=$wpdb->get_var($wpdb->prepare("SELECT ordering FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE id=%d",$ids[0]));
 		$next_order=$wpdb->get_var($wpdb->prepare("SELECT ordering FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE id=%d",$ids[1]));	
 		$wpdb->update($wpdb->prefix.'Spider_Video_Player_tag', array(
@@ -204,8 +204,8 @@ function save_tag(){
 	 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_tag', array(
 		'id'	=> NULL,
         'name'     => esc_html(stripslashes($_POST["name"])),
-        'required'    => $_POST["required"],
-        'published'  =>$_POST["published"],
+        'required'    => esc_html(stripslashes($_POST["required"])),
+        'published'  =>esc_html(stripslashes($_POST["published"])),
         'ordering'   =>$order
                 ),
 				array(
@@ -421,8 +421,8 @@ function apply_tag($id)
 	global $wpdb;
 			$save_or_no=$wpdb->update($wpdb->prefix.'Spider_Video_Player_tag', array(
             'name'     => esc_html(stripslashes($_POST["name"])),
-			'required'    => $_POST["required"],
-			'published'  =>$_POST["published"],
+			'required'    => esc_html(stripslashes($_POST["required"])),
+			'published'  =>esc_html(stripslashes($_POST["published"])),
               ), 
               array('id'=>$id),
 			  array(  '%s',
