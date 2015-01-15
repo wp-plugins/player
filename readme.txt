@@ -181,10 +181,12 @@ If any problem occurs with Spider [WordPress Video Plugin](http://wordpress.org/
 5.  Click **Install Now** button.  
 6.  Once it is complete, activate the plugin.  
 
+If any problem occurs with Spider Video Player, please contact us at info@web-dorado.com.  
+
 If you want to update the  Spider Video Player plugin while preserving your existing data, you need to deactivate and delete the  Spider Video Player from the list of installed plugins (Do not uninstall it using the Uninstall Video Player option of the plugin, otherwise you will lose your initial data) and install the new plugin.   
 
 Once the plugin is activated, you'll notice a menu on the left called "Video Player".  
-If any problem occurs with Spider Video Player, please contact us at info@web-dorado.com.  
+
   
 == Spider Video Player Step by step guide Step 2 ==    
 = Adding Tags to Spider  [WordPress Video Player](http://web-dorado.com/products/wordpress-player.html)  =    
