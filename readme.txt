@@ -142,6 +142,8 @@ bug fixed in wp 3.9 editor
 = 1.5.0 =
 backend design problems in wp3.8, notices fixed
 
+= 1.0.0 =
+Initial version
 
 == Installation ==
 
