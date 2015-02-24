@@ -4,7 +4,7 @@
 Plugin Name: Spider Video Player 
 Plugin URI: http://web-dorado.com/products/wordpress-player.html
 Description:Spider Video Player supports both HTML5 and Flash, allowing you to play videos on any mobile device.Spider WordPress Video Player allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player.
-Version: 1.5.5
+Version: 1.5.6
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -196,7 +196,7 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
 
 
         $theme = $wpdb->get_row($wpdb->prepare("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_theme WHERE id=%d", $theme_id));
-        $videos = $wpdb->get_results($wpdb->prepare("SELECT urlHtml5,type,title,thumb FROM " .$wpdb->prefix ."Spider_Video_Player_video WHERE id=%d", $track));
+        $videos = $wpdb->get_results($wpdb->prepare("SELECT url,urlHtml5,type,title,thumb FROM " .$wpdb->prefix ."Spider_Video_Player_video WHERE id=%d", $track));
         $video_urls = '';
         for ($i = 0; $i < count($videos); $i++) {
             if ($videos[$i]->urlHtml5 != "") {
@@ -379,6 +379,50 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
         <div id="video_div_<?php echo $ident; ?>"
              style="display:block;width:<?php echo $theme->appWidth; ?>px;height:<?php echo $theme->appHeight; ?>px;background-color:<?php echo "#" .$theme->vidBgColor; ?>">
             <div id="play_list_<?php echo $ident ?>">
+            
+            <?php 
+if($trackk->type=="http")
+		{
+		if($trackk->urlHtml5!='')
+		{
+		if(strpos($trackk->urlHtml5, "http:")===false and strpos($trackk->urlHtml5, "https:")===false )
+		$html5Url=$trackk->urlHtml5;
+		else
+		$html5Url=$trackk->urlHtml5;
+		}
+		else
+		{
+		if(strpos($trackk->url, "http:")===false and strpos($trackk->url, "https:")===false )
+		$html5Url=$trackk->url;
+		else
+		$html5Url=$trackk->url;
+		}
+		
+		
+
+		if($trackk->urlHdHtml5!='')
+		{
+		if(strpos($trackk->urlHdHtml5, "http:")===false and strpos($trackk->urlHdHtml5, "https:")===false )
+		$html5UrlHD=$trackk->urlHdHtml5;
+		else
+		$html5UrlHD=$trackk->urlHdHtml5;
+		}
+		else
+		{
+		if(strpos($trackk->urlHD, "http:")===false and strpos($trackk->urlHD, "https:")===false )
+		$html5UrlHD=$trackk->urlHD;
+		else
+		$html5UrlHD=$trackk->urlHD;
+		
+		}
+}
+?>
+
+
+<input type='hidden' value='<?php echo $html5UrlHD ?>' id="urlHD_<?php echo $ident; ?>" />
+<input type='hidden' value='<?php echo $html5Url ?>' id="trackURL_<?php echo $ident; ?>" />
+
+
                 <input type='hidden' value='0' id="track_list_<?php echo $ident; ?>"/>
 
                 <div style="height:90%" id="play_list1_<?php echo $ident; ?>">
@@ -822,23 +866,33 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
                 jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width', jQuery('#global_body_<?php echo $ident;?> #volumeBar_width_<?php  echo $ident?>').val())
             }
         })
-        jQuery('.hd_<?php echo $ident;?>').on('click', function () {
-            current_time_<?php  echo $ident?> = video_<?php echo $ident;?>[0].currentTime;
-            HD_on_<?php  echo $ident?> = jQuery('#HD_on_<?php  echo $ident?>').val();
-            current_playlist_table_<?php echo $ident;?> = jQuery('#current_playlist_table_<?php echo $ident;?>').val();
-            current_track_<?php echo $ident;?> = jQuery('#current_track_<?php echo $ident;?>').val();
-            if (jQuery('#track_list_<?php  echo $ident?>_' + current_playlist_table_<?php echo $ident;?>).find('#urlHD_' + current_track_<?php echo $ident?> + '_' +<?php echo $ident?>).val() && HD_on_<?php  echo $ident?> == 0) {
-                document.getElementById('videoID_<?php  echo $ident?>').src = jQuery('#track_list_<?php  echo $ident?>_' + current_playlist_table_<?php  echo $ident?>).find('#urlHD_' + current_track_<?php echo $ident?> + '_' +<?php echo $ident?>).val();
-                play_<?php  echo $ident?>();
-                setTimeout('video_<?php echo $ident;?>[0].currentTime=current_time_<?php echo $ident?>', 500)
-                jQuery('#HD_on_<?php  echo $ident?>').val(1);
-            }
-            if (jQuery('#track_list_<?php  echo $ident?>_' + current_playlist_table_<?php  echo $ident?>).find('#urlHD_' + current_track_<?php echo $ident?> + '_' +<?php echo $ident?>).val() && HD_on_<?php echo $ident?> == 1) {
-                jQuery('#track_list_<?php  echo $ident?>_' + current_playlist_table_<?php  echo $ident?>).find('#thumb_' + current_track_<?php echo $ident?> + '_' +<?php echo $ident?>).click();
-                setTimeout('video_<?php echo $ident;?>[0].currentTime=current_time_<?php echo $ident?>', 500)
-                jQuery('#HD_on_<?php  echo $ident?>').val(0);
-            }
+        
+        
+        jQuery('.hd_<?php echo $ident;?>').on('click',function(){
+          current_time=video_<?php echo $ident;?>[0].currentTime;
+          HD_on=jQuery('#HD_on_<?php echo $ident;?>').val();
+
+          current_playlist_table=jQuery('#current_playlist_table_<?php echo $ident;?>').val();
+          current_track=jQuery('#current_track_<?php echo $ident;?>').val();
+          
+          if(jQuery('#urlHD_<?php echo $ident;?>').val() && HD_on==0)
+          {
+          document.getElementById('videoID_<?php echo $ident;?>').src=jQuery('#urlHD_<?php echo $ident;?>').val();
+          play_<?php echo $ident;?>();
+          setTimeout('video_<?php echo $ident;?>[0].currentTime=current_time',500)
+          jQuery('#HD_on_<?php echo $ident;?>').val(1);
+          }
+
+          if(jQuery('#urlHD_<?php echo $ident;?>').val() && HD_on==1)
+          {
+          document.getElementById('videoID_<?php echo $ident;?>').src=jQuery('#trackURL_<?php echo $ident;?>').val();
+          play_<?php echo $ident;?>();
+          setTimeout('video_<?php echo $ident;?>[0].currentTime=current_time',500)
+          jQuery('#HD_on_<?php echo $ident;?>').val(0);
+          }
+
         })
+
         function support_<?php echo $ident;?>(i, j) {
             if (jQuery('#track_list_<?php  echo $ident?>_' + i).find('#vid_type_' + j + '_<?php echo $ident?>').val() != 'http') {
                 jQuery('#not_supported_<?php  echo $ident?>').css('display', '');
@@ -2033,7 +2087,7 @@ function Spider_Video_Player_front_end($id)
                                     if ($vdss->urlHDHtml5 != "") {
                                         $html5UrlHD = $vdss->urlHDHtml5;
                                     } else $html5UrlHD = $vdss->urlHD;
-                                    echo '<div id="thumb_' .$jj .'_' .$ident .'"  onclick="jQuery(\'#HD_on_' .$ident .'\').val(0);document.getElementById(\'videoID_' .$ident .'\').src=\'' .$html5Url .'\';play_' .$ident .'();vid_select_' .$ident .'(this);vid_num=' .$jj .';jQuery(\'#current_track_' .$ident .'\').val(' .$jj .');" class="vid_thumb_' .$ident .'" style="color:#' .$theme->textColor .';cursor:pointer;width:' .$theme->playlistWidth .'px;text-align:center; "  >';
+                                    echo '<div id="thumb_' .$jj .'_' .$ident .'"  onclick="jQuery(\'#HD_on_' .$ident .'\').val(0);document.getElementById(\'videoID_' .$ident .'\').src=\'' .$html5Url .'\';document.getElementById(\'videoID_' .$ident .'\').poster=\'' .$vidsTHUMB .'\';play_' .$ident .'();vid_select_' .$ident .'(this);vid_num=' .$jj .';jQuery(\'#current_track_' .$ident .'\').val(' .$jj .');" class="vid_thumb_' .$ident .'" style="color:#' .$theme->textColor .';cursor:pointer;width:' .$theme->playlistWidth .'px;text-align:center; "  >';
                                     if ($vdss->thumb)
                                         echo '<img   src="' .$vidsTHUMB .'" width="90px" style="display:none;  border:none;"  />';
                                     echo '<p style="font-size:' .$theme->playlistTextSize .'px !important;line-height:30px !important;cursor:pointer;margin: 0px !important;padding:0px !important" >' .($theme->show_trackid ? ($jj + 1) .'-' : '') .$vdss->title .'</p></div>';
@@ -3007,7 +3061,7 @@ function Spider_Video_Player_front_end($id)
 
 
                         <?php if($theme->playlistOverVid==0 && $theme->playlistPos==2){ ?>
-                        $("#videoID_<?php echo $ident;?>").animate({
+                        jQuery("#videoID_<?php echo $ident;?>").animate({
                             width: <?php echo $theme->appWidth ?>+"px",
                         }, 300);
                         <?php } ?>
