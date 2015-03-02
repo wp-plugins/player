@@ -342,3 +342,27 @@ For a single video, the shortcode is the following: [Spider_Single_Video track="
 8.  Spider Video Player  - Album view
  
  
+ == Frequently Asked Questions ==
+
+= 1. Is it possible to translate the Spider Video Player into another language? =
+It is only possible to translate the front end of the plugin. To do so, you should set define('WPLANG','[lang_code]') to the desired language code in wp_config.php file of your website. This way the plugin should be translated automatically. Please be informed, that you can modify the translations from wp-content/plugins/spider_player/languages/ (you will need POEdit http://www.poedit.net/download.php).  
+
+= 2. What content does the Spider Video Player Flash option support? =
+The Spider  Video Player Flash options supports playback of any media content format supported by the Adobe Flash Player. This includes FLV, H.264/MPEG-4, MP3, AAC, JPG, PNG and GIF files, as well as XML playlists. HTTP and RTMP streaming are supported, too.
+
+= 3. What content does the Spider Video Player HTML5 option support? =
+The HTML5 video player has support only for MP4, WebM, and Ogg formats.  
+
+= 4. Why should I use Priority feature? =
+The option is used for setting the priority of the Video player format. If you choose Flash priority the videos will work with Flash in case of devices/browsers with Flash support, otherwise the HTML5 player will be used.  
+
+= 5. What format is used for the YouTube videos? =
+The Video Player has support for YouTube videos. Those are being played in Flash format.  
+
+= 6. How to include YouTube videos to the playlists? =
+You should simply include the link of the YouTube video. Please note that the links should have http//: format instead of the https:// since the second option does not work with Flash.  
+
+= 7. Can I customize the Spider Video Player? =
+Yes, you can use one of the standard themes of the player included in the package and change them according to your needs and preferences. Moreover, you can create your own themes customizing all parameters.   
+
+ 
