@@ -122,6 +122,9 @@ Vietnamese (vi)
 
 == Changelog ==
 
+= 1.5.6 =
+bugs fixed in single video hd, autohide, playlist thumbs
+
 = 1.5.5 =
 security issue fixed
 
