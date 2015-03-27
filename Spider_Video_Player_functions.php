@@ -33,24 +33,24 @@ function show_Spider_Video_Player(){
 			
 			if($_POST['asc_or_desc'])
 			{
-				$sort["sortid_by"]=esc_html(stripslashes($_POST['order_by']));
+				$sort["sortid_by"]=esc_sql(esc_html(stripslashes($_POST['order_by'])));
 				if($_POST['asc_or_desc']==1)
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
 					$sort["1_or_2"]="2";
-					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." ASC";
+					$order="ORDER BY ".$sort["sortid_by"]." ASC";
 				}
 				else
 				{
 					$sort["custom_style"]="manage-column column-title sorted desc";
 					$sort["1_or_2"]="1";
-					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." DESC";
+					$order="ORDER BY ".$sort["sortid_by"]." DESC";
 				}
 			}
 			
 	if($_POST['page_number'])
 		{
-			$limit=(esc_html(stripslashes($_POST['page_number']))-1)*20;
+			$limit=(esc_sql(esc_html(stripslashes($_POST['page_number'])))-1)*20;
 		}
 		else
 		{
@@ -62,7 +62,7 @@ function show_Spider_Video_Player(){
 			$limit=0;
 		}
 	if(isset($_POST['search_events_by_title'])){
-		$search_tag=esc_html(stripslashes($_POST['search_events_by_title']));
+		$search_tag=esc_sql(esc_html(stripslashes($_POST['search_events_by_title'])));
 		}
 		
 		else
@@ -70,7 +70,7 @@ function show_Spider_Video_Player(){
 		$search_tag="";
 		}
 	if ( $search_tag ) {
-		$where= ' WHERE title LIKE "%'.$wpdb->escape($search_tag).'%"';
+		$where= ' WHERE title LIKE "%'.$search_tag.'%"';
 	}
 	
 	
@@ -90,10 +90,10 @@ function save_Spider_Video_Player(){
 	global $wpdb;
 	$save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_player', array(
 		'id'	=> NULL,
-        'title'       => esc_html(stripslashes($_POST["title"])),
-        'playlist'    => esc_html(stripslashes($_POST["params"])),
-        'theme'       => esc_html(stripslashes($_POST["params_theme"])),
-		'priority'    => esc_html(stripslashes($_POST["priority"]))
+        'title'       => esc_sql(esc_html(stripslashes($_POST["title"]))),
+        'playlist'    => esc_sql(esc_html(stripslashes($_POST["params"]))),
+        'theme'       => esc_sql(esc_html(stripslashes($_POST["params_theme"]))),
+		'priority'    => esc_sql(esc_html(stripslashes($_POST["priority"])))
                 ),
 				array(
 				'%d',
@@ -124,10 +124,10 @@ function Apply_Spider_Video_Player($id)
 	global $wpdb;
 	$save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_player', array(
 		
-        'title'       => esc_html(stripslashes($_POST["title"])),
-        'playlist'    => esc_html(stripslashes($_POST["params"])),
-        'theme'       =>esc_html(stripslashes($_POST["params_theme"])),
-		'priority'    => esc_html(stripslashes($_POST["priority"]))
+        'title'       => esc_sql(esc_html(stripslashes($_POST["title"]))),
+        'playlist'    => esc_sql(esc_html(stripslashes($_POST["params"]))),
+        'theme'       => esc_sql(esc_html(stripslashes($_POST["params_theme"]))),
+		'priority'    => esc_sql(esc_html(stripslashes($_POST["priority"])))
                 ),
 				array('id'	=> $id),
 				array(

@@ -33,24 +33,24 @@ function show_playlist(){
 			
 			if($_POST['asc_or_desc'])
 			{
-				$sort["sortid_by"]=esc_html(stripslashes($_POST['order_by']));
+				$sort["sortid_by"]=esc_sql(esc_html(stripslashes($_POST['order_by'])));
 				if($_POST['asc_or_desc']==1)
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
 					$sort["1_or_2"]="2";
-					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." ASC";
+					$order="ORDER BY ".$sort["sortid_by"]." ASC";
 				}
 				else
 				{
 					$sort["custom_style"]="manage-column column-title sorted desc";
 					$sort["1_or_2"]="1";
-					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." DESC";
+					$order="ORDER BY ".$sort["sortid_by"]." DESC";
 				}
 			}
 			
 	if($_POST['page_number'])
 		{
-			$limit=(esc_html(stripslashes($_POST['page_number']))-1)*20;
+			$limit=(esc_sql(esc_html(stripslashes($_POST['page_number'])))-1)*20;
 		}
 		else
 		{
@@ -62,7 +62,7 @@ function show_playlist(){
 			$limit=0;
 		}
 	if(isset($_POST['search_events_by_title'])){
-		$search_tag=esc_html(stripslashes($_POST['search_events_by_title']));
+		$search_tag=esc_sql(esc_html(stripslashes($_POST['search_events_by_title'])));
 		}
 		
 		else
@@ -70,7 +70,7 @@ function show_playlist(){
 		$search_tag="";
 		}
 	if ( $search_tag ) {
-		$where= ' WHERE name LIKE "%'.$wpdb->escape($search_tag).'%"';
+		$where= ' WHERE name LIKE "%'.$search_tag.'%"';
 	}
 	
 	
@@ -86,7 +86,7 @@ function show_playlist(){
 	{
 		if($_POST['asc_or_desc'])
 			{
-				$sort["sortid_by"]=esc_html(stripslashes($_POST['order_by']));
+				$sort["sortid_by"]=esc_sql(esc_html(stripslashes($_POST['order_by'])));
 				if($_POST['asc_or_desc']==1)
 				{
 					$order=" ASC";
@@ -106,10 +106,10 @@ function save_playlist(){
 	global $wpdb;
 	$save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_playlist', array(
 		'id'	    => NULL,
-        'title'     => esc_html(stripslashes($_POST["title"])),
-        'thumb'     => esc_html(stripslashes($_POST["thumb"])),
-        'published' =>esc_html(stripslashes($_POST["published"])),
-        'videos'    =>esc_html(stripslashes($_POST["videos"]))
+        'title'     => esc_sql(esc_html(stripslashes($_POST["title"]))),
+        'thumb'     => esc_sql(esc_html(stripslashes($_POST["thumb"]))),
+        'published' => esc_sql(esc_html(stripslashes($_POST["published"]))),
+        'videos'    => esc_sql(esc_html(stripslashes($_POST["videos"])))
                 ),
 				array(
 				'%d',
@@ -140,10 +140,10 @@ function Apply_playlist($id)
 	global $wpdb;
 	$save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_playlist', array(
 		
-        'title'       => esc_html(stripslashes($_POST["title"])),
-        'thumb'       => esc_html(stripslashes($_POST["thumb"])),
-        'published'   =>esc_html(stripslashes($_POST["published"])),
-        'videos'      =>esc_html(stripslashes($_POST["videos"]))
+        'title'       => esc_sql(esc_html(stripslashes($_POST["title"]))),
+        'thumb'       => esc_sql(esc_html(stripslashes($_POST["thumb"]))),
+        'published'   => esc_sql(esc_html(stripslashes($_POST["published"]))),
+        'videos'      => esc_sql(esc_html(stripslashes($_POST["videos"])))
                 ),
 				array('id'	=> $id),
 				array(
@@ -231,7 +231,7 @@ function change_tag( $id ){
               array('id'=>$id),
 			  array(  '%d' )
 			  );
-	if($save_or_no)
+	if(!$savedd)
 	{
 		?>
 	<div class="error"><p><strong><?php _e('Error. Please install plugin again'); ?></strong></p></div>

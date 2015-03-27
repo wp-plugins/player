@@ -4,7 +4,7 @@
 Plugin Name: Spider Video Player 
 Plugin URI: http://web-dorado.com/products/wordpress-player.html
 Description:Spider Video Player supports both HTML5 and Flash, allowing you to play videos on any mobile device.Spider WordPress Video Player allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player.
-Version: 1.5.6
+Version: 1.5.7
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -206,7 +206,7 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
         $video_urls = substr($video_urls, 0, -1);
         $playlists = $wpdb->get_results("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_playlist");
         if (isset($_POST['play'])) {
-            $p = esc_html(stripslashes($_POST['play']));
+            $p = esc_sql(esc_html(stripslashes($_POST['play'])));
         } else $p = 0;
         $display = 'style="width:100%;height:100% !important;border-collapse: collapse; margin-left:8px !important;"';
         $table_count = 1;
@@ -221,11 +221,11 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
             $share_top = '-' .$theme->appHeight + 25 .'px';
         }
         if (isset($_POST['AlbumId']))
-            $AlbumId = esc_html(stripslashes($_POST['AlbumId']));
+            $AlbumId = esc_sql(esc_html(stripslashes($_POST['AlbumId'])));
         else
             $AlbumId = '';
         if (isset($_POST['TrackId']))
-            $TrackId = esc_html(stripslashes($_POST['TrackId']));
+            $TrackId = esc_sql(esc_html(stripslashes($_POST['TrackId'])));
         else
             $TrackId = '';
         ?>
@@ -1846,7 +1846,7 @@ function Spider_Video_Player_front_end($id)
         $playlist_array = explode(',', $playlist->playlist);
         global $many_players;
         if (isset($_POST['playlist_id'])) {
-            $playlistID = esc_html(stripslashes($_POST['playlist_id']));
+            $playlistID = esc_sql(esc_html(stripslashes($_POST['playlist_id'])));
         } else $playlistID = 1;
         $key = $playlistID - 1;
         if (isset($playlist->playlist)) {
@@ -1878,7 +1878,7 @@ function Spider_Video_Player_front_end($id)
         // load the row from the db table
         $k = $libRows * $libCols;
         if (isset($_POST['play'])) {
-            $p = esc_html(stripslashes($_POST['play']));
+            $p = esc_sql(esc_html(stripslashes($_POST['play'])));
         } else $p = 0;
         $display = 'style="width:100%;height:100% !important;border-collapse: collapse;"';
         $table_count = 1;
@@ -1893,11 +1893,11 @@ function Spider_Video_Player_front_end($id)
             $share_top = '-' .$theme->appHeight + 20 .'px';
         }
         if (isset($_POST['AlbumId']))
-            $AlbumId = esc_html(stripslashes($_POST['AlbumId']));
+            $AlbumId = esc_sql(esc_html(stripslashes($_POST['AlbumId'])));
         else
             $AlbumId = '';
         if (isset($_POST['TrackId']))
-            $TrackId = esc_html(stripslashes($_POST['TrackId']));
+            $TrackId = esc_sql(esc_html(stripslashes($_POST['TrackId'])));
         else
             $TrackId = '';
         ?>
@@ -3612,6 +3612,7 @@ function Spider_Video_Player_player()
             show_Spider_Video_Player();
             break;
         case "unpublish_Spider_Video_Player":
+			check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
             change_tag($id);
             show_Spider_Video_Player();
 
@@ -3622,18 +3623,23 @@ function Spider_Video_Player_player()
             break;
         case 'Save':
             if ($id) {
+			    check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 Apply_Spider_Video_Player($id);
             } else {
+			    check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 save_Spider_Video_Player();
             }
             show_Spider_Video_Player();
             break;
         case 'Apply':
-            if ($id == 0)
-
-                $save_or_no = save_Spider_Video_Player();
-            else
+            if ($id == 0) {
+				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
+                $save_or_no = save_Spider_Video_Player();			
+			}
+            else {
+				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 $save_or_no = Apply_Spider_Video_Player($id);
+			}
             if ($save_or_no) {
                 add_Spider_Video_Player();
             } else {
@@ -3646,6 +3652,9 @@ function Spider_Video_Player_player()
             break;
 
         case 'remove_Spider_Video_Player':
+			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
+			  die("Are you sure you want to do this?");
             remove_Spider_Video_Player($id);
             show_Spider_Video_Player();
             break;
@@ -3824,10 +3833,14 @@ function Tags_Spider_Video_Player()
             cancel_tag();
             break;
         case 'apply_tag':
-            if ($id == 0)
+            if ($id == 0) {
+				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 $save_or_no = save_tag();
-            else
+			}
+            else {
+				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 $save_or_no = apply_tag($id);
+			}
             if ($save_or_no) {
                 edit_tag($id);
             } else {
@@ -3838,14 +3851,17 @@ function Tags_Spider_Video_Player()
 
         case 'save_tag':
             if (!$id) {
+				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 save_tag();
             } else {
+				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 apply_tag($id);
             }
             show_tag();
             break;
 
         case 'saveorder';
+			check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
             saveorder();
             break;
 
@@ -3863,24 +3879,39 @@ function Tags_Spider_Video_Player()
             break;
 
         case 'remove_tag':
+			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
+			  die("Are you sure you want to do this?");
             remove_tag($id);
             show_tag();
             break;
 
         case 'publish_tag':
+			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
+			  die("Are you sure you want to do this?");
             change_tag($id);
             show_tag();
             break;
         case 'unpublish_tag':
+			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
+			  die("Are you sure you want to do this?");
             change_tag($id);
             show_tag();
             break;
 
         case 'required_tag':
+			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
+			  die("Are you sure you want to do this?");
             required_tag($id);
             show_tag();
             break;
         case 'unrequired_tag':
+			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
+			  die("Are you sure you want to do this?");
             required_tag($id);
             show_tag();
             break;
@@ -3932,22 +3963,29 @@ function Spider_Video_Player_Videos()
             break;
 
         case 'published';
+			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
+			  die("Are you sure you want to do this?");
             published($id);
             show_video();
             break;
 
         case 'Save':
             if (!$id) {
+			    check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 save_video();
             } else {
+			    check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 apply_video($id);
             }
             show_video();
             break;
         case 'Apply':
             if (!$id) {
+			    check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 save_video();
             } else {
+			    check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 apply_video($id);
             }
             edit_video($id);
@@ -3959,14 +3997,23 @@ function Spider_Video_Player_Videos()
             break;
 
         case 'remove_video':
+		    $nonce_sp_vid = $_REQUEST['_wpnonce'];
+			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
+			  die("Are you sure you want to do this?");
             remove_video($id);
             show_video();
             break;
 
         case 'publish_video':
+		    $nonce_sp_vid = $_REQUEST['_wpnonce'];
+			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
+			  die("Are you sure you want to do this?");
             change_video(1);
             break;
         case 'unpublish_video':
+		    $nonce_sp_vid = $_REQUEST['_wpnonce'];
+			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
+			  die("Are you sure you want to do this?");
             change_video(0);
             break;
         default:
@@ -4003,6 +4050,9 @@ function Spider_Video_Player_Playlists()
             show_playlist();
             break;
         case "unpublish_playlist":
+			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
+			  die("Are you sure you want to do this?");
             change_tag($id);
             show_playlist();
 
@@ -4017,17 +4067,23 @@ function Spider_Video_Player_Playlists()
             break;
         case 'Save':
             if ($id) {
+				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 Apply_playlist($id);
             } else {
+				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 save_playlist();
             }
             show_playlist();
             break;
         case 'Apply':
-            if ($id == 0)
-                $save_or_no = save_playlist();
-            else
-                $save_or_no = Apply_playlist($id);
+            if ($id == 0) {
+                check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
+				$save_or_no = save_playlist();
+			}
+            else {
+                check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
+				$save_or_no = Apply_playlist($id);
+			}
             if ($save_or_no) {
                 edit_playlist($id);
             } else {
@@ -4040,6 +4096,9 @@ function Spider_Video_Player_Playlists()
             break;
 
         case 'remove_playlist':
+			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
+			  die("Are you sure you want to do this?");
             remove_playlist($id);
             show_playlist();
             break;
@@ -4082,6 +4141,9 @@ function Spider_Video_Player_Themes()
             show_theme();
             break;
         case 'default':
+		    $nonce_sp_vid = $_REQUEST['_wpnonce'];
+			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
+			  die("Are you sure you want to do this?");
             default_theme($id);
             show_theme();
             break;
@@ -4092,8 +4154,10 @@ function Spider_Video_Player_Themes()
 
         case 'Save':
             if ($id) {
+				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 apply_theme($id);
             } else {
+				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 save_theme();
             }
 
@@ -4102,8 +4166,10 @@ function Spider_Video_Player_Themes()
 
         case 'Apply':
             if ($id) {
+				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 apply_theme($id);
             } else {
+				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 save_theme();
             }
 
@@ -4115,6 +4181,9 @@ function Spider_Video_Player_Themes()
             break;
 
         case 'remove_theme':
+			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
+			  die("Are you sure you want to do this?");
             remove_theme($id);
             show_theme();
             break;
@@ -4250,8 +4319,6 @@ function Uninstall_Spider_Video_Player()
 
 function Spider_Video_Player_activate()
 {
-
-
     global $wpdb;
     $sql_playlist = "CREATE TABLE IF NOT EXISTS `" .$wpdb->prefix ."Spider_Video_Player_playlist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -4272,7 +4339,7 @@ function Spider_Video_Player_activate()
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
 
     $sql_theme = "CREATE TABLE IF NOT EXISTS `" .$wpdb->prefix ."Spider_Video_Player_theme` (
-`id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL auto_increment,
   `default` int(2) NOT NULL,
   `title` varchar(256) NOT NULL,
   `appWidth` int(11) NOT NULL,
@@ -4327,11 +4394,7 @@ function Spider_Video_Player_activate()
   `openPlaylistAtStart` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ";
-
-    $query = "SHOW COUNT(columns) FROM `" .$wpdb->prefix ."Spider_Video_Player_theme` LIKE 'openPlaylistAtStart'";
-    $colExists = $wpdb->get_var($query);
-    $sql_alter_theme = "ALTER TABLE `" .$wpdb->prefix ."Spider_Video_Player_theme` ADD `openPlaylistAtStart` tinyint(1) NOT NULL";
-
+    
     $sql_video = "CREATE TABLE IF NOT EXISTS `" .$wpdb->prefix ."Spider_Video_Player_video` (
   `id` int(11) NOT NULL auto_increment,
   `url` varchar(200) NOT NULL,
@@ -4386,11 +4449,25 @@ function Spider_Video_Player_activate()
     $wpdb->query($sql_Spider_Video_Player);
     $wpdb->query($sql_tag);
     $wpdb->query($sql_theme);
-    if (!$colExists)
+  
+    $exist_that_col = false;
+    $query = "SHOW COLUMNS FROM `" .$wpdb->prefix ."Spider_Video_Player_theme`";
+    $colExists = $wpdb->get_results($query);
+    foreach($colExists as $col) {
+      if($col->Field == 'openPlaylistAtStart') {
+  	    $exist_that_col = true;
+	    break;
+      }
+    }
+    $sql_alter_theme = "ALTER TABLE `" .$wpdb->prefix ."Spider_Video_Player_theme` ADD `openPlaylistAtStart` tinyint(1) NOT NULL";
+    if (!$exist_that_col)
         $wpdb->query($sql_alter_theme);
-    $wpdb->query($sql_video);
+    
+	$wpdb->query($sql_video);
+	$spider_video_player_theme = $wpdb->get_var("SELECT * FROM " . $wpdb->prefix . "Spider_Video_Player_theme");
 
-////// insert themt rows
+  ////// insert themt rows
+  if ($spider_video_player_theme == NULL) {
     $wpdb->query($sql_theme1);
     $wpdb->query($sql_theme2);
     $wpdb->query($sql_theme3);
@@ -4398,19 +4475,27 @@ function Spider_Video_Player_activate()
     $wpdb->query($sql_theme5);
     $wpdb->query($sql_theme6);
     $wpdb->query($sql_theme7);
-
-////// insert video rows
+  }
+  
+  $spider_video_player_video = $wpdb->get_var("SELECT * FROM " . $wpdb->prefix . "Spider_Video_Player_video");
+  ////// insert video rows
+  if ($spider_video_player_video == NULL) {
     $wpdb->query($sql_video_insert_row1);
-
-////// insert tag rows
-    $wpdb->query($sql_tag_insert_row1);
+  }
+  
+  $spider_video_player_tag = $wpdb->get_var("SELECT * FROM " . $wpdb->prefix . "Spider_Video_Player_tag");
+  ////// insert tag rows  
+  if ($spider_video_player_tag == NULL) {
+	$wpdb->query($sql_tag_insert_row1);
     $wpdb->query($sql_tag_insert_row2);
+  }
 
-////// insert playlist rows
+  ////// insert playlist rows 
+  $spider_video_player_playlist = $wpdb->get_var("SELECT * FROM " . $wpdb->prefix . "Spider_Video_Player_playlist");
+  
+  if ($spider_video_player_playlist == NULL) {
     $wpdb->query($sql_playlist_insert_row1);
-
-
+  }
 }
-
 
 register_activation_hook(__FILE__, 'Spider_Video_Player_activate');

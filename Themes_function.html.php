@@ -1466,7 +1466,7 @@ This section allows you to create themes to customize the design of the player. 
  
  
  </td></tr></table>
-                
+    <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>            
     <input type="hidden" name="option" value="com_player" />
     <input type="hidden" name="task" value="" />
 </form>
@@ -1510,6 +1510,7 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
 </script>
 
     <form method="post" onkeypress="doNothing()"  action="admin.php?page=Spider_Video_Player_Themes" id="admin_form" name="admin_form">
+	<?php $sp_vid_nonce = wp_create_nonce('nonce_sp_vid'); ?>
 	<table cellspacing="10" width="100%">
         <tr>   
 <td width="100%" style="font-size:14px; font-weight:bold"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-5/spider-video-player-wordpress-guide-step-5-1.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
@@ -1532,7 +1533,7 @@ This section allows you to create themes to customize the design of the player. 
     </table>
     <?php
 	$serch_value='';
-	if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=esc_html(stripslashes($_POST['search_events_by_title'])); }else{$serch_value="";}}
+	if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=esc_js(esc_html(stripslashes($_POST['search_events_by_title']))); }else{$serch_value="";}}
 	$serch_fields='<div class="alignleft actions" style="width:180px;">
     	<label for="search_events_by_title" style="font-size:14px">Title: </label>
         <input type="text" name="search_events_by_title" value="'.$serch_value.'" id="search_events_by_title" onchange="clear_serch_texts()">
@@ -1560,15 +1561,16 @@ This section allows you to create themes to customize the design of the player. 
  <tr>
          <td><?php echo $rows[$i]->id; ?></td>
          <td><a  href="admin.php?page=Spider_Video_Player_Themes&task=edit_theme&id=<?php echo $rows[$i]->id?>"><?php echo $rows[$i]->title; ?></a></td>
-         <td><a <?php if(!$rows[$i]->default) echo 'style="color:#C00"';  ?>  href="admin.php?page=Spider_Video_Player_Themes&task=default&id=<?php echo $rows[$i]->id?>"><?php if($rows[$i]->default) echo "Default"; else echo "Not Default";  ?></a></td>
+         <td><a <?php if(!$rows[$i]->default) echo 'style="color:#C00"';  ?>  href="admin.php?page=Spider_Video_Player_Themes&task=default&id=<?php echo $rows[$i]->id?>&_wpnonce=<?php echo $sp_vid_nonce; ?>"><?php if($rows[$i]->default) echo "Default"; else echo "Not Default";  ?></a></td>
          <td><a  href="admin.php?page=Spider_Video_Player_Themes&task=edit_theme&id=<?php echo $rows[$i]->id?>">Edit</a></td>
-         <td><a  href="admin.php?page=Spider_Video_Player_Themes&task=remove_theme&id=<?php echo $rows[$i]->id?>">Delete</a></td>
+         <td><a  href="admin.php?page=Spider_Video_Player_Themes&task=remove_theme&id=<?php echo $rows[$i]->id?>&_wpnonce=<?php echo $sp_vid_nonce; ?>">Delete</a></td>
   </tr> 
  <?php } ?>
  </tbody>
  </table>
- <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php if(isset($_POST['asc_or_desc'])) echo esc_html(stripslashes($_POST['asc_or_desc']));?>"  />
- <input type="hidden" name="order_by" id="order_by" value="<?php if(isset($_POST['order_by'])) echo esc_html(stripslashes($_POST['order_by']));?>"  />
+ <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>
+ <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php if(isset($_POST['asc_or_desc'])) echo esc_js(esc_html(stripslashes($_POST['asc_or_desc'])));?>"  />
+ <input type="hidden" name="order_by" id="order_by" value="<?php if(isset($_POST['order_by'])) echo esc_js(esc_html(stripslashes($_POST['order_by'])));?>"  />
 
  <?php
 ?>
@@ -3048,7 +3050,7 @@ This section allows you to create themes to customize the design of the player. 
  
  
  
-                
+    <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>           
     <input type="hidden" name="option" value="com_player" />
     <input type="hidden" name="task" value="" />
 </form>

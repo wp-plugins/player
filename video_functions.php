@@ -38,24 +38,24 @@ function show_video(){
 			
 			if($_POST['asc_or_desc'])
 			{
-				$sort["sortid_by"]=esc_html(stripslashes($_POST['order_by']));
+				$sort["sortid_by"]=esc_sql(esc_html(stripslashes($_POST['order_by'])));
 				if($_POST['asc_or_desc']==1)
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
 					$sort["1_or_2"]="2";
-					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." ASC";
+					$order="ORDER BY ".$sort["sortid_by"]." ASC";
 				}
 				else
 				{
 					$sort["custom_style"]="manage-column column-title sorted desc";
 					$sort["1_or_2"]="1";
-					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." DESC";
+					$order="ORDER BY ".$sort["sortid_by"]." DESC";
 				}
 			}
 			
 	if($_POST['page_number'])
 		{
-			$limit=(esc_html(stripslashes($_POST['page_number']))-1)*20;
+			$limit=(esc_sql(esc_html(stripslashes($_POST['page_number'])))-1)*20;
 		}
 		else
 		{
@@ -67,7 +67,7 @@ function show_video(){
 			$limit=0;
 		}
 	if(isset($_POST['search_events_by_title'])){
-		$search_tag=esc_html(stripslashes($_POST['search_events_by_title']));
+		$search_tag=esc_sql(esc_html(stripslashes($_POST['search_events_by_title'])));
 		}
 		
 		else
@@ -75,7 +75,7 @@ function show_video(){
 		$search_tag="";
 		}
 	if ( $search_tag ) {
-		$where= ' WHERE name LIKE "%'.$wpdb->escape($search_tag).'%"';
+		$where= ' WHERE name LIKE "%'.$search_tag.'%"';
 	}
 	if(isset($_POST['id_for_playlist']))
 	{
@@ -147,15 +147,15 @@ function save_video(){
 	
 		$save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_video', array(
 		'id'	     => NULL,
-        'url'        => esc_html(stripslashes($_POST["http_post_video"])),
-		'urlHtml5'   => esc_html(stripslashes($_POST["http_post_video_html5"])),
-        'urlHD'      => esc_html(stripslashes($_POST["http_post_video_UrlHD"])),
-		'urlHDHtml5' => esc_html(stripslashes($_POST["http_post_video_UrlHD_html5"])),
-        'published'  =>esc_html(stripslashes($_POST["published"])),
+        'url'        => esc_sql(esc_html(stripslashes($_POST["http_post_video"]))),
+		'urlHtml5'   => esc_sql(esc_html(stripslashes($_POST["http_post_video_html5"]))),
+        'urlHD'      => esc_sql(esc_html(stripslashes($_POST["http_post_video_UrlHD"]))),
+		'urlHDHtml5' => esc_sql(esc_html(stripslashes($_POST["http_post_video_UrlHD_html5"]))),
+        'published'  => esc_sql(esc_html(stripslashes($_POST["published"]))),
         'type'       => "http",
-		'params'     =>esc_html($s),
-		'title'      =>esc_html(stripslashes($_POST["title"])),
-		'thumb'      =>esc_html(stripslashes($_POST["post_image"]))
+		'params'     =>esc_sql(esc_html(stripslashes($s))),
+		'title'      =>esc_sql(esc_html(stripslashes($_POST["title"]))),
+		'thumb'      =>esc_sql(esc_html(stripslashes($_POST["post_image"])))
                 ),
 				array(
 				'%d',
@@ -190,14 +190,14 @@ function save_video(){
 		 global $wpdb;
 	 	 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_video', array(
 		'id'	   => NULL,
-		'urlHD'    => esc_html(stripslashes($_POST["fmsUrl"])),
-        'url'      => esc_html(stripslashes($_POST["url_rtmp"])),
-        'urlHD'    => esc_html(stripslashes($_POST["urlHD_rtmp"])),
-        'published' =>esc_html(stripslashes($_POST["published"])),
+		'urlHD'    => esc_sql(esc_html(stripslashes($_POST["fmsUrl"]))),
+        'url'      => esc_sql(esc_html(stripslashes($_POST["url_rtmp"]))),
+        'urlHD'    => esc_sql(esc_html(stripslashes($_POST["urlHD_rtmp"]))),
+        'published' =>esc_sql(esc_html(stripslashes($_POST["published"]))),
         'type'      => "http",
-		'params'   =>esc_html($s),
-		'title'    =>esc_html(stripslashes($_POST["title"])),
-		'thumb'    =>esc_html(stripslashes($_POST["post_image"])),
+		'params'   =>esc_sql(esc_html(stripslashes($s))),
+		'title'    =>esc_sql(esc_html(stripslashes($_POST["title"]))),
+		'thumb'    =>esc_sql(esc_html(stripslashes($_POST["post_image"]))),
 		'urlHtml5'   => '',
 		'urlHDHtml5' => ''
                 ),
@@ -233,12 +233,12 @@ function save_video(){
 		 global $wpdb;
 		 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_video', array(
 		'id'	     => NULL,
-        'url'        => esc_html(stripslashes($_POST["url_youtube"])),
-        'published'  =>esc_html(stripslashes($_POST["published"])),
+        'url'        => esc_sql(esc_html(stripslashes($_POST["url_youtube"]))),
+        'published'  =>esc_sql(esc_html(stripslashes($_POST["published"]))),
         'type'       => "youtube",
-		'params'     =>esc_html($s),
-		'title'      =>esc_html(stripslashes($_POST["title"])),
-		'thumb'      =>esc_html(stripslashes($_POST["post_image"])),
+		'params'     =>esc_sql(esc_html(stripslashes($s))),
+		'title'      =>esc_sql(esc_html(stripslashes($_POST["title"]))),
+		'thumb'      =>esc_sql(esc_html(stripslashes($_POST["post_image"]))),
 		'urlHtml5'   => '',
 		'urlHDHtml5' => ''
                 ),
@@ -407,15 +407,15 @@ function apply_type_http($s,$id)
 	 $save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_video', array(
 	 
 	    'fmsUrl'      =>"",
-        'url'         => esc_html(stripslashes($_POST["http_post_video"])),
-		'urlHtml5'    => esc_html(stripslashes($_POST["http_post_video_html5"])),
-        'urlHD'       => esc_html(stripslashes($_POST["http_post_video_UrlHD"])),
-		'urlHDHtml5'  => esc_html(stripslashes($_POST["http_post_video_UrlHD_html5"])),
-        'published'   =>esc_html(stripslashes($_POST["published"])),
+        'url'         => esc_sql(esc_html(stripslashes($_POST["http_post_video"]))),
+		'urlHtml5'    => esc_sql(esc_html(stripslashes($_POST["http_post_video_html5"]))),
+        'urlHD'       => esc_sql(esc_html(stripslashes($_POST["http_post_video_UrlHD"]))),
+		'urlHDHtml5'  => esc_sql(esc_html(stripslashes($_POST["http_post_video_UrlHD_html5"]))),
+        'published'   => esc_sql(esc_html(stripslashes($_POST["published"]))),
         'type'        => "http",
-		'params'      =>esc_html($s),
-		'title'       =>esc_html(stripslashes($_POST["title"])),
-		'thumb'       =>esc_html(stripslashes($_POST["post_image"]))
+		'params'      => esc_sql(esc_html(stripslashes($s))),
+		'title'       => esc_sql(esc_html(stripslashes($_POST["title"]))),
+		'thumb'       => esc_sql(esc_html(stripslashes($_POST["post_image"])))
                 ),
 				array('id'=>$id),
 				array(
@@ -443,14 +443,14 @@ function apply_type_http($s,$id)
  {
 		 global $wpdb;
 	 	 $save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_video', array(
-		'fmsUrl'      => esc_html(stripslashes($_POST["fmsUrl"])),
-        'url'         => esc_html(stripslashes($_POST["url_rtmp"])),
-        'urlHD'       => esc_html(stripslashes($_POST["urlHD_rtmp"])),
-        'published'   =>esc_html(stripslashes($_POST["published"])),
+		'fmsUrl'      => esc_sql(esc_html(stripslashes($_POST["fmsUrl"]))),
+        'url'         => esc_sql(esc_html(stripslashes($_POST["url_rtmp"]))),
+        'urlHD'       => esc_sql(esc_html(stripslashes($_POST["urlHD_rtmp"]))),
+        'published'   => esc_sql(esc_html(stripslashes($_POST["published"]))),
         'type'        => "rtmp",
-		'params'      =>esc_html($s),
-		'title'       =>esc_html(stripslashes($_POST["title"])),
-		'thumb'       =>esc_html(stripslashes($_POST["post_image"])),
+		'params'      => esc_sql(esc_html(stripslashes($s))),
+		'title'       => esc_sql(esc_html(stripslashes($_POST["title"]))),
+		'thumb'       => esc_sql(esc_html(stripslashes($_POST["post_image"]))),
 		'urlHtml5'    => '',
 		'urlHDHtml5'  => ''
                 ),
@@ -480,14 +480,14 @@ function apply_type_http($s,$id)
  {
 		 global $wpdb;
 		 $save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_video', array(
-        'url'        => esc_html(stripslashes($_POST["url_youtube"])),
-		'urlHD'      => esc_html(stripslashes($_POST["urlHD"])),
-		'fmsUrl'     => esc_html(stripslashes($_POST["fmsUrl"])),
-        'published'  =>esc_html(stripslashes($_POST["published"])),
+        'url'        => esc_sql(esc_html(stripslashes($_POST["url_youtube"]))),
+		'urlHD'      => esc_sql(esc_html(stripslashes($_POST["urlHD"]))),
+		'fmsUrl'     => esc_sql(esc_html(stripslashes($_POST["fmsUrl"]))),
+        'published'  => esc_sql(esc_html(stripslashes($_POST["published"]))),
         'type'       => "youtube",
-		'params'     =>esc_html($s),
-		'title'      =>esc_html(stripslashes($_POST["title"])),
-		'thumb'      =>esc_html(stripslashes($_POST["post_image"])),
+		'params'     => esc_sql(esc_html(stripslashes($s))),
+		'title'      => esc_sql(esc_html(stripslashes($_POST["title"]))),
+		'thumb'      => esc_sql(esc_html(stripslashes($_POST["post_image"]))),
 		'urlHtml5'   => '',
 		'urlHDHtml5' => ''
                 ),

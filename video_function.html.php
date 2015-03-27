@@ -418,7 +418,7 @@ foreach($tags as $tag)
 					</td>
 				</tr>                
  </table>    
-                
+    <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>          
     <input type="hidden" name="option" value="com_player" />
     <input type="hidden" name="task" value="" />
 </form>
@@ -456,6 +456,7 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
 }
 	</script>
     <form method="post" onkeypress="doNothing()" action="admin.php?page=Spider_Video_Player_Videos" id="admin_form" name="admin_form">
+	<?php $sp_vid_nonce = wp_create_nonce('nonce_sp_vid'); ?>
 	<table cellspacing="10" width="100%">
       <tr>   
 <td width="100%" style="font-size:14px; font-weight:bold"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-3.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
@@ -493,7 +494,7 @@ This section allows you to upload videos or add videos from the Internet. <a hre
 </div>
     <?php
 	$serch_value='';
-	if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=esc_html(stripslashes($_POST['search_events_by_title'])); }else{$serch_value="";}}
+	if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=esc_js(esc_html(stripslashes($_POST['search_events_by_title']))); }else{$serch_value="";}}
 	$serch_fields='<div class="alignleft actions" style="width:180px;">
     	<label for="search_events_by_title" style="font-size:14px">Title: </label>
         <input type="text" name="search_events_by_title" value="'.$serch_value.'" id="search_events_by_title" onchange="clear_serch_texts()">
@@ -534,17 +535,18 @@ This section allows you to upload videos or add videos from the Internet. <a hre
          <td><?php echo $rows[$i]->urlHD; ?></td>
          <td><?php echo $rows[$i]->urlHDHtml5; ?></td>
          <td><img width="50" src="<?php echo $rows[$i]->thumb; ?>" title="<?php echo $rows[$i]->thumb; ?>" style="border:none;"></td>
-         <td><a <?php if(!$rows[$i]->published) echo 'style="color:#C00"'; ?> href="admin.php?page=Spider_Video_Player_Videos&task=published&id=<?php echo $rows[$i]->id; ?>"><?php if($rows[$i]->published) echo "Yes"; else echo "No"; ?></a></td>
+         <td><a <?php if(!$rows[$i]->published) echo 'style="color:#C00"'; ?> href="admin.php?page=Spider_Video_Player_Videos&task=published&id=<?php echo $rows[$i]->id; ?>&_wpnonce=<?php echo $sp_vid_nonce; ?>"><?php if($rows[$i]->published) echo "Yes"; else echo "No"; ?></a></td>
          <td><a href="admin.php?page=Spider_Video_Player_Videos&task=edit_video&id=<?php echo $rows[$i]->id; ?>">Edit</a></td>
-         <td><a href="admin.php?page=Spider_Video_Player_Videos&task=remove_video&id=<?php echo $rows[$i]->id; ?>">Delete</a></td>
+         <td><a href="admin.php?page=Spider_Video_Player_Videos&task=remove_video&id=<?php echo $rows[$i]->id; ?>&_wpnonce=<?php echo $sp_vid_nonce; ?>">Delete</a></td>
                
   </tr> 
  <?php } ?>
  </tbody>
  </table>
- <input type="hidden" name="id_for_playlist" id="id_for_playlist" value="<?php if(isset($_POST['id_for_playlist'])) echo esc_html(stripslashes($_POST['id_for_playlist']));?>" />
- <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php if(isset($_POST['asc_or_desc'])) echo esc_html(stripslashes($_POST['asc_or_desc']));?>"  />
- <input type="hidden" name="order_by" id="order_by" value="<?php if(isset($_POST['order_by'])) echo esc_html(stripslashes($_POST['order_by']));?>"  />
+ <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>
+ <input type="hidden" name="id_for_playlist" id="id_for_playlist" value="<?php if(isset($_POST['id_for_playlist'])) echo esc_js(esc_html(stripslashes($_POST['id_for_playlist'])));?>" />
+ <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php if(isset($_POST['asc_or_desc'])) echo esc_js(esc_html(stripslashes($_POST['asc_or_desc'])));?>"  />
+ <input type="hidden" name="order_by" id="order_by" value="<?php if(isset($_POST['order_by'])) echo esc_js(esc_html(stripslashes($_POST['order_by'])));?>"  />
 
  <?php
 ?>
@@ -968,7 +970,8 @@ foreach($tags as $tag)
 						?>
 					</td>
 				</tr>                
- </table>        
+ </table> 
+<?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?> 
 <input type="hidden" name="id" value="<?php echo $row->id?>" />        
 <input type="hidden" name="cid[]" value="<?php echo $row->id; ?>" />         
 </form>

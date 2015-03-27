@@ -102,7 +102,7 @@ Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="http://web-dor
         <input type="button" value="Cancel" onclick="window.location.href='admin.php?page=Tags_Spider_Video_Player'">
         </p>
         
-        
+    <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>    
     <input type="hidden" name="option" value="com_player" />
     <input type="hidden" name="task" value="" />
 </form>
@@ -162,6 +162,7 @@ border-bottom:1px solid #cccccc;
 </style>
 
     <form method="post"  onkeypress="doNothing()" action="admin.php?page=Tags_Spider_Video_Player" id="admin_form" name="admin_form">
+	<?php $sp_vid_nonce = wp_create_nonce('nonce_sp_vid'); ?>
 	<table cellspacing="10" width="100%">
     <thead>
     
@@ -191,7 +192,7 @@ Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="http://web-dor
     </table>
     <?php
 	$serch_value='';
-	if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=esc_html(stripslashes($_POST['search_events_by_title'])); }else{$serch_value="";}}
+	if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=esc_js(esc_html(stripslashes($_POST['search_events_by_title']))); }else{$serch_value="";}}
 	$serch_fields='<div class="alignleft actions" style="width:180px;">
     	<label for="search_events_by_title" style="font-size:14px">Title: </label>
         <input type="text" name="search_events_by_title" value="'.$serch_value.'" id="search_events_by_title" onchange="clear_serch_texts()">
@@ -237,17 +238,18 @@ Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="http://web-dor
          <td><?php echo $rows[$i]->id; ?></td>
          <td><a  href="admin.php?page=Tags_Spider_Video_Player&task=edit_tag&id=<?php echo $rows[$i]->id?>"><?php echo $rows[$i]->name; ?></a></td>
          <td style="text-align:right;" ><?php echo  $move_up.$move_down; ?><input type="text" name="order_<?php echo $rows[$i]->id; ?>" style="width:40px" value="<?php echo $rows[$i]->ordering; ?>" /></td>
-         <td><a  href="admin.php?page=Tags_Spider_Video_Player&task=required_tag&id=<?php echo $rows[$i]->id?>"<?php if(!$rows[$i]->required){ ?> style="color:#C00;" <?php }?> ><?php if($rows[$i]->required)echo "Required "; else echo "NOT Required"; ?></a></td>
-         <td><a  href="admin.php?page=Tags_Spider_Video_Player&task=unpublish_tag&id=<?php echo $rows[$i]->id?>"<?php if(!$rows[$i]->published){ ?> style="color:#C00;" <?php }?> ><?php if($rows[$i]->published)echo "Yes"; else echo "No"; ?></a></td>
+         <td><a  href="admin.php?page=Tags_Spider_Video_Player&task=required_tag&id=<?php echo $rows[$i]->id?>&_wpnonce=<?php echo $sp_vid_nonce; ?>"<?php if(!$rows[$i]->required){ ?> style="color:#C00;" <?php }?> ><?php if($rows[$i]->required)echo "Required "; else echo "NOT Required"; ?></a></td>
+         <td><a  href="admin.php?page=Tags_Spider_Video_Player&task=unpublish_tag&id=<?php echo $rows[$i]->id?>&_wpnonce=<?php echo $sp_vid_nonce; ?>"<?php if(!$rows[$i]->published){ ?> style="color:#C00;" <?php }?> ><?php if($rows[$i]->published)echo "Yes"; else echo "No"; ?></a></td>
          <td><a  href="admin.php?page=Tags_Spider_Video_Player&task=edit_tag&id=<?php echo $rows[$i]->id?>">Edit</a></td>
-         <td><a  href="admin.php?page=Tags_Spider_Video_Player&task=remove_tag&id=<?php echo $rows[$i]->id?>">Delete</a></td>
+         <td><a  href="admin.php?page=Tags_Spider_Video_Player&task=remove_tag&id=<?php echo $rows[$i]->id?>&_wpnonce=<?php echo $sp_vid_nonce; ?>">Delete</a></td>
   </tr> 
  <?php } ?>
  </tbody>
  </table>
+ <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>
  <input type="hidden" name="oreder_move" id="oreder_move" value="" />
- <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php if(isset($_POST['asc_or_desc'])) echo esc_html(stripslashes($_POST['asc_or_desc']));?>"  />
- <input type="hidden" name="order_by" id="order_by" value="<?php if(isset($_POST['order_by'])) echo esc_html(stripslashes($_POST['order_by']));?>"  />
+ <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php if(isset($_POST['asc_or_desc'])) echo esc_js(esc_html(stripslashes($_POST['asc_or_desc'])));?>"  />
+ <input type="hidden" name="order_by" id="order_by" value="<?php if(isset($_POST['order_by'])) echo esc_js(esc_html(stripslashes($_POST['order_by'])));?>"  />
  <input type="hidden" name="saveorder" id="saveorder" value="" />
 
  <?php
@@ -340,7 +342,7 @@ Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="http://web-dor
         <input type="button" value="Cancel" onclick="window.location.href='admin.php?page=Tags_Spider_Video_Player'">
         </p>
         
-        
+    <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>   
     <input type="hidden" name="option" value="com_player" />
     <input type="hidden" name="task" value="" />
 </form>

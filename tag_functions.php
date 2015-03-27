@@ -54,24 +54,24 @@ function show_tag(){
 			
 			if($_POST['asc_or_desc'])
 			{
-				$sort["sortid_by"]=esc_html(stripslashes($_POST['order_by']));
+				$sort["sortid_by"]=esc_sql(esc_html(stripslashes($_POST['order_by'])));
 				if($_POST['asc_or_desc']==1)
 				{
 					$sort["custom_style"]="manage-column column-title sorted asc";
 					$sort["1_or_2"]="2";
-					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." ASC";
+					$order="ORDER BY ".$sort["sortid_by"]." ASC";
 				}
 				else
 				{
 					$sort["custom_style"]="manage-column column-title sorted desc";
 					$sort["1_or_2"]="1";
-					$order="ORDER BY ".$wpdb->escape($sort["sortid_by"])." DESC";
+					$order="ORDER BY ".$sort["sortid_by"]." DESC";
 				}
 			}
 			
 	if($_POST['page_number'])
 		{
-			$limit=(esc_html(stripslashes($_POST['page_number']))-1)*20;
+			$limit=(esc_sql(esc_html(stripslashes($_POST['page_number'])))-1)*20;
 		}
 		else
 		{
@@ -83,7 +83,7 @@ function show_tag(){
 			$limit=0;
 		}
 	if(isset($_POST['search_events_by_title'])){
-		$search_tag=esc_html(stripslashes($_POST['search_events_by_title']));
+		$search_tag=esc_sql(esc_html(stripslashes($_POST['search_events_by_title'])));
 		}
 		
 		else
@@ -150,7 +150,7 @@ function show_tag(){
 	
 	if(isset($_POST["oreder_move"]))
 	{
-		$ids=explode(",",esc_html(stripslashes($_POST["oreder_move"])));
+		$ids=explode(",",esc_sql(esc_html(stripslashes($_POST["oreder_move"]))));
 		$this_order=$wpdb->get_var($wpdb->prepare("SELECT ordering FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE id=%d",$ids[0]));
 		$next_order=$wpdb->get_var($wpdb->prepare("SELECT ordering FROM ".$wpdb->prefix."Spider_Video_Player_tag WHERE id=%d",$ids[1]));	
 		$wpdb->update($wpdb->prefix.'Spider_Video_Player_tag', array(
@@ -203,9 +203,9 @@ function save_tag(){
 	$order=$wpdb->get_var("SELECT MAX(ordering) FROM ".$wpdb->prefix."Spider_Video_Player_tag")+1;
 	 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_tag', array(
 		'id'	=> NULL,
-        'name'     => esc_html(stripslashes($_POST["name"])),
-        'required'    => esc_html(stripslashes($_POST["required"])),
-        'published'  =>esc_html(stripslashes($_POST["published"])),
+        'name'     => esc_sql(esc_html(stripslashes($_POST["name"]))),
+        'required'    => esc_sql(esc_html(stripslashes($_POST["required"]))),
+        'published'  =>esc_sql(esc_html(stripslashes($_POST["published"]))),
         'ordering'   =>$order
                 ),
 				array(
@@ -216,7 +216,7 @@ function save_tag(){
 				'%d'				
 				)
                 );
-					if(!$save_or_no)
+					if($save_or_no)
 	{
 		?>
 	<div class="updated"><p><strong><?php _e('Error. Please install plugin again'); ?></strong></p></div>
@@ -358,7 +358,7 @@ function change_tag( $id ){
               array('id'=>$id),
 			  array(  '%d' )
 			  );
-	if($save_or_no)
+	if(!$savedd)
 	{
 		?>
 	<div class="error"><p><strong><?php _e('Error. Please install plugin again'); ?></strong></p></div>
@@ -394,7 +394,7 @@ function required_tag($id){
               array('id'=>$id),
 			  array(  '%d' )
 			  );
-	if($save_or_no)
+	if(!$savedd)
 	{
 		?>
 	<div class="error"><p><strong><?php _e('Error. Please install plugin again'); ?></strong></p></div>
@@ -420,9 +420,9 @@ function apply_tag($id)
 {
 	global $wpdb;
 			$save_or_no=$wpdb->update($wpdb->prefix.'Spider_Video_Player_tag', array(
-            'name'     => esc_html(stripslashes($_POST["name"])),
-			'required'    => esc_html(stripslashes($_POST["required"])),
-			'published'  =>esc_html(stripslashes($_POST["published"])),
+            'name'     => esc_sql(esc_html(stripslashes($_POST["name"]))),
+			'required'    => esc_sql(esc_html(stripslashes($_POST["required"]))),
+			'published'  =>esc_sql(esc_html(stripslashes($_POST["published"]))),
               ), 
               array('id'=>$id),
 			  array(  '%s',
@@ -431,7 +431,7 @@ function apply_tag($id)
 			)
 			  
   );		
-	if($save_or_no)
+	if(!$save_or_no)
 	{
 		?>
 	<div class="error"><p><strong><?php _e('Error. Please install plugin again'); ?></strong></p></div>
