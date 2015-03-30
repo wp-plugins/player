@@ -11,7 +11,8 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Spider Video Player is a WordPress video plugin that allows you to easily add videos to your website.
 
 == Description ==
-
+Add HTML 5 and Flash players easily to your WordPress website by organizing videos in playlists and having playback options. Download for FREE!
+    
 Spider Video [WordPress  Player](http://web-dorado.com/products/wordpress-player.html)   
 [Demo](http://wpdemo.web-dorado.com/spider-video-player/)  
 [Demo Admin](http://wpdemo.web-dorado.com/wp-admin/admin.php?page=Spider_Video_Player)  
