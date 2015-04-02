@@ -123,6 +123,9 @@ Vietnamese (vi)
 
 == Changelog ==
 
+= 1.5.7 =
+New: wp_nonce
+
 = 1.5.6 =
 bugs fixed in single video hd, autohide, playlist thumbs
 
