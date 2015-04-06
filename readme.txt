@@ -66,7 +66,8 @@ Upgrade to [WordPress Player Pro](http://web-dorado.com/products/wordpress-playe
  
 Spider video [WordPress  Player](http://web-dorado.com/products/wordpress-player.html) has wonderful flash effects. You can add several video players in one page with different themes and playlists. With Spider video player you can have unlimited playlists with unlimited number of videos.
  
-###IMPORTANT: If you think you found a bug in Spider Video Player or have any problem/question concerning the plugin, please check out [Support Forum](http://web-dorado.com/forum/spider-video-player-wordpress.html) in our website. If you do not find a solution here, do not hesitate to contact us at [info@web-dorado.com](mailto:info@web-dorado.com).
+###IMPORTANT:  
+ If you think you found a bug in Spider Video Player or have any problem/question concerning the plugin, please check out [Support Forum](http://web-dorado.com/forum/spider-video-player-wordpress.html) in our website. If you do not find a solution here, do not hesitate to contact us at [info@web-dorado.com](mailto:info@web-dorado.com).
  
 ### Supported languages
 
