@@ -368,7 +368,7 @@ The option is used for setting the priority of the Video player format. If you c
 The Video Player has support for YouTube videos. Those are being played in Flash format.  
 
 = 6. How to include YouTube videos to the playlists? =
-You should simply include the link of the YouTube video. Please note that the links should have http//: format instead of the https:// since the second option does not work with Flash.  
+You should simply include the link of the YouTube video. 
 
 = 7. Can I customize the Spider Video Player? =
 Yes, you can use one of the standard themes of the player included in the package and change them according to your needs and preferences. Moreover, you can create your own themes.   
