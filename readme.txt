@@ -202,7 +202,7 @@ Once the plugin is activated, you'll notice a menu on the left called "Video Pla
 
   
 == Spider Video Player Step by step guide Step 2 ==    
-= Adding Tags to Spider  [WordPress Video Player](https://web-dorado.com/products/wordpress-player.html)  =    
+Adding Tags to Spider  [WordPress Video Player](https://web-dorado.com/products/wordpress-player.html) 
   
 The Tag is a custom parameter of videos by which you can search videos while creating playlists. Here are some examples of Tags: Year, Date, Artist, Album, Genre, Location, Country, Section etc.  
   
@@ -312,11 +312,11 @@ The Tag is a custom parameter of videos by which you can search videos while cre
 = Adding a player = 
 
 6.1  On the left menu select. Video Player > Spider Video Player.   
-6.2  In the upper left corner click on the “Add player” button.    
+6.2  In the upper left corner click on the "Add player" button.    
 6.3 Priority. Choose if you want to add a Flash or HTML5 player. Note that if the device (e.g. mobile phone) does not support Flash, the player will automatically switch to HTML5 mode (videos of unsupported formats will not be displayed).   
 6.4 Title. Choose a title for the player.   
 6.5 Select Theme. Select a theme from the existing list.   
-6.6 Playlist. Use the “Add” button to add playlist to your player.   
+6.6 Playlist. Use the "Add" button to add playlist to your player.   
   
 
 
