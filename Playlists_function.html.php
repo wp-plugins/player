@@ -192,7 +192,6 @@ jQuery(function() {
 	});
 });
 </script>
-
 <style type="text/css">
 .admintable td
 {
@@ -203,9 +202,6 @@ border-bottom:1px solid #cccccc;
 border-top:1px solid #cccccc;
 }
 </style>
-
-
-
 <form action="admin.php?page=Spider_Video_Player_Playlists" method="post" name="adminForm" id="adminForm">
  <table width="90%">
        <tr>   
@@ -294,7 +290,6 @@ This section allows you to create video playlists. <a href="http://web-dorado.co
 		
 	
 }
-
 function html_show_playlist( $rows, $pageNav, $sort){
 		
 	global $wpdb;
@@ -340,11 +335,12 @@ This section allows you to create video playlists. <a href="http://web-dorado.co
         </td>
     </tr>
     </table>
+    <label for="search_events_by_title" style="font-size:14px">Title: </label>
     <?php
 	$serch_value='';
 	if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=esc_js(esc_html(stripslashes($_POST['search_events_by_title']))); }else{$serch_value="";}}
-	$serch_fields='<div class="alignleft actions" style="width:180px;">
-    	<label for="search_events_by_title" style="font-size:14px">Title: </label>
+	$serch_fields='
+            <div class="alignleft actions" style="width:180px;">
         <input type="text" name="search_events_by_title" value="'.$serch_value.'" id="search_events_by_title" onchange="clear_serch_texts()">
     </div>
 	<div class="alignleft actions">
@@ -360,7 +356,7 @@ This section allows you to create video playlists. <a href="http://web-dorado.co
  <TR>
  <th scope="col" id="id" class="<?php if($sort["sortid_by"]=="id") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:110px" ><a href="javascript:ordering('id',<?php if($sort["sortid_by"]=="id") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>ID</span><span class="sorting-indicator"></span></a></th>
  <th scope="col" id="title" class="<?php if($sort["sortid_by"]=="title") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="" ><a href="javascript:ordering('title',<?php if($sort["sortid_by"]=="title") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Title</span><span class="sorting-indicator"></span></a></th>
- <th scope="col" id="videos" class="<?php if($sort["sortid_by"]=="videos") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:161px" ><a href="javascript:ordering('videos',<?php if($sort["sortid_by"]=="videos") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>The number of Videos</span><span class="sorting-indicator"></span></a></th>
+ <th scope="col" id="videos" class="<?php if($sort["sortid_by"]=="videos") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:161px" ><a href="javascript:ordering('videos',<?php if($sort["sortid_by"]=="videos") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Number of Videos</span><span class="sorting-indicator"></span></a></th>
   <th scope="col" id="published" class="<?php if($sort["sortid_by"]=="published") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:87px" ><a href="javascript:ordering('published',<?php if($sort["sortid_by"]=="published") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Published</span><span class="sorting-indicator"></span></a></th>
  <th style="width:80px">Edit</th>
  <th style="width:80px">Delete</th>
@@ -374,7 +370,7 @@ This section allows you to create video playlists. <a href="http://web-dorado.co
          <td><?php echo count(explode(",",$rows[$i]->videos))-1; ?></td>
          <td><a  href="admin.php?page=Spider_Video_Player_Playlists&task=unpublish_playlist&id=<?php echo $rows[$i]->id?>&_wpnonce=<?php echo $sp_vid_nonce; ?>"<?php if(!$rows[$i]->published){ ?> style="color:#C00;" <?php }?> ><?php if($rows[$i]->published)echo "Yes"; else echo "No"; ?></a></td>
          <td><a  href="admin.php?page=Spider_Video_Player_Playlists&task=edit_playlist&id=<?php echo $rows[$i]->id?>">Edit</a></td>
-         <td><a  href="admin.php?page=Spider_Video_Player_Playlists&task=remove_playlist&id=<?php echo $rows[$i]->id?>&_wpnonce=<?php echo $sp_vid_nonce; ?>">Delete</a></td>
+         <td><a  href="#" href-data="admin.php?page=Spider_Video_Player_Playlists&task=remove_playlist&id=<?php echo $rows[$i]->id?>&_wpnonce=<?php echo $sp_vid_nonce; ?>">Delete</a></td>
   </tr> 
  <?php } ?>
  </tbody>
@@ -382,7 +378,6 @@ This section allows you to create video playlists. <a href="http://web-dorado.co
  <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>
  <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php if(isset($_POST['asc_or_desc'])) echo esc_js(esc_html(stripslashes($_POST['asc_or_desc'])));?>"  />
  <input type="hidden" name="order_by" id="order_by" value="<?php if(isset($_POST['order_by'])) echo esc_js(esc_html(stripslashes($_POST['order_by'])));?>"  />
-
  <?php
 ?>
     
@@ -390,9 +385,7 @@ This section allows you to create video playlists. <a href="http://web-dorado.co
    
  </form>
     <?php
-
 	}
-
 function html_edit_playlist($row,$videos,$lists){
 	
 		$path=plugins_url("images",__FILE__);
@@ -646,7 +639,6 @@ jQuery(function() {
 	});
 });
 </script>
-
 <style type="text/css">
 .admintable td
 {
@@ -657,7 +649,6 @@ border-bottom:1px solid #cccccc;
 border-top:1px solid #cccccc;
 }
 </style>
-
 <form action="admin.php?page=Spider_Video_Player_Playlists<?php echo "&id=".$row->id?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
  <table width="90%">
     <tr>
@@ -738,14 +729,11 @@ This section allows you to create video playlists. <a href="http://web-dorado.co
 					</td>
 				</tr>                
  </table>    
-           
+    <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>        
     <input type="hidden" name="option" value="com_Spider_Video_Player" />
     <input type="hidden" name="task" value="" />
-
-
 		
 	
-
 <?php
 if($videos)
 {
@@ -758,7 +746,6 @@ if($videos)
 		$v_thumbs[]=addslashes($video->thumb);
 		$v_trackIds[]=isset($video->trackId) ? $video->trackId : "";
 	}
-
 	$v_id='["'.implode('","',$v_ids).'"]';
 	$v_title='["'.implode('","',$v_titles).'"]';
 	$v_type='["'.implode('","',$v_types).'"]';
@@ -770,10 +757,8 @@ if($videos)
 jSelectVideo(<?php echo $v_id?>,<?php echo $v_title?>,<?php echo $v_type?>,<?php echo $v_url?>,<?php echo $v_thumb?>,<?php echo $v_trackId?>);
 </script>
 <?php
-
-
 ?>
-    <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>
+	<?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>
     <input type="hidden" name="option" value="com_Spider_Video_Player" />
     <input type="hidden" name="id" value="<?php echo $row->id?>" />        
     <input type="hidden" name="cid[]" value="<?php echo $row->id; ?>" />        
@@ -781,9 +766,6 @@ jSelectVideo(<?php echo $v_id?>,<?php echo $v_title?>,<?php echo $v_type?>,<?php
 </form>
 <?php
 		
-
 }
-
-
  
 ?>

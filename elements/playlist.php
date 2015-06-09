@@ -6,14 +6,10 @@
  * @copyright (C) 2011 Web-Dorado. All rights reserved.
  * @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  **/
-
 defined('_JEXEC') or die('Restricted access');
-
 class JElementPlaylist extends JElement
 {
-
 	var	$_name = 'Playlist';
-
 	function fetchElement($name, $value, &$node, $control_name)
 	{        
 		ob_start();
@@ -29,14 +25,11 @@ class JElementPlaylist extends JElement
 		$document		=& JFactory::getDocument();
 		$db			=& JFactory::getDBO();
 		?>
-
 <script type="text/javascript">
 var next=0;
 function set_height(){
 	document.getElementById('playlists').parentNode.parentNode.parentNode.parentNode.parentNode.style.height="inherit";
 }
-
-
 function jSelectVideo(VIDS, title, thumb, number_of_vids) {
 	
 		set_height();
@@ -69,7 +62,6 @@ function jSelectVideo(VIDS, title, thumb, number_of_vids) {
 			img.setAttribute('height','100');
 			img.src = thumb[i];
 			img.style.marginRight="10px";
-
 			td_info.appendChild(img);
 			td_info.appendChild(b);
 			td_info.appendChild(p_info);
@@ -117,7 +109,6 @@ function jSelectVideo(VIDS, title, thumb, number_of_vids) {
 			tr.appendChild(td_UP);
 			tr.appendChild(td_DOWN);
 			tbody.appendChild(tr);
-
 //refresh
 			next++;
 		}
@@ -158,7 +149,6 @@ function jSelectVideoS(VIDS, title, thumb, number_of_vids) {
 			img.setAttribute('height','100');
 			img.src = thumb[i];
 			img.style.marginRight="10px";
-
 			td_info.appendChild(img);
 			td_info.appendChild(b);
 			td_info.appendChild(p_info);
@@ -206,7 +196,6 @@ function jSelectVideoS(VIDS, title, thumb, number_of_vids) {
 			tr.appendChild(td_UP);
 			tr.appendChild(td_DOWN);
 			tbody.appendChild(tr);
-
 //refresh
 			next++;
 		}
@@ -223,7 +212,6 @@ function remove_row(id){
 	tr.parentNode.removeChild(tr);
 	refresh_();
 }
-
 function refresh_(){
 	playlist=document.getElementById('playlist');
 	GLOBAL_tbody=playlist;
@@ -233,10 +221,8 @@ function refresh_(){
 		tr=GLOBAL_tbody.childNodes[x];
 		tox=tox+tr.getAttribute('playlist_id')+',';
 	}
-
 	document.getElementById('playlists').value=tox;
 }
-
 function up_row(id){
 	form=document.getElementById(id).parentNode;
 	k=0;
@@ -256,7 +242,6 @@ function up_row(id){
 		refresh_();
 	}
 }
-
 function down_row(id){
 	form=document.getElementById(id).parentNode;
 	l=form.childNodes.length;
@@ -267,7 +252,6 @@ function down_row(id){
 		break;
 	k++;
 	}
-
 	if(k!=l-1)
 	{
 		up=form.childNodes[k];
@@ -279,16 +263,13 @@ down=null;
 		refresh_();
 	}
 }
-
 </script>
-
 <a class="modal" href="index.php?option=com_player&amp;task=select_playlist&amp;tmpl=component&amp;object=id" rel="{handler: 'iframe', size: {x: 850, y: 575}}">
 <img src="components/com_player/images/add_but.png" /> 
 </a>
 <table width="100%">
 <tbody id="playlist"></tbody>
 </table>
-
 <input type="hidden" name="<?php echo $fieldName ?>" id="playlists" size="80" value="<?php echo $value; ?>" />
 <?php
 JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_player'.DS.'tables');
@@ -318,7 +299,6 @@ if($playlists)
 		$v_thumbs[]=addslashes($playlist->thumb);
 		$v_number_of_vids[]=substr_count($playlist->videos, ',');
 	}
-
 	$v_id='["'.implode('","',$v_ids).'"]';
 	$v_title='["'.implode('","',$v_titles).'"]';
 	$v_thumb='["'.implode('","',$v_thumbs).'"]';
@@ -331,12 +311,9 @@ jSelectVideo(<?php echo $v_id?>,<?php echo $v_title?>,<?php echo $v_thumb?>,<?ph
 ?>
  </script>
       <?php
-
         $content=ob_get_contents();
-
         ob_end_clean();
         return $content;
-
 	}
 }
 ?>

@@ -1,12 +1,11 @@
 <?php   
-	if(function_exists('current_user_can')){
+if(function_exists('current_user_can')){
 	if(!current_user_can('manage_options')) {
 	die('Access Denied');
 }	
 } else {
 	die('Access Denied');
 }
-
 function html_add_Spider_Video_Player(){
 	global $wpdb;
 	$themes=$wpdb->get_results("SELECT `id`,`title`,`default` FROM ".$wpdb->prefix."Spider_Video_Player_theme");
@@ -272,8 +271,6 @@ function submitform(pressbutton)
 	document.getElementById("adminForm").submit();
 }
 </script>
-
-
 <style type="text/css">
 .admintable
 {
@@ -287,14 +284,12 @@ border-left:1px solid #cccccc;
 border-bottom:1px solid #cccccc;
 }
 </style>
-
 <form action="admin.php?page=Spider_Video_Player<?php if($id) echo "&id=".$id; ?>" onkeypress="doNothing()" method="post" name="adminForm" id="adminForm">
 <input type="hidden" name="params" id="playlists" value="<?php echo $value; ?>">
 <table width="90%">
 <tr>   
 <td style="font-size:14px; font-weight:bold;"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a></a><br />
 This section allows you to create players, providing them with playlist(s) and a distinct visual theme. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">More...</a></td>   
-
         </tr>
     <tr>
   <td width="100%"><h2><?php if($title) echo $title; else echo "Add Spider Video Player"; ?></h2></td>
@@ -308,7 +303,6 @@ This section allows you to create players, providing them with playlist(s) and a
 <tr>
 <td>Priority</td>
 <td>
-
 <input type="radio" name="priority" value="0" <?php if($priority == 0) echo 'checked="checked"';?>>Flash</input>
 <input type="radio" name="priority" value="1" <?php if($priority == 1) echo 'checked="checked"';?>>HTML5</input>
 </td>
@@ -341,10 +335,6 @@ This section allows you to create players, providing them with playlist(s) and a
 <table width="100%">
 <tbody id="playlist"></tbody>
 </table>
-
-
-
-
 <?php
 	$playlists=array();
 	$playlists_id=explode(',',$value);
@@ -363,7 +353,6 @@ if($playlists)
 		$v_thumbs[]=addslashes($playlist[0]->thumb);
 		$v_number_of_vids[]=substr_count($playlist[0]->videos, ',');
 	}
-
 	$v_id='["'.implode('","',$v_ids).'"]';
 	$v_title='["'.implode('","',$v_titles).'"]';
 	$v_thumb='["'.implode('","',$v_thumbs).'"]';
@@ -380,14 +369,8 @@ jSelectVideo(<?php echo $v_id?>,<?php echo $v_title?>,<?php echo $v_thumb?>,<?ph
  </script>
  <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>
  </form>
-
       <?php
-
-
-
 }
-
-
 function html_show_Spider_Video_Player( $rows, $pageNav, $sort){
 		
 	global $wpdb;
@@ -418,7 +401,6 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
    <tr>   
 <td width="100%" style="font-size:14px; font-weight:bold"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
 This section allows you to create players, providing them with playlist(s) and a distinct visual theme. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">More...</a></td>   
-
         </tr>
     <tr>
     <td style="width:210px">
@@ -433,11 +415,11 @@ This section allows you to create players, providing them with playlist(s) and a
         </td>
     </tr>
     </table>
+    <label for="search_events_by_title" style="font-size:14px">Title: </label>
     <?php
 	$serch_value='';
 	if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=esc_js(esc_html(stripslashes($_POST['search_events_by_title']))); }else{$serch_value="";}}
 	$serch_fields='<div class="alignleft actions" style="width:180px;">
-    	<label for="search_events_by_title" style="font-size:14px">Title: </label>
         <input type="text" name="search_events_by_title" value="'.$serch_value.'" id="search_events_by_title" onchange="clear_serch_texts()">
     </div>
 	<div class="alignleft actions">
@@ -463,7 +445,7 @@ This section allows you to create players, providing them with playlist(s) and a
          <td><?php echo $rows[$i]->id; ?></td>
          <td><a  href="admin.php?page=Spider_Video_Player&task=edit_Spider_Video_Player&id=<?php echo $rows[$i]->id?>"><?php echo $rows[$i]->title; ?></a></td>
          <td><a  href="admin.php?page=Spider_Video_Player&task=edit_Spider_Video_Player&id=<?php echo $rows[$i]->id?>">Edit</a></td>
-         <td><a  href="admin.php?page=Spider_Video_Player&task=remove_Spider_Video_Player&id=<?php echo $rows[$i]->id?>&_wpnonce=<?php echo $sp_vid_nonce; ?>">Delete</a></td>
+         <td><a  href="#" href-data="admin.php?page=Spider_Video_Player&task=remove_Spider_Video_Player&id=<?php echo $rows[$i]->id?>&_wpnonce=<?php echo $sp_vid_nonce; ?>">Delete</a></td>
   </tr> 
  <?php } ?>
  </tbody>
@@ -471,7 +453,6 @@ This section allows you to create players, providing them with playlist(s) and a
  <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>
  <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php if(isset($_POST['asc_or_desc'])) echo esc_js(esc_html(stripslashes($_POST['asc_or_desc'])));?>"  />
  <input type="hidden" name="order_by" id="order_by" value="<?php if(isset($_POST['order_by'])) echo esc_js(esc_html(stripslashes($_POST['order_by'])));?>"  />
-
  <?php
 ?>
     
@@ -479,7 +460,6 @@ This section allows you to create players, providing them with playlist(s) and a
    
  </form>
     <?php
-
 	}
 	
 	
@@ -488,6 +468,5 @@ This section allows you to create players, providing them with playlist(s) and a
 	
 	
 	
-
  
 ?>

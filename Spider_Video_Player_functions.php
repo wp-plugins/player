@@ -1,5 +1,5 @@
 <?php 
-	if(function_exists('current_user_can')){
+if(function_exists('current_user_can')){
 	if(!current_user_can('manage_options')) {
 	die('Access Denied');
 }	
@@ -7,7 +7,6 @@
 	die('Access Denied');
 }
 function add_Spider_Video_Player(){
-
   wp_admin_css('thickbox');
   
 	$lists['published'] =  '<input type="radio" name="published" id="published0" value="0" class="inputbox">
@@ -18,7 +17,6 @@ function add_Spider_Video_Player(){
 // display function
 	html_add_Spider_Video_Player($lists);
 }
-
 function show_Spider_Video_Player(){
 	global $wpdb;
 	$sort["default_style"]="manage-column column-autor sortable desc";
@@ -85,7 +83,6 @@ function show_Spider_Video_Player(){
 	$rows = $wpdb->get_results($query);	    	
 	html_show_Spider_Video_Player($rows, $pageNav, $sort);
 }
-
 function save_Spider_Video_Player(){
 	global $wpdb;
 	$save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_player', array(
@@ -116,9 +113,6 @@ function save_Spider_Video_Player(){
 	
     return true;
 }
-
-
-
 function Apply_Spider_Video_Player($id)
 {
 	global $wpdb;
@@ -144,12 +138,6 @@ function Apply_Spider_Video_Player($id)
 	
     return true;
 }
-
-
-
-
-
-
 function remove_Spider_Video_Player($id){
    global $wpdb;
  $sql_remov_tag=$wpdb->prepare("DELETE FROM ".$wpdb->prefix."Spider_Video_Player_player WHERE id=%d",$id);
@@ -166,7 +154,4 @@ function remove_Spider_Video_Player($id){
  <?php
  }
 }
-
-
-
 ?>

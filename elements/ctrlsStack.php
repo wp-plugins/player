@@ -1,5 +1,4 @@
 <?php
-
 class JElementctrlsStack extends JElement
 {
 function fetchElement($name, $value, &$node, $control_name)
@@ -10,20 +9,15 @@ $n = count($ctrls);
 $document =& JFactory::getDocument();
 $cmpnt_js_path = JURI::root(true).'/administrator/components/com_player/elements';
 $document->addScript($cmpnt_js_path.'/jquery.js');
-
 $path=JURI::root(true)."/administrator/components/com_player/elements/images/";
-
         ob_start();
         static $embedded;
                 if(!$embedded)
         {
-
             $embedded=true;
-
         }
             ?>
 <script type="text/javascript">
-
 function nextSibling(start) {
   var nextSib;
   if (!(nextSib=start.nextSibling)) {
@@ -36,7 +30,6 @@ function nextSibling(start) {
   }
   return nextSib;
 }
-
 function previousSibling(start) {
   var previousSib;
   if (!(previousSib=start.previousSibling)) {
@@ -49,7 +42,6 @@ function previousSibling(start) {
   }
   return previousSib;
 }
-
 $.noConflict();
 jQuery(document).ready(function($) 
 {	
@@ -70,7 +62,6 @@ for (var i = 0; i < <?php echo $n ?>; i++)
 		i=event.data.i;
 	    $("#panel_arr_" + i).fadeOut(0);
 	  });
-
 	$("#go_x_" + i).bind('click',{i:i},function(event){
 		i=event.data.i;
 		image=document.getElementById("arr_" + i).getAttribute('image');
@@ -96,9 +87,7 @@ for (var i = 0; i < <?php echo $n ?>; i++)
 	if(previous)
 		parent.insertBefore(current, previous);
 		refresh_ctrl();
-
 	});
-
 	$("#go_r_" + i).bind('click',{i:i},function(event){
 		i=event.data.i;
 		current=document.getElementById("td_arr_" + i)
@@ -108,11 +97,8 @@ for (var i = 0; i < <?php echo $n ?>; i++)
 	if(next)
 		parent.insertBefore(next,current);
 		refresh_ctrl();
-
 	});
-
 }	  
-
 refresh_ctrl();
 function refresh_ctrl()
 {
@@ -128,12 +114,10 @@ function refresh_ctrl()
 			}
 	document.getElementById('<?php echo  $control_name.$name ?>').value=ctrlStack;
 }
-
 });
 ///////////////////////////////////////////////////////////////////////////////////////	/////////////////////////////			  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////				  
 /////////////////////////////	///////////////////////////////////////////////////////////////////////////////////////			
-
   
 });
 </script>
@@ -143,7 +127,6 @@ for($i=0; $i < $n-1; $i++)
 		echo "#panel_arr_".$i.", ";
 echo "#panel_arr_".($n-1);
 ?>
-
 {
 display:none;
 cursor:pointer;
@@ -171,7 +154,6 @@ cursor:pointer;
 													echo '<span id="go_r_'.$key.'"><img src="'.$path.'r_arrow.png" width="10" /></span>
 											</div>
 									</td>';
-
 						}
 						else
 						{
@@ -191,19 +173,14 @@ cursor:pointer;
 				}
 				 echo '</tr>';
 				 ?>
-
                
       
 </table>           
 <input type="hidden" name="<?php echo $control_name."[".$name."]";?>" id="<?php echo  $control_name.$name ?>" value="<?php echo $value; ?>">
-
         <?php
-
         $content=ob_get_contents();
-
         ob_end_clean();
         return $content;
-
     }
 	}
 	

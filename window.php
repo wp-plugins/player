@@ -1,8 +1,6 @@
 <?php
-
 $path  = ''; // It should be end with a trailing slash  
 if ( !defined('WP_LOAD_PATH') ) {
-
 	/** classic root path if wp-content and plugins is below wp-config.php */
 	$classic_root = dirname(dirname(dirname(dirname(__FILE__)))) . '/' ;
 	
@@ -14,9 +12,8 @@ if ( !defined('WP_LOAD_PATH') ) {
 		else
 			exit("Could not find wp-load.php");
 }
-
 // let's load WordPress
-require_once( WP_LOAD_PATH . 'wp-load.php')
+require_once( WP_LOAD_PATH . 'wp-load.php');
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -116,7 +113,6 @@ require_once( WP_LOAD_PATH . 'wp-load.php')
 		<div style="float: left">
 			<input type="button" id="cancel" name="cancel" value="Cancel" onClick="tinyMCEPopup.close();" />
 		</div>
-
 		<div style="float: right">
 			<input type="submit" id="insert" name="insert" value="Insert" onClick="insert_Spider_Video_Player();" />
 		</div>
@@ -159,9 +155,6 @@ if(document.getElementById('spider_player_panel').className==='panel')
 	}
 	}
 }
-
 </script>
-<?php 
-//$player_Spider_Video_Player++;
-?>
+
 </body></html>

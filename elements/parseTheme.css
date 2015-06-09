@@ -1,5 +1,4 @@
 
-
 /* Component containers
 ----------------------------------*/
 .ui-widget { font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif; font-size: 1.1em; }
@@ -8,7 +7,6 @@
 .ui-widget-content a { color: #333333; }
 .ui-widget-header { border: 1px solid #e78f08; background: #f6a828; color: #ffffff; font-weight: bold; }
 .ui-widget-header a { color: #ffffff; }
-
 /* Interaction states
 ----------------------------------*/
 .ui-state-default, .ui-widget-content .ui-state-default { border: 1px solid #cccccc; background: #f6f6f6; color: #1c94c4; outline: none; }
@@ -17,7 +15,6 @@
 .ui-state-hover a, .ui-state-hover a:hover { color: #c77405; text-decoration: none; outline: none; }
 .ui-state-active, .ui-widget-content .ui-state-active { border: 1px solid #fbd850; background: #ffffff; color: #eb8f00; outline: none; }
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited { color: #eb8f00; outline: none; text-decoration: none; }
-
 /* Interaction Cues
 ----------------------------------*/
 .ui-state-highlight, .ui-widget-content .ui-state-highlight {border: 1px solid #fed22f; background: #ffe45c; }
@@ -28,13 +25,10 @@
 .ui-state-disabled, .ui-widget-content .ui-state-disabled { opacity: .35; filter:Alpha(Opacity=35); background-image: none; }
 .ui-priority-primary, .ui-widget-content .ui-priority-primary { font-weight: bold; }
 .ui-priority-secondary, .ui-widget-content .ui-priority-secondary { opacity: .7; filter:Alpha(Opacity=70); font-weight: normal; }
-
 /* Icons
 ----------------------------------*/
-
 /* states and images */
 .ui-icon { width: 16px; height: 16px; }
-
 /* positioning */
 .ui-icon-carat-1-n { background-position: 0 0; }
 .ui-icon-carat-1-ne { background-position: -16px 0; }
@@ -209,11 +203,8 @@
 .ui-icon-grip-solid-horizontal { background-position: -48px -224px; }
 .ui-icon-gripsmall-diagonal-se { background-position: -64px -224px; }
 .ui-icon-grip-diagonal-se { background-position: -80px -224px; }
-
-
 /* Misc visuals
 ----------------------------------*/
-
 /* Corner radius */
 .ui-corner-tl { -moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; }
 .ui-corner-tr { -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px; }
@@ -224,7 +215,6 @@
 .ui-corner-right {  -moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px; -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; }
 .ui-corner-left { -moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; -moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; }
 .ui-corner-all { -moz-border-radius: 4px; -webkit-border-radius: 4px; }
-
 /* Overlays */
 .ui-widget-overlay { background: #666666; }
 .ui-widget-shadow { margin: -5px 0 0 -5px; padding: 5px; background: #000000; -moz-border-radius: 5px; -webkit-border-radius: 5px; }

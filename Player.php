@@ -1,10 +1,9 @@
 <?php
-
 /*
 Plugin Name: Spider Video Player 
 Plugin URI: http://web-dorado.com/products/wordpress-player.html
 Description:Spider Video Player supports both HTML5 and Flash, allowing you to play videos on any mobile device.Spider WordPress Video Player allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player.
-Version: 1.5.7
+Version: 1.5.8
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -18,29 +17,32 @@ function askofen_1($id)
     wp_enqueue_style("jqueri_ui", plugins_url('js/jquery-ui.css', __FILE__));
     wp_enqueue_script("flsh_detect", plugins_url('js/flash_detect.js', __FILE__));
 }
-
+function my_scripts_method() {
+	wp_enqueue_script(
+		'player_admin',
+		plugins_url( '/js/player_js.js', __FILE__ ),
+		array( 'jquery' )
+	);
+}    
+ 
+add_action( 'admin_enqueue_scripts', 'my_scripts_method' );
 add_action('init', 'Player_language_load');
 $ident = 1;
 function Player_language_load()
 {
     load_plugin_textdomain('Player', false, basename(dirname(__FILE__)) .'/Languages');
-
 }
-
 function Spider_Video_Player_shotrcode($atts)
 {
     extract(shortcode_atts(array(
         'id' => 'no Spider Video Player',
     ), $atts));
     if (!(is_numeric($atts['id'])))
-        return 'insert numerical value in `id`';
-
+        return 'insert numerical  shortcode in `id`';
     return front_end_Spider_Video_Player($id);
 }
 
 add_shortcode('Spider_Video_Player', 'Spider_Video_Player_shotrcode');
-
-
 function Spider_Single_Video_shotrcode($atts)
 {
     extract(shortcode_atts(array(
@@ -49,17 +51,15 @@ function Spider_Single_Video_shotrcode($atts)
         'priority' => '1'
     ), $atts));
     if (!(is_numeric($atts['track'])))
-        return 'insert numerical value in `track`';
+        return 'insert numerical  shortcode in `track`';
     if (!(is_numeric($atts['theme_id'])))
-        return 'insert numerical value in `theme_id`';
+        return 'insert numerical  shortcode in `theme_id`';
     if (!($atts['priority'] == 1 || $atts['priority'] == 0))
         return 'insert valid `priority`';
-
     return front_end_Spider_Single_Video($atts['track'], $atts['theme_id'], $atts['priority']);
 }
 
 add_shortcode('Spider_Single_Video', 'Spider_Single_Video_shotrcode');
-
 ////
 function   front_end_Spider_Single_Video($track, $theme_id, $priority)
 {
@@ -67,8 +67,7 @@ function   front_end_Spider_Single_Video($track, $theme_id, $priority)
     global $ident;
     $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_video WHERE id=%d", $track));
     $params = $wpdb->get_row($wpdb->prepare("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_theme WHERE id=%d", $theme_id));
-
-    if ($priority == 0) {
+    if ($priority == 0){
         $scripttt = '    <script type="text/javascript"> 
 var html5_' .$ident .' = document.getElementById("spidervideoplayerhtml5_' .$ident .'");
 var flash_' .$ident .' = document.getElementById("spidervideoplayerflash_' .$ident .'");
@@ -102,7 +101,6 @@ spidervideoplayerflash_' .$ident .'.style.display=\'\';
             $width = $params->appWidth;
         else
             $width = '700';
-
         if ($params->appHeight != "")
             $height = $params->appHeight;
         else
@@ -159,42 +157,37 @@ u=location.href;
 			</div>
 			";
         $many_players++;
-
         ?>
         <?php
         return $Spider_Single_Video_front_end .Spider_Single_Video_front_end($track, $theme_id, $priority) .$scripttt;
-
     } else {
         $identt = $ident;
         return Spider_Single_Video_front_end($track, $theme_id, $priority) .'<script>document.getElementById("spidervideoplayerhtml5_' .$identt .'").style.display=\'\'</script>';
-
     }
 }
-
 function Spider_Single_Video_front_end($track, $theme_id, $priority)
 {
     ob_start();
     global $ident;
-
-
     ?>
     <div id="spidervideoplayerhtml5_<?php echo $ident ?>" style="display:none">
     <?php
     if ($priority == 1 || $priority == 0) {
         global $wpdb;
-
         $playlist_array = '';
         $trackk = $wpdb->get_row($wpdb->prepare("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_video WHERE id=%d", $track));
-
         global $many_players;
         $track_URL = '';
         $track_poster = $trackk->thumb;
-        if ($trackk->urlHtml5 == "") {
-            $track_URL = $trackk->url;
+        if ($trackk->urlHtml5 == "" || !strpos($trackk->url, 'embed')) {
+            if($trackk->type=="youtube" ){
+                $track_URL = "https://www.youtube.com/embed/".substr($trackk->url, strpos($trackk->url, '?v=')+3,11)."?enablejsapi=1&html5=1&controls=1&modestbranding=1&rel=0";
+            } else {
+                $track_URL = $trackk->url;  
+            }
+            
         } else
             $track_URL = $trackk->urlHtml5;
-
-
         $theme = $wpdb->get_row($wpdb->prepare("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_theme WHERE id=%d", $theme_id));
         $videos = $wpdb->get_results($wpdb->prepare("SELECT url,urlHtml5,type,title,thumb FROM " .$wpdb->prefix ."Spider_Video_Player_video WHERE id=%d", $track));
         $video_urls = '';
@@ -206,7 +199,7 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
         $video_urls = substr($video_urls, 0, -1);
         $playlists = $wpdb->get_results("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_playlist");
         if (isset($_POST['play'])) {
-            $p = esc_sql(esc_html(stripslashes($_POST['play'])));
+            $p = esc_html(stripslashes($_POST['play']));
         } else $p = 0;
         $display = 'style="width:100%;height:100% !important;border-collapse: collapse; margin-left:8px !important;"';
         $table_count = 1;
@@ -221,38 +214,36 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
             $share_top = '-' .$theme->appHeight + 25 .'px';
         }
         if (isset($_POST['AlbumId']))
-            $AlbumId = esc_sql(esc_html(stripslashes($_POST['AlbumId'])));
+            $AlbumId = esc_html(stripslashes($_POST['AlbumId']));
         else
             $AlbumId = '';
         if (isset($_POST['TrackId']))
-            $TrackId = esc_sql(esc_html(stripslashes($_POST['TrackId'])));
+            $TrackId = esc_html(stripslashes($_POST['TrackId']));
         else
             $TrackId = '';
         ?>
         <style>
+            a#dorado_mark_<?php echo $ident;?>:hover {
+                background: none !important;
+            }
             #album_table_<?php  echo $ident?> td,
             #album_table_<?php  echo $ident?> tr,
             #album_table_<?php  echo $ident?> img {
                 padding: 3px 9px 0px 0px !important;
                 line-height: 1em !important;
             }
-
             #share_buttons_<?php echo $ident;?> img {
                 display: inline !important;
             }
-
             #album_div_<?php  echo $ident?> table {
                 margin: 0px !important;
             }
-
             #album_table_<?php  echo $ident?> {
                 margin: -1 0 1.625em !important;
             }
-
             table {
                 margin: 0em;
             }
-
             #global_body_<?php echo $ident;?> .control_<?php  echo $ident?> {
                 position: absolute;
                 background-color: rgba(<?php echo HEXDEC(SUBSTR($theme->framesBgColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
@@ -262,21 +253,17 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
                 z-index: 7;
                 margin-top: -5px;
             }
-
             #global_body_<?php echo $ident;?> img {
                 background: none !important;
             }
-
             #global_body_<?php echo $ident;?> .control_<?php  echo $ident?> td {
                 padding: 0px !important;
                 margin: 0px !important;
             }
-
             #global_body_<?php echo $ident;?> .control_<?php  echo $ident?> td img {
                 padding: 0px !important;
                 margin: 0px !important;
             }
-
             #global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?> {
                 position: relative;
                 width: 100%;
@@ -286,7 +273,6 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
                 border-top: 1px solid rgba(<?php echo HEXDEC(SUBSTR($theme->slideColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
                 border-bottom: 1px solid rgba(<?php echo HEXDEC(SUBSTR($theme->slideColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
             }
-
             #global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?> {
                 position: absolute;
                 top: 0;
@@ -296,7 +282,6 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
                 background-color: <?php echo '#'.$theme->slideColor; ?>;
                 z-index: 5;
             }
-
             #global_body_<?php echo $ident;?> .bufferBar_<?php  echo $ident?> {
                 position: absolute;
                 top: 0;
@@ -306,7 +291,6 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
                 background-color: <?php echo '#'.$theme->slideColor; ?>;
                 opacity: 0.3;
             }
-
             #global_body_<?php echo $ident;?> .volumeBar_<?php echo $ident;?> {
                 position: relative;
                 overflow: hidden;
@@ -315,7 +299,6 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
                 background-color: rgba(<?php echo HEXDEC(SUBSTR($theme->framesBgColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
                 border: 1px solid rgba(<?php echo HEXDEC(SUBSTR($theme->slideColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
             }
-
             #global_body_<?php echo $ident;?> .volume_<?php echo $ident;?> {
                 position: absolute;
                 top: 0;
@@ -324,7 +307,6 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
                 height: 100%;
                 background-color: <?php echo '#'.$theme->slideColor; ?>;
             }
-
             #play_list_<?php  echo $ident?> {
                 height: <?php echo $theme->appHeight; ?>px;
                 width: 0px;
@@ -332,7 +314,7 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
 	if ($theme->playlistPos==1)
 	echo 'position:absolute;float:left !important;';
 	else
-	echo 'position:relative;float:right !important;';
+	echo 'position:absolute;float:right !important;right:0;';
 	?>;
                 position: absolute;
                 background-color: rgba(<?php echo HEXDEC(SUBSTR($theme->framesBgColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
@@ -341,7 +323,6 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
                 padding: 0px !important;
                 margin: 0px !important;
             }
-
             #play_list_<?php  echo $ident?> img,
             #play_list_<?php  echo $ident?> td {
                 background-color: transparent !important;
@@ -349,24 +330,21 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
                 padding: 0px !important;
                 margin: 0px !important;
             }
-
             .control_btns_<?php  echo $ident?> {
                 opacity: <?php echo $theme->ctrlsMainAlpha/100; ?>;
             }
-
             #control_btns_<?php  echo $ident?>,
             #volumeTD_<?php echo $ident;?> {
                 margin: 0px;
             }
-
             img {
                 box-shadow: none !important;
             }
-
             #td_ik_<?php echo $ident;?> {
                 border: 0px;
             }
-        </style>
+            
+            </style>
     <?php
     $player_id = $wpdb->get_var($wpdb->prepare("SELECT id FROM " .$wpdb->prefix ."Spider_Video_Player_player WHERE id=%d", $track));
     ?>
@@ -399,7 +377,6 @@ if($trackk->type=="http")
 		}
 		
 		
-
 		if($trackk->urlHdHtml5!='')
 		{
 		if(strpos($trackk->urlHdHtml5, "http:")===false and strpos($trackk->urlHdHtml5, "https:")===false )
@@ -417,18 +394,13 @@ if($trackk->type=="http")
 		}
 }
 ?>
-
-
 <input type='hidden' value='<?php echo $html5UrlHD ?>' id="urlHD_<?php echo $ident; ?>" />
 <input type='hidden' value='<?php echo $html5Url ?>' id="trackURL_<?php echo $ident; ?>" />
-
-
                 <input type='hidden' value='0' id="track_list_<?php echo $ident; ?>"/>
-
                 <div style="height:90%" id="play_list1_<?php echo $ident; ?>">
                     <div id="arrow_up_<?php echo $ident ?>"
                          onmousedown="scrolltp2=setInterval('scrollTop2_<?php echo $ident; ?>()', 30)"
-                         onmouseup="clearInterval(scrolltp2)"
+                         onmouseup="clearInterval(scrolltp2)" onclick="scrollTop2_<?php echo $ident; ?>()"
                          style="overflow:hidden; text-align:center;width:<?php echo $theme->playlistWidth; ?>px; height:20px">
                         <img src="<?php echo plugins_url('', __FILE__) ?>/images/top.png"
                              style="cursor:pointer;  border:none;" id="button20_<?php echo $ident ?>"/>
@@ -451,7 +423,7 @@ if($trackk->type=="http")
                             $jj = 0;
                             for ($j = 0; $j < count($v_ids) - 1; $j++) {
                                 $vdss = $wpdb->get_row("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_video WHERE id=" .$v_ids[$j]);
-                                if ($vdss->type == "http") {
+                                if ($vdss->type == "http" || $vdss->type == "youtube") {
                                     if ($vdss->urlHtml5 != "") {
                                         $html5Url = $vdss->urlHtml5;
                                     } else $html5Url = $vdss->url;
@@ -473,25 +445,36 @@ if($trackk->type=="http")
                         }
                         ?>
                     </div>
-                    <div onmousedown="scrollBot2=setInterval('scrollBottom2_<?php echo $ident; ?>()', 30)"
-                         onmouseup="clearInterval(scrollBot2)"
+                                      <div onmousedown="scrollBot2=setInterval('scrollBottom2_<?php echo $ident; ?>()', 30)"
+                                           onmouseup="clearInterval(scrollBot2)" onclick="scrollBottom2_<?php echo $ident; ?>()"
                          style="position:absolute;overflow:hidden; text-align:center;width:<?php echo $theme->playlistWidth; ?>px; height:20px"
                          id="divulushka_<?php echo $ident; ?>"><img
                             src="<?php echo plugins_url('', __FILE__) ?>/images/bot.png"
                             style="cursor:pointer;  border:none;" id="button21_<?php echo $ident ?>"/></div>
                 </div>
             </div>
+            
+            <?php if($trackk->type=="youtube" ){?>
+             <iframe id="videoID_<?php echo $ident ?>" type="text/html" width="<?php echo $theme->appWidth; ?>" height="<?php echo $theme->appHeight; ?>"
+                     src="<?php echo substr($track_URL,0,  strpos($track_URL, "?"));?>?enablejsapi=1&version=3&playerapiid=ytplayer&modestbranding=1&rel=0"
+                frameborder="0" allowfullscreen></iframe>
+             
+            <?php }elseif($trackk->type=="vimeo"){?>
+            <iframe id="videoID_<?php echo $ident ?>" type="text/html" width="<?php echo $theme->appWidth; ?>" height="<?php echo $theme->appHeight; ?>"
+                     src="<?php echo $track_URL;?>"
+                frameborder="0" allowfullscreen></iframe>
+            <?php }else{?>
             <video ontimeupdate="timeUpdate_<?php echo $ident ?>()"
                    ondurationchange="durationChange_<?php echo $ident ?>();" id="videoID_<?php echo $ident ?>"
                    src="<?php echo $track_URL ?>" poster="<?php echo $track_poster ?>"
                    style="width:100%; height:100%;margin:0px;position: absolute;">
                 <p>Your browser does not support the video tag.</p>
             </video>
+            <?php }?>
             <img src="<?php echo plugins_url('', __FILE__) ?>/images/wd_logo.png"
-                 style="bottom: 30px;position: absolute;width: 140px;height: 73px; border: 0px !important;"/>
-
+                 style="bottom: 30px;position: absolute;width: 140px;height: 73px; border: 0px !important; left:0px;"/>
             <div class="control_<?php echo $ident; ?>" id="control_<?php echo $ident; ?>"
-                 style="overflow:hidden;top: 5px;">
+                 style="overflow:hidden;top: 5px;<?php if($trackk->type=="youtube" || $trackk->type=="vimeo") echo "visibility: hidden !important; ";?>">
                 <?php if ($theme->ctrlsPos == 2) { ?>
                     <div class="progressBar_<?php echo $ident; ?>">
                         <div class="timeBar_<?php echo $ident; ?>"></div>
@@ -557,7 +540,6 @@ if($trackk->type=="http")
                                             $y = $y + 2;
                                         } else
                                             if ($ctrl[0] == 'repeat') {
-
                                                 if ($theme->appWidth > 400) {
                                                     echo '
 					<img  id="button' .$y .'_' .$ident .'" class="repeat_' .$ident .'" style="position: relative;vertical-align: middle;cursor:pointer; border:none;opacity:' .$theme->ctrlsMainAlpha / 100 .';"   src="' .plugins_url('', __FILE__) .'/images/repeat.png"/>
@@ -594,6 +576,7 @@ if($trackk->type=="http")
                 }
                 ?>
             </div>
+             
         </div>
         <div id="album_div_<?php echo $ident; ?>"
              style="display:none;background-color:<?php echo "#" .$theme->appBgColor; ?>;height:100%; overflow:hidden;position:relative;">
@@ -606,11 +589,10 @@ if($trackk->type=="http")
                             onmouseout="this.style.background='none'" id="scroll"
                             style="overflow:hidden;width:50%;height:100%;text-align:center;float:right;cursor:pointer;"
                             onmousedown="scrolltp=setInterval('scrollTop_<?php echo $ident; ?>()', 30)"
-                            onmouseup="clearInterval(scrolltp)">
+                            onmouseup="clearInterval(scrolltp)" onclick="scrollTop_<?php echo $ident; ?>()">
                             <img src="<?php echo plugins_url('', __FILE__) ?>/images/top.png"
                                  style="cursor:pointer; margin: 0px !important; padding: 0px !important; border:none;background: transparent;"
                                  id="button25_<?php echo $ident; ?>"/>
-
                             <div>
                     </td>
                 </tr>
@@ -659,7 +641,7 @@ if($trackk->type=="http")
                             onmouseout="this.style.background='none'" id="scroll"
                             style="overflow:hidden;width:50%;height:100%;text-align:center;float:right;cursor:pointer;"
                             onmousedown="scrollBot=setInterval('scrollBottom_<?php echo $ident; ?>()', 30)"
-                            onmouseup="clearInterval(scrollBot)">
+                            onmouseup="clearInterval(scrollBot)" onclick="scrollBottom_<?php echo $ident; ?>()">
                             <img src="<?php echo plugins_url('', __FILE__) ?>/images/bot.png"
                                  style="cursor:pointer;border:none;background: transparent;"
                                  id="button26_<?php echo $ident ?>"/>
@@ -751,11 +733,17 @@ if($trackk->type=="http")
         <input type="hidden" value="0" id="HD_on_<?php echo $ident ?>"/>
         <input type="hidden" value="" id="volumeBar_width_<?php echo $ident ?>"/>
         <script>
+        function is_youtube_video_<?php echo $ident ?>(){
+            if(jQuery("#videoID_<?php echo $ident ?>").attr("src").indexOf("youtube.com/")>-1 || jQuery("#videoID_<?php echo $ident ?>").attr("src").indexOf("vimeo.com/")>-1){
+                return true;}
+            return false;
+        }                 
         var video_<?php echo $ident;?> = jQuery('#videoID_<?php  echo $ident?>');
         var paly_<?php echo $ident;?> = jQuery('#global_body_<?php echo $ident;?> .btnPlay');
         var pause_<?php echo $ident;?> = jQuery('#global_body_<?php echo $ident;?> .btnPause');
+        var check_play_<?php echo $ident;?> = false;
         function embed_url_<?php echo $ident;?>(a, b) {
-            jQuery('#embed_Url_<?php  echo $ident?>').html('<iframe allowFullScreen allowTransparency="true" frameborder="0" width="<?php echo $theme->appWidth ?>" height="<?php echo $theme->appHeight ?>" src="<?php echo $admin_url?>&single=1&priority=<?php echo $priority?>&video=<?php echo $ident?>&theme=<?php echo $theme_id?>&AlbumId=' + a + '&TrackId=' + b + '" type="text/html" ></iframe>')
+           // jQuery('#embed_Url_<?php  echo $ident?>').html('<iframe allowFullScreen allowTransparency="true" frameborder="0" width="<?php echo $theme->appWidth ?>" height="<?php echo $theme->appHeight ?>" src="<?php echo $admin_url?>&single=1&priority=<?php echo $priority?>&video=<?php echo $ident?>&theme=<?php echo $theme_id?>&AlbumId=' + a + '&TrackId=' + b + '" type="text/html" ></iframe>')
             jQuery('#embed_Url_<?php  echo $ident?>').focus();
             jQuery('#embed_Url_<?php  echo $ident?>').select();
         }
@@ -871,7 +859,6 @@ if($trackk->type=="http")
         jQuery('.hd_<?php echo $ident;?>').on('click',function(){
           current_time=video_<?php echo $ident;?>[0].currentTime;
           HD_on=jQuery('#HD_on_<?php echo $ident;?>').val();
-
           current_playlist_table=jQuery('#current_playlist_table_<?php echo $ident;?>').val();
           current_track=jQuery('#current_track_<?php echo $ident;?>').val();
           
@@ -882,7 +869,6 @@ if($trackk->type=="http")
           setTimeout('video_<?php echo $ident;?>[0].currentTime=current_time',500)
           jQuery('#HD_on_<?php echo $ident;?>').val(1);
           }
-
           if(jQuery('#urlHD_<?php echo $ident;?>').val() && HD_on==1)
           {
           document.getElementById('videoID_<?php echo $ident;?>').src=jQuery('#trackURL_<?php echo $ident;?>').val();
@@ -890,9 +876,7 @@ if($trackk->type=="http")
           setTimeout('video_<?php echo $ident;?>[0].currentTime=current_time',500)
           jQuery('#HD_on_<?php echo $ident;?>').val(0);
           }
-
         })
-
         function support_<?php echo $ident;?>(i, j) {
             if (jQuery('#track_list_<?php  echo $ident?>_' + i).find('#vid_type_' + j + '_<?php echo $ident?>').val() != 'http') {
                 jQuery('#not_supported_<?php  echo $ident?>').css('display', '');
@@ -904,10 +888,16 @@ if($trackk->type=="http")
             }
         }
         jQuery('.play_<?php echo $ident;?>').on('click', function () {
+        if(!is_youtube_video_<?php echo $ident ?>())
             video_<?php echo $ident;?>[0].play();
+            else
+                if(typeof player_<?php echo $ident;?> != 'undefined'){if(youtube_ready_<?php echo $ident ?>)player_<?php echo $ident ?>.playVideo();}                
         })
         jQuery('.pause_<?php echo $ident;?>').on('click', function () {
+           if(!is_youtube_video_<?php echo $ident ?>())
             video_<?php echo $ident;?>[0].pause();
+            else
+           if(typeof player_<?php echo $ident;?> != 'undefined')player_<?php echo $ident;?>.pauseVideo();     
         })
         function vid_select_<?php echo $ident?>(x) {
             jQuery("div.vid_thumb_<?php echo $ident?>").each(function () {
@@ -1158,18 +1148,28 @@ if($trackk->type=="http")
             pause_<?php echo $ident;?>.css('display', "");
         }
         function play_<?php echo $ident;?>() {
-            video_<?php echo $ident;?>[0].play();
+     
+            if(!is_youtube_video_<?php echo $ident ?>())
+            video_<?php echo $ident;?>[0].play()
+            else
+                if(typeof player_<?php echo $ident;?> != 'undefined'){if(youtube_ready_<?php echo $ident ?>)player_<?php echo $ident ?>.playVideo();}
             paly_<?php echo $ident;?>.css('display', "none");
             pause_<?php echo $ident;?>.css('display', "");
         }
         jQuery('#global_body_<?php echo $ident;?> .btnPlay <?php if($theme->clickOnVid==1) echo ',#videoID_'.$ident.'' ?>, #global_body_<?php echo $ident;?> .btnPause').on('click', function () {
             if (video_<?php echo $ident;?>[0].paused) {
+                if(!is_youtube_video_<?php echo $ident ?>())
                 video_<?php echo $ident;?>[0].play();
+                else
+                    if(typeof player_<?php echo $ident;?> != 'undefined'){if(youtube_ready_<?php echo $ident ?>)player_<?php echo $ident ?>.playVideo();}
                 paly_<?php echo $ident;?>.css('display', "none");
                 pause_<?php echo $ident;?>.css('display', "");
             }
             else {
+                if(!is_youtube_video_<?php echo $ident ?>())
                 video_<?php echo $ident;?>[0].pause();
+                else
+                    if(typeof player_<?php echo $ident;?> != 'undefined')player_<?php echo $ident;?>.pauseVideo();
                 paly_<?php echo $ident;?>.css('display', "");
                 pause_<?php echo $ident;?>.css('display', "none");
             }
@@ -1183,14 +1183,13 @@ if($trackk->type=="http")
         }
         window.onload = check_volume_<?php echo $ident;?>();
         video_<?php echo $ident;?>.on('loadedmetadata', function () {
-
             jQuery('.duration_<?php echo $ident?>').text(video_<?php echo $ident;?>[0].duration);
         });
         video_<?php echo $ident;?>.on('timeupdate', function () {
             var progress_<?php  echo $ident?> = jQuery('#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>');
-            var currentPos_<?php  echo $ident?> = video_<?php echo $ident;?>[0].currentTime;
-            var maxduration_<?php  echo $ident?> = video_<?php echo $ident;?>[0].duration;
-            var percentage_<?php  echo $ident?> = 100 * currentPos_<?php  echo $ident?> / maxduration_<?php echo $ident;?>;
+            var currentPos_<?php  echo $ident?> = video_<?php echo $ident;?>[0].currentTime; //Get currenttime
+            var maxduration_<?php  echo $ident?> = video_<?php echo $ident;?>[0].duration; //Get video duration  
+            var percentage_<?php  echo $ident?> = 100 * currentPos_<?php  echo $ident?> / maxduration_<?php echo $ident;?>; //in %
             var position_<?php  echo $ident?> = (<?php echo $theme->appWidth; ?> * percentage_<?php  echo $ident?> / 100
             )
             -progress_<?php  echo $ident?>.offset().left;
@@ -1227,7 +1226,6 @@ if($trackk->type=="http")
                 }
             <?php }?>
         })
-
         var timeDrag_<?php echo $ident;?> = false;
         /* Drag status */
         jQuery('#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>').mousedown(function (e) {
@@ -1252,7 +1250,6 @@ if($trackk->type=="http")
             var maxduration_<?php  echo $ident?> = video_<?php echo $ident;?>[0].duration; //Video duraiton
             var position_<?php  echo $ident?> = x - progress_<?php  echo $ident?>.offset().left; //Click pos
             var percentage_<?php  echo $ident?> = 100 * position_<?php  echo $ident?> / progress_<?php  echo $ident?>.width();
-
             if (percentage_<?php  echo $ident?> > 100) {
                 percentage_<?php  echo $ident?> = 100;
             }
@@ -1358,7 +1355,8 @@ if($trackk->type=="http")
                         <?php echo (($theme->appWidth*20)/100) ?>+"px"},300)*/
                         <?php }?>
                         <?php if($theme->ctrlsSlideOut==1){ ?>
-                        jQuery('#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>').hide("slide", { direction: "<?php if($theme->ctrlsPos==1) echo 'up'; else echo 'down'; ?>" }, 1000);
+                        jQuery('#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>').hide("slide", { direction: "<?php if($theme->ctrlsPos==1) echo 'up'; else echo 'down'; ?>"
+                        }, 1000);
                         <?php } ?>
                     }
                 }, 1000);
@@ -1370,6 +1368,7 @@ if($trackk->type=="http")
                 }
                 if (document.getElementById('control_<?php  echo $ident?>').style.display == "none") {
                     jQuery('#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>').show("slide", { direction: "<?php if($theme->ctrlsPos==1) echo 'up'; else echo 'down'; ?>" }, 450);
+                    
                 }
             })
         })
@@ -1465,43 +1464,31 @@ else { ?>
         function in_array(needle, haystack, strict) {	// Checks if a value exists in an array
             // 
             // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-
             var found = false, key, strict = !!strict;
-
             for (key in haystack) {
                 if ((strict && haystack[key] === needle) || (!strict && haystack[key] == needle)) {
                     found = true;
                     break;
                 }
             }
-
             return found;
         }
-
-
         var vid_num_<?php  echo $ident?> = 0; //for set cur video number
-
         var used_track_<?php  echo $ident?> = new Array(); // played vido numbers 
-
         jQuery('.playPrev_<?php  echo $ident?>').on('click', function () {
-
+            next_vid_<?php  echo $ident?> = true;
             used_track_<?php  echo $ident?>[used_track_<?php  echo $ident?>.length] = vid_num_<?php  echo $ident?>;
             vid_num_<?php  echo $ident?>--;
-
             if (used_track_<?php  echo $ident?>.length >= video_urls_<?php  echo $ident?>.length) {
                 // reset old list
                 used_track_<?php  echo $ident?> = [];
-
-
                 if (jQuery('#shuffle_<?php  echo $ident?>').val() == 1) {
 // get new vido number out of used_tracks
                     vid_num_<?php  echo $ident?> = parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
                     while (in_array(vid_num_<?php  echo $ident?>, used_track_<?php  echo $ident?>)) {
                         vid_num_<?php  echo $ident?> = parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
                     }
-
                 }
-
             }
             if (jQuery('#shuffle_<?php  echo $ident?>').val() == 1) {
 // get new vido number out of used_tracks
@@ -1509,35 +1496,26 @@ else { ?>
                 while (in_array(vid_num_<?php  echo $ident?>, used_track_<?php  echo $ident?>)) {
                     vid_num_<?php  echo $ident?> = parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
                 }
-
             }
-
             if (vid_num_<?php  echo $ident?> < 0) {
                 vid_num_<?php  echo $ident?> = video_urls_<?php  echo $ident?>.length - 1;
             }
-            video_urls_<?php  echo $ident?>[vid_num_<?php  echo $ident?>].click()
+            video_urls_<?php  echo $ident?>[vid_num_<?php  echo $ident?>].click();
         });
-
-
         jQuery('#global_body_<?php echo $ident;?> .playNext_<?php echo $ident;?>').on('click', function () {
-
+            next_vid_<?php echo $ident;?> = true;
             used_track_<?php  echo $ident?>[used_track_<?php  echo $ident?>.length] = vid_num_<?php  echo $ident?>;
             vid_num_<?php  echo $ident?>++;
-
             if (used_track_<?php  echo $ident?>.length >= video_urls_<?php  echo $ident?>.length) {
                 // reset old list
                 used_track_<?php  echo $ident?> = [];
-
-
                 if (jQuery('#shuffle_<?php  echo $ident?>').val() == 1) {
 // get new vido number out of used_tracks
                     vid_num_<?php  echo $ident?> = parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
                     while (in_array(vid_num_<?php  echo $ident?>, used_track_<?php  echo $ident?>)) {
                         vid_num_<?php  echo $ident?> = parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
                     }
-
                 }
-
             }
             if (jQuery('#shuffle_<?php  echo $ident?>').val() == 1) {
 // get new vido number out of used_tracks
@@ -1545,14 +1523,12 @@ else { ?>
                 while (in_array(vid_num_<?php  echo $ident?>, used_track_<?php  echo $ident?>)) {
                     vid_num_<?php  echo $ident?> = parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
                 }
-
             }
-
             jQuery('#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>').css('width', '0%');
             if (vid_num_<?php  echo $ident?> == video_urls_<?php  echo $ident?>.length) {
                 vid_num_<?php  echo $ident?> = 0;
             }
-            video_urls_<?php  echo $ident?>[vid_num_<?php  echo $ident?>].click()
+            video_urls_<?php  echo $ident?>[vid_num_<?php  echo $ident?>].click();
         });
         jQuery(".lib_<?php  echo $ident?>").click(function () {
             jQuery('#album_div_<?php  echo $ident?>').css('transform', '');
@@ -1630,7 +1606,6 @@ else { ?>
             };
         }
         function changeColor_<?php  echo $ident?>() {
-
             for (i = 1; i < 30; i++)
                 if (document.getElementById('button' + i + '_<?php  echo $ident?>')) {
                     if (!originalPixels_<?php  echo $ident?>[i]) return; // Check if image has loaded
@@ -1680,7 +1655,10 @@ else { ?>
             }
         }
         jQuery('#track_list_<?php  echo $ident?>_0').find('#thumb_0_<?php echo $ident?>').click();
+        if(!is_youtube_video_<?php echo $ident ?>())    
         video_<?php echo $ident;?>[0].pause();
+        else
+            if(typeof player_<?php echo $ident;?> != 'undefined')player_<?php echo $ident;?>.pauseVideo();
         if (paly_<?php echo $ident;?> && pause_<?php echo $ident;?>) {
             paly_<?php echo $ident;?>.css('display', "");
             pause_<?php echo $ident;?>.css('display', "none");
@@ -1694,7 +1672,7 @@ else { ?>
         })
         jQuery('.volume_<?php  echo $ident?>')[0].style.width = '<?php echo $theme->defaultVol?>%';
         video_<?php echo $ident;?>[0].volume =<?php echo $theme->defaultVol/100 ;?>;
-        </script>
+       </script>
     <?php
     }
     ?>
@@ -1707,8 +1685,6 @@ else { ?>
     ob_end_clean();
     return $content;
 }
-
-
 ////
 function   front_end_Spider_Video_Player($id)
 {
@@ -1716,7 +1692,6 @@ function   front_end_Spider_Video_Player($id)
     global $ident;
     $find_priority = $wpdb->get_row($wpdb->prepare("SELECT priority FROM " .$wpdb->prefix ."Spider_Video_Player_player WHERE id=%d", $id));
     $priority = $find_priority->priority;
-
     $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_player WHERE id=%d", $id));
     $params = $wpdb->get_row($wpdb->prepare("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_theme WHERE id=%d", $row->theme));
     if ($priority == 0) {
@@ -1732,11 +1707,9 @@ html5_' .$ident .'.parentNode.removeChild(html5_' .$ident .');
 spidervideoplayerflash_' .$ident .'.style.display=\'\';
 }
 </script>';
-
     } else {
         $scripttt = '';
     }
-
     if ($priority == 0) {
         global $post;
         $id_for_posts = $post->ID;
@@ -1748,10 +1721,8 @@ spidervideoplayerflash_' .$ident .'.style.display=\'\';
         }
         if (!$b)
             return "";
-
         $Spider_Video_Player_front_end = "";
         $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_player WHERE id=%d", $id));
-
         $params = $wpdb->get_row($wpdb->prepare("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_theme WHERE id=%d", $row->theme));
         $theme = $row->theme;
         $playlist = $row->id;
@@ -1759,14 +1730,11 @@ spidervideoplayerflash_' .$ident .'.style.display=\'\';
             $width = $params->appWidth;
         else
             $width = '700';
-
         if ($params->appHeight != "")
             $height = $params->appHeight;
         else
             $height = '400';
-
         $show_trackid = $params->show_trackid;
-
         global $many_players;
         ?>
         <?php
@@ -1817,19 +1785,15 @@ u=location.href;
 			</script>
 			</div>
 			";
-
         $many_players++;
         ?>
         <?php
         return $Spider_Video_Player_front_end .Spider_Video_Player_front_end($id) .$scripttt;
-
     } else {
         $identt = $ident;
         return Spider_Video_Player_front_end($id) .'<script>document.getElementById("spidervideoplayerhtml5_' .$identt .'").style.display=\'\'</script>';
-
     }
 }
-
 function Spider_Video_Player_front_end($id)
 {
     ob_start();
@@ -1846,22 +1810,24 @@ function Spider_Video_Player_front_end($id)
         $playlist_array = explode(',', $playlist->playlist);
         global $many_players;
         if (isset($_POST['playlist_id'])) {
-            $playlistID = esc_sql(esc_html(stripslashes($_POST['playlist_id'])));
+            $playlistID = esc_html(stripslashes($_POST['playlist_id']));
         } else $playlistID = 1;
         $key = $playlistID - 1;
         if (isset($playlist->playlist)) {
-            $playlistID = $playlist->playlist;
+            $playlistID = count($playlist_array)-1;
         } else $playlistID = 1;
         $key = $playlistID - 1;
-        $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_playlist WHERE id=%d", $playlist_array[$key]));
+    
+        $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_playlist WHERE id=%d", $playlist_array[0]));
         $theme = $wpdb->get_row($wpdb->prepare("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_theme WHERE id=%d", $theme_id->theme));
         $row1 = $wpdb->get_row($wpdb->prepare("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_player WHERE id=%d", $id));
+                
         $themeid = $row1->theme;
         if (isset($row->videos))
             $video_ids = substr($row->videos, 0, -1);
         else
             $video_ids = 0;
-        $videos = $wpdb->get_results("SELECT urlHtml5,type,title,thumb FROM " .$wpdb->prefix ."Spider_Video_Player_video WHERE id IN ($video_ids)");
+        $videos = $wpdb->get_results("SELECT url,urlHtml5,type,title,thumb FROM " .$wpdb->prefix ."Spider_Video_Player_video WHERE id IN ($video_ids)");
         $video_urls = '';
         for ($i = 0; $i < count($videos); $i++) {
             if ($videos[$i]->urlHtml5 != "") {
@@ -1878,7 +1844,7 @@ function Spider_Video_Player_front_end($id)
         // load the row from the db table
         $k = $libRows * $libCols;
         if (isset($_POST['play'])) {
-            $p = esc_sql(esc_html(stripslashes($_POST['play'])));
+            $p = esc_html(stripslashes($_POST['play']));
         } else $p = 0;
         $display = 'style="width:100%;height:100% !important;border-collapse: collapse;"';
         $table_count = 1;
@@ -1893,37 +1859,35 @@ function Spider_Video_Player_front_end($id)
             $share_top = '-' .$theme->appHeight + 20 .'px';
         }
         if (isset($_POST['AlbumId']))
-            $AlbumId = esc_sql(esc_html(stripslashes($_POST['AlbumId'])));
+            $AlbumId = esc_html(stripslashes($_POST['AlbumId']));
         else
             $AlbumId = '';
         if (isset($_POST['TrackId']))
-            $TrackId = esc_sql(esc_html(stripslashes($_POST['TrackId'])));
+            $TrackId = esc_html(stripslashes($_POST['TrackId']));
         else
             $TrackId = '';
         ?>
         <style>
+            a#dorado_mark_<?php echo $ident;?>:hover {
+                background: none !important;
+            }
             #album_table_<?php  echo $ident?> td,
             #album_table_<?php  echo $ident?> tr,
             #album_table_<?php  echo $ident?> img {
                 line-height: 1em !important;
             }
-
             #share_buttons_<?php echo $ident;?> img {
                 display: inline !important;
             }
-
             #album_div_<?php  echo $ident?> table {
                 margin: 0px !important;
             }
-
             #album_table_<?php  echo $ident?> {
                 margin: -1 0 1.625em !important;
             }
-
             table {
                 margin: 0em;
             }
-
             #global_body_<?php echo $ident;?> .control_<?php  echo $ident?> {
                 position: absolute;
                 background-color: rgba(<?php echo HEXDEC(SUBSTR($theme->framesBgColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
@@ -1933,17 +1897,14 @@ function Spider_Video_Player_front_end($id)
                 z-index: 7;
                 margin-top: -5px;
             }
-
             #global_body_<?php echo $ident;?> .control_<?php  echo $ident?> td {
                 padding: 0px !important;
                 margin: 0px !important;
             }
-
             #global_body_<?php echo $ident;?> .control_<?php  echo $ident?> td img {
                 padding: 0px !important;
                 margin: 0px !important;
             }
-
             #global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?> {
                 position: relative;
                 width: 100%;
@@ -1953,7 +1914,6 @@ function Spider_Video_Player_front_end($id)
                 border-top: 1px solid rgba(<?php echo HEXDEC(SUBSTR($theme->slideColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
                 border-bottom: 1px solid rgba(<?php echo HEXDEC(SUBSTR($theme->slideColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
             }
-
             #global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?> {
                 position: absolute;
                 top: 0;
@@ -1963,7 +1923,6 @@ function Spider_Video_Player_front_end($id)
                 background-color: <?php echo '#'.$theme->slideColor; ?>;
                 z-index: 5;
             }
-
             #global_body_<?php echo $ident;?> .bufferBar_<?php  echo $ident?> {
                 position: absolute;
                 top: 0;
@@ -1973,7 +1932,6 @@ function Spider_Video_Player_front_end($id)
                 background-color: <?php echo '#'.$theme->slideColor; ?>;
                 opacity: 0.3;
             }
-
             #global_body_<?php echo $ident;?> .volumeBar_<?php echo $ident;?> {
                 position: relative;
                 overflow: hidden;
@@ -1982,11 +1940,9 @@ function Spider_Video_Player_front_end($id)
                 background-color: rgba(<?php echo HEXDEC(SUBSTR($theme->framesBgColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
                 border: 1px solid rgba(<?php echo HEXDEC(SUBSTR($theme->slideColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->slideColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>);
             }
-
             #global_body_<?php echo $ident;?> img {
                 background: none !important;
             }
-
             #global_body_<?php echo $ident;?> .volume_<?php echo $ident;?> {
                 position: absolute;
                 top: 0;
@@ -1995,7 +1951,6 @@ function Spider_Video_Player_front_end($id)
                 height: 100%;
                 background-color: <?php echo '#'.$theme->slideColor; ?>;
             }
-
             #play_list_<?php  echo $ident?> {
                 height: <?php echo $theme->appHeight; ?>px;
                 width: 0px;
@@ -2003,7 +1958,7 @@ function Spider_Video_Player_front_end($id)
 	if ($theme->playlistPos==1)
 	echo 'position:absolute;float:left !important;';
 	else
-	echo 'position:relative;float:right !important;';
+	echo 'position:absolute;float:right !important;right:0;';
 	?>;
                 background-color: rgba(<?php echo HEXDEC(SUBSTR($theme->framesBgColor, 0, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 2, 2)) ?>, <?php echo HEXDEC(SUBSTR($theme->framesBgColor, 4, 2)) ?>, <?php echo $theme->framesBgAlpha/100; ?>) !important;
                 color: white;
@@ -2011,7 +1966,6 @@ function Spider_Video_Player_front_end($id)
                 padding: 0px !important;
                 margin: 0px !important;
             }
-
             #play_list_<?php  echo $ident?> img,
             #play_list_<?php  echo $ident?> td {
                 background-color: transparent !important;
@@ -2019,23 +1973,20 @@ function Spider_Video_Player_front_end($id)
                 padding: 0px !important;
                 margin: 0px !important;
             }
-
             .control_btns_<?php  echo $ident?> {
                 opacity: <?php echo $theme->ctrlsMainAlpha/100; ?>;
             }
-
             #control_btns_<?php  echo $ident?>,
             #volumeTD_<?php echo $ident;?> {
                 margin: 0px;
             }
-
             img {
                 box-shadow: none !important;
             }
-
             #td_ik_<?php echo $ident;?> {
                 border: 0px;
             }
+            
         </style>
     <?php
     $player_id = $wpdb->get_var($wpdb->prepare("SELECT theme FROM " .$wpdb->prefix ."Spider_Video_Player_player WHERE id=%d", $id));
@@ -2050,11 +2001,10 @@ function Spider_Video_Player_front_end($id)
              style="display:<?php if ($start_lib == 1) echo 'none'; else echo 'block' ?>;width:<?php echo $theme->appWidth; ?>px;height:<?php echo $theme->appHeight; ?>px;background-color:<?php echo "#" .$theme->vidBgColor; ?>">
             <div id="play_list_<?php echo $ident ?>">
                 <input type='hidden' value='0' id="track_list_<?php echo $ident; ?>"/>
-
                 <div style="height:90%" id="play_list1_<?php echo $ident; ?>">
                     <div id="arrow_up_<?php echo $ident ?>"
                          onmousedown="scrolltp2=setInterval('scrollTop2_<?php echo $ident; ?>()', 30)"
-                         onmouseup="clearInterval(scrolltp2)"
+                         onmouseup="clearInterval(scrolltp2)" onclick="scrollTop2_<?php echo $ident; ?>()"
                          style="overflow:hidden; text-align:center;width:<?php echo $theme->playlistWidth; ?>px; height:20px">
                         <img src="<?php echo plugins_url('', __FILE__) ?>/images/top.png"
                              style="cursor:pointer;  border:none;" id="button20_<?php echo $ident ?>"/>
@@ -2075,52 +2025,64 @@ function Spider_Video_Player_front_end($id)
 <td id="td_ik_' .$ident .'" style="text-align:left;border:0px solid grey;width:100%;vertical-align:top;">
 <div id="scroll_div2_' .$i .'_' .$ident .'" class="playlist_values_' .$ident .'" style="position:relative">';
                             $jj = 0;
-                            $vtttt = '';
+                            $vtttt = ''; 
                             for ($j = 0; $j < count($v_ids) - 1; $j++) {
                                 $vdss = $wpdb->get_row($wpdb->prepare("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_video WHERE id=%d", $v_ids[$j]));
-                                if ($vdss->type == "http") {
-                                    if ($vdss->urlHtml5 != "") {
+                              
+                                if ($vdss->type == "http" || $vdss->type == "youtube" || $vdss->type == "vimeo") {
+                                    if (($vdss->urlHtml5 == "" || !strpos($vdss->url, 'embed')) && $vdss->type != "vimeo") {
+                                        if ($vdss->type == "youtube") {
+                                            $html5Url = "https://www.youtube.com/embed/" . substr($vdss->url, strpos($vdss->url, '?v=') + 3, 11) . "?enablejsapi=1&html5=1&controls=1&modestbranding=1&rel=0";
+                                        } else {
+                                            $html5Url = $vdss->url;
+                                        }
+                                    } else
                                         $html5Url = $vdss->urlHtml5;
-                                    } else $html5Url = $vdss->url;
                                     $vidsTHUMB = $vdss->thumb;
-                                    $vtttt = (!$j || (j && !$vtttt) ? $vidsTHUMB : $vtttt);
+                                    $vtttt = (!$j || ($j && !$vtttt) ? $vidsTHUMB : $vtttt);
                                     if ($vdss->urlHDHtml5 != "") {
                                         $html5UrlHD = $vdss->urlHDHtml5;
                                     } else $html5UrlHD = $vdss->urlHD;
-                                    echo '<div id="thumb_' .$jj .'_' .$ident .'"  onclick="jQuery(\'#HD_on_' .$ident .'\').val(0);document.getElementById(\'videoID_' .$ident .'\').src=\'' .$html5Url .'\';document.getElementById(\'videoID_' .$ident .'\').poster=\'' .$vidsTHUMB .'\';play_' .$ident .'();vid_select_' .$ident .'(this);vid_num=' .$jj .';jQuery(\'#current_track_' .$ident .'\').val(' .$jj .');" class="vid_thumb_' .$ident .'" style="color:#' .$theme->textColor .';cursor:pointer;width:' .$theme->playlistWidth .'px;text-align:center; "  >';
+                                    echo '<div id="thumb_' .$jj .'_' .$ident .'"  onclick="jQuery(\'#HD_on_' .$ident .'\').val(0);';
+                                           if($vdss->type=="youtube")
+                                               echo 'youtube_control_'.$ident.'(\''.$html5Url.'\'); ';
+                                           elseif($vdss->type=="vimeo")
+                                                echo 'vimeo_control_'.$ident.'(\''.$html5Url.'\'); ';
+                                            else 
+                                                echo ' document.getElementById(\'videoID_' .$ident .'\').src=\'' .$html5Url.'\';video_control_'.$ident.'(\''.$html5Url.'\');play_' .$ident .'();';
+                                               echo    'document.getElementById(\'videoID_' .$ident .'\').poster=\'' .$vidsTHUMB .'\';vid_select_' .$ident .'(this);vid_num=' .$jj .';jQuery(\'#current_track_' .$ident .'\').val(' .$jj .');" class="vid_thumb_' .$ident .'" style="color:#' .$theme->textColor .';cursor:pointer;width:' .$theme->playlistWidth .'px;text-align:center; "  >';
                                     if ($vdss->thumb)
                                         echo '<img   src="' .$vidsTHUMB .'" width="90px" style="display:none;  border:none;"  />';
                                     echo '<p style="font-size:' .$theme->playlistTextSize .'px !important;line-height:30px !important;cursor:pointer;margin: 0px !important;padding:0px !important" >' .($theme->show_trackid ? ($jj + 1) .'-' : '') .$vdss->title .'</p></div>';
-
                                     echo '<input type="hidden" id="urlHD_' .$jj .'_' .$ident .'" value="' .$html5UrlHD .'" />';
                                     echo '<input type="hidden" id="vid_type_' .$jj .'_' .$ident .'" value="' .$vdss->type .'" />';
                                     $jj = $jj + 1;
                                 }
-                            }
+                            } 
                             echo '</div></td>
 </tr></table>';
                         }
                         ?>
                     </div>
                     <div onmousedown="scrollBot2=setInterval('scrollBottom2_<?php echo $ident; ?>()', 30)"
-                         onmouseup="clearInterval(scrollBot2)"
+                         onmouseup="clearInterval(scrollBot2)" onclick="scrollBottom2_<?php echo $ident; ?>()"
                          style="position:absolute;overflow:hidden; text-align:center;width:<?php echo $theme->playlistWidth; ?>px; height:20px"
                          id="divulushka_<?php echo $ident; ?>"><img
                             src="<?php echo plugins_url('', __FILE__) ?>/images/bot.png"
                             style="cursor:pointer;  border:none;" id="button21_<?php echo $ident ?>"/></div>
                 </div>
             </div>
+           
             <video ontimeupdate="timeUpdate_<?php echo $ident ?>()"
                    ondurationchange="durationChange_<?php echo $ident ?>();" id="videoID_<?php echo $ident ?>"
-                   src="<?php echo $videos[0]->urlHtml5; ?>" poster="<?php echo $vtttt ?>"
+                   src="" poster="<?php echo $vtttt ?>" 
                    style="width:100%; height:100%;margin:0px;position: absolute;">
                 <p>Your browser does not support the video tag.</p>
             </video>
-            <img src="<?php echo plugins_url('', __FILE__) ?>/images/wd_logo.png"
-                 style="top: <?php echo $theme->appHeight - 100 ?>px;position: absolute !important;height: 90px !important;"/>
-
+             <img src="<?php echo plugins_url('', __FILE__) ?>/images/wd_logo.png"
+                 style="bottom: 30px;position: absolute;width: 140px;height: 73px; border: 0px !important;left: 0px;"/>
             <div class="control_<?php echo $ident; ?>" id="control_<?php echo $ident; ?>" style="overflow:hidden;">
-                <?php if ($theme->ctrlsPos == 2) { ?>
+                <?php if ($theme->ctrlsPos == 2 ) { ?>
                     <div class="progressBar_<?php echo $ident; ?>">
                         <div class="timeBar_<?php echo $ident; ?>"></div>
                         <div class="bufferBar_<?php echo $ident; ?>"></div>
@@ -2128,11 +2090,12 @@ function Spider_Video_Player_front_end($id)
                 <?php
                 }
                 $ctrls = explode(',', $ctrlsStack);
-
+                
                 $y = 1;
-                echo '<table id="control_btns_' .$ident .'" style="width: 100%; border:none;border-collapse: inherit; background: transparent; margin-top: 4px;padding: 0px !important;"><tr style="background: transparent;">';
+                echo '<table id="control_btns_' .$ident .'" style="width: 100%; border:none;border-collapse: inherit; background: transparent;padding: 0px !important;"><tr style="background: transparent;">';
                 for ($i = 0; $i < count($ctrls); $i++) {
                     $ctrl = explode(':', $ctrls[$i]);
+                   
                     if ($ctrl[1] == 1) {
                         echo '<td style="border:none;background: transparent;">';
                         if ($ctrl[0] == 'playPause') {
@@ -2148,13 +2111,13 @@ function Spider_Video_Player_front_end($id)
                             if ($ctrl[0] == '+') {
                                 echo '<span id="space" style="position: relative;vertical-align: middle;padding-left:' .(($theme->appWidth * 20) / 100) .'px"></span>';
                             } else
-                                if ($ctrl[0] == 'time') {
+                                if ($ctrl[0] == 'time' ) {
                                     echo '						
 						  <span style="color:#' .$theme->ctrlsMainColor .';opacity:' .$theme->ctrlsMainAlpha / 100 .'; position:relative; vertical-align: middle; " id="time_' .$ident .'">00:00</span>
 						  <span style="color:#' .$theme->ctrlsMainColor .'; opacity:' .$theme->ctrlsMainAlpha / 100 .';position:relative; vertical-align: middle;">/</span> 
 						  <span style="color:#' .$theme->ctrlsMainColor .';opacity:' .$theme->ctrlsMainAlpha / 100 .';position:relative; vertical-align: middle;" id="duration_' .$ident .'">00:00</span>';
                                 } else
-                                    if ($ctrl[0] == 'vol') {
+                                    if ($ctrl[0] == 'vol' ) {
                                         if ($theme->appWidth > 400) {
                                             $img_button = '<img  style="position: relative;cursor:pointer; border:none;opacity:' .$theme->ctrlsMainAlpha / 100 .';vertical-align: middle;"  id="button' .$y .'_' .$ident .'"    src="' .plugins_url('', __FILE__) .'/images/vol.png"  />';
                                         } else {
@@ -2235,11 +2198,10 @@ function Spider_Video_Player_front_end($id)
                             onmouseout="this.style.background='none'" id="scroll"
                             style="overflow:hidden;width:50%;height:100%;text-align:center;float:right;cursor:pointer;"
                             onmousedown="scrolltp=setInterval('scrollTop_<?php echo $ident; ?>()', 30)"
-                            onmouseup="clearInterval(scrolltp)">
+                            onmouseup="clearInterval(scrolltp)" onclick="scrollTop_<?php echo $ident; ?>()">
                             <img src="<?php echo plugins_url('', __FILE__) ?>/images/top.png"
                                  style="cursor:pointer; margin: 0px !important; padding: 0px !important; border:none;background: transparent;"
                                  id="button25_<?php echo $ident; ?>"/>
-
                             <div>
                     </td>
                 </tr>
@@ -2272,7 +2234,6 @@ function Spider_Video_Player_front_end($id)
 			</td>';
                                     }
                                 }
-
                                 echo '</tr>';
                             }
                             if ($p < count($playlist_array) - 1) {
@@ -2301,9 +2262,16 @@ function Spider_Video_Player_front_end($id)
 <div style="width:100%;text-align:left;border:1px solid white;height:' .($theme->appHeight - 55) .'px;vertical-align:top;position:relative;overflow:hidden; min-width: 130px;">
 <div id="scroll_div_' .$i .'_' .$ident .'" style="position:relative;">';
                             $jj = 0;
+                            
                             for ($j = 0; $j < count($v_ids) - 1; $j++) {
                                 $vds1 = $wpdb->get_results("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_video WHERE id=" .$v_ids[$j]);
                                 if ($vds1[0]->type == 'http') {
+                                    echo '<p class="vid_title_' .$ident .'" ondblclick="jQuery(\'.show_vid_' .$ident .'\').click()" onmouseover="this.style.color=\'#' .$theme->textHoverColor .'\';this.style.background=\'rgba(' .HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2)) .',' .HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2)) .',' .HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2)) .',0.4)\'" onmouseout="this.style.color=\'#' .$theme->textColor .'\';this.style.background=\' none\'" style="padding: 0px !important;color:#' .$theme->textColor .' !important;font-size:' .$theme->libDetailsTextSize .'px !important;line-height:30px !important;cursor:pointer; margin: 0px !important;" onclick="jQuery(\'#HD_on_' .$ident .'\').val(0);jQuery(\'#track_list_' .$ident .'_' .$i .'\').find(\'.vid_thumb_' .$ident .'\')[' .$jj .'].click();playBTN_' .$ident .'();current_playlist_videos_' .$ident .'();vid_num=' .$jj .';jQuery(\'#current_track_' .$ident .'\').val(' .$jj .');vid_select2_' .$ident .'(this);playlist_select_' .$ident .'(' .$i .') ">' .($jj + 1) .' - ' .$vds1[0]->title .'</p>';
+                                    $jj = $jj + 1;
+                                }elseif($vds1[0]->type == 'youtube'){
+                                    echo '<p class="vid_title_' .$ident .'" ondblclick="jQuery(\'.show_vid_' .$ident .'\').click()" onmouseover="this.style.color=\'#' .$theme->textHoverColor .'\';this.style.background=\'rgba(' .HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2)) .',' .HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2)) .',' .HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2)) .',0.4)\'" onmouseout="this.style.color=\'#' .$theme->textColor .'\';this.style.background=\' none\'" style="padding: 0px !important;color:#' .$theme->textColor .' !important;font-size:' .$theme->libDetailsTextSize .'px !important;line-height:30px !important;cursor:pointer; margin: 0px !important;" onclick="jQuery(\'#HD_on_' .$ident .'\').val(0);jQuery(\'#track_list_' .$ident .'_' .$i .'\').find(\'.vid_thumb_' .$ident .'\')[' .$jj .'].click();playBTN_' .$ident .'();current_playlist_videos_' .$ident .'();vid_num=' .$jj .';jQuery(\'#current_track_' .$ident .'\').val(' .$jj .');vid_select2_' .$ident .'(this);playlist_select_' .$ident .'(' .$i .') ">' .($jj + 1) .' - ' .$vds1[0]->title .'</p>';
+                                    $jj = $jj + 1;
+                                }elseif($vds1[0]->type == 'vimeo'){
                                     echo '<p class="vid_title_' .$ident .'" ondblclick="jQuery(\'.show_vid_' .$ident .'\').click()" onmouseover="this.style.color=\'#' .$theme->textHoverColor .'\';this.style.background=\'rgba(' .HEXDEC(SUBSTR($theme->itemBgHoverColor, 0, 2)) .',' .HEXDEC(SUBSTR($theme->itemBgHoverColor, 2, 2)) .',' .HEXDEC(SUBSTR($theme->itemBgHoverColor, 4, 2)) .',0.4)\'" onmouseout="this.style.color=\'#' .$theme->textColor .'\';this.style.background=\' none\'" style="padding: 0px !important;color:#' .$theme->textColor .' !important;font-size:' .$theme->libDetailsTextSize .'px !important;line-height:30px !important;cursor:pointer; margin: 0px !important;" onclick="jQuery(\'#HD_on_' .$ident .'\').val(0);jQuery(\'#track_list_' .$ident .'_' .$i .'\').find(\'.vid_thumb_' .$ident .'\')[' .$jj .'].click();playBTN_' .$ident .'();current_playlist_videos_' .$ident .'();vid_num=' .$jj .';jQuery(\'#current_track_' .$ident .'\').val(' .$jj .');vid_select2_' .$ident .'(this);playlist_select_' .$ident .'(' .$i .') ">' .($jj + 1) .' - ' .$vds1[0]->title .'</p>';
                                     $jj = $jj + 1;
                                 }
@@ -2352,7 +2320,7 @@ function Spider_Video_Player_front_end($id)
                             onmouseout="this.style.background='none'" id="scroll"
                             style="overflow:hidden;width:50%;height:100%;text-align:center;float:right;cursor:pointer;"
                             onmousedown="scrollBot=setInterval('scrollBottom_<?php echo $ident; ?>()', 30)"
-                            onmouseup="clearInterval(scrollBot)">
+                            onmouseup="clearInterval(scrollBot)" onclick="scrollBottom_<?php echo $ident; ?>()"> 
                             <img src="<?php echo plugins_url('', __FILE__) ?>/images/bot.png"
                                  style="cursor:pointer;border:none;background: transparent;padding:0px !important;"
                                  id="button26_<?php echo $ident ?>"/>
@@ -2443,17 +2411,199 @@ function Spider_Video_Player_front_end($id)
         <input type="hidden" value="<?php echo $theme->defaultRepeat ?>" id="repeat_<?php echo $ident ?>"/>
         <input type="hidden" value="0" id="HD_on_<?php echo $ident ?>"/>
         <input type="hidden" value="" id="volumeBar_width_<?php echo $ident ?>"/>
+        <script src="http://www.youtube.com/player_api"></script>
+        <script src="https://f.vimeocdn.com/js/froogaloop2.min.js"></script>
         <script>
+       function is_youtube_video_<?php echo $ident ?>(){
+            if(jQuery("#videoID_<?php echo $ident ?>").attr("src").indexOf("youtube.com/")>-1 || jQuery("#videoID_<?php echo $ident ?>").attr("src").indexOf("vimeo.com/")>-1){
+                return true;}
+            return false;
+        }
+        var ua = navigator.userAgent.toLowerCase();
+        var isAndroid = ua.indexOf("android") > -1; 
+        var next_vid_<?php echo $ident ?> = false;
+        var player_<?php echo $ident ?>;
+        var vimeo_play_<?php echo $ident ?> = false;
+        var youtube_ready_<?php echo $ident ?> = false; 
+        function onPlayerReady_<?php echo $ident ?>(event) {
+            youtube_ready_<?php echo $ident ?> = true; 
+          <?php  if($theme->autoPlay ==1)
+           echo  "player_".$ident.".playVideo();";
+               ?>     
+           if(next_vid_<?php echo $ident ?>){  
+               player_<?php echo $ident ?>.playVideo();}
+       
+        }
+         function onPlayerStateChange_<?php echo $ident ?>(event) {  
+            if(event.data === 0) {          
+              if (jQuery('#repeat_<?php echo $ident ?>').val() == 'repeatOne') {
+                  {if(youtube_ready_<?php echo $ident ?>)player_<?php echo $ident ?>.playVideo();}
+                 paly_<?php echo $ident ?>.css('display', 'none');
+                pause_<?php echo $ident ?>.css('display', '');
+            }
+            if (jQuery('#repeat_<?php echo $ident ?>').val() == 'repeatAll') {
+                jQuery('#global_body_<?php echo $ident ?> .playNext_<?php echo $ident ?>').click();
+                    setTimeout(function(){player_<?php echo $ident ?>.playVideo()},0);
+            }
+            }if(event.data == YT.PlayerState.PLAYING){
+                paly_<?php echo $ident ?>.css('display', 'none');
+                pause_<?php echo $ident ?>.css('display', ''); 
+            }
+            if(event.data == YT.PlayerState.PAUSED)
+            {
+                paly_<?php echo $ident ?>.css('display', '');
+                pause_<?php echo $ident ?>.css('display', 'none'); 
+            }
+        };
+        function onVimeoReady_<?php echo $ident;?>(){
+            youtube_ready_<?php echo $ident ?> = true;
+            try{
+            player_<?php echo $ident;?>.addEvent('play', onPlay_<?php echo $ident ?>);
+            player_<?php echo $ident;?>.addEvent('pause', onPause_<?php echo $ident ?>);
+            player_<?php echo $ident;?>.addEvent('finish', onFinish_<?php echo $ident ?>);
+            
+            }catch(err){
+                return false;
+            }
+        }
+        function onPlay_<?php echo $ident ?>(id){
+            vimeo_play_<?php echo $ident ?> = true;
+            paly_<?php echo $ident ?>.css('display', 'none');
+            pause_<?php echo $ident ?>.css('display', ''); 
+        }
+        function onPause_<?php echo $ident ?>(id){
+            vimeo_play_<?php echo $ident ?> = false;
+            paly_<?php echo $ident ?>.css('display', '');
+            pause_<?php echo $ident ?>.css('display', 'none'); 
+        }
+        function onFinish_<?php echo $ident ?>(id){
+            if (jQuery('#repeat_<?php echo $ident ?>').val() == 'repeatOne') {
+                {if(youtube_ready_<?php echo $ident ?>)player_<?php echo $ident ?>.playVideo();}
+                paly_<?php echo $ident ?>.css('display', 'none');
+                pause_<?php echo $ident ?>.css('display', '');
+            }
+            if (jQuery('#repeat_<?php echo $ident ?>').val() == 'repeatAll') {
+                jQuery('#global_body_<?php echo $ident ?> .functiom<?php echo $ident ?>').click();
+               
+            }
+        }
+        function youtube_control_<?php echo $ident;?>(src){
+            jQuery("#time_<?php echo $ident;?>").parent('td').hide();
+            jQuery("#control_<?php echo $ident;?> .btnPlay").parent('td').hide();
+            jQuery(".progressBar_<?php echo $ident;?>").hide();
+            jQuery("#volumeTD_<?php echo $ident;?>").parent('td').hide();
+            jQuery(".hd_<?php echo $ident;?>").parent('td').hide();
+            jQuery(".fullScreen_<?php echo $ident;?>").parent('td').hide();
+            var button_width = <?php echo $theme->appWidth; ?> - 240;
+            jQuery("#control_<?php echo $ident;?>").attr('style',"overflow:hidden;");
+            jQuery("#control_<?php echo $ident;?>").attr("style",jQuery("#control_1").attr("style")+"top : auto !important;bottom: 0px;width:"+button_width+"px; margin-left:160px;height: 27px;line-height: 27px;background: transparent;");
+            jQuery("#control_<?php echo $ident;?> #control_btns_<?php echo $ident;?>").css({"line-height":"27px","width":"100%"});
+            jQuery('#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').css({'background':'transparent','margin-left': '160px','text-align': 'inherit','top':'-130px'});
+            jQuery("#videoID_<?php echo $ident;?>").replaceWith('<iframe id="videoID_<?php echo $ident ?>" type="text/html" width="<?php echo $theme->appWidth; ?>" height="<?php echo $theme->appHeight; ?>" src="'+src+'" frameborder="0" allowfullscreen></iframe>');
+            jQuery("#videoID_<?php echo $ident;?>").load(function(){
+                youtube_ready_<?php echo $ident ?> = false;
+                set_youtube_player_<?php echo $ident;?>();
+                var ua = navigator.userAgent.toLowerCase();
+                var isAndroid = ua.indexOf("android") > -1; //&& ua.indexOf("mobile");
+                if(!isAndroid) {
+                        play_<?php echo $ident; ?>();
+                       
+                }else{
+                     paly_<?php echo $ident; ?>.css('display', "");
+                    pause_<?php echo $ident; ?>.css('display', "none");
+                }
+            });            
+        }
+        function vimeo_control_<?php echo $ident;?>(src){
+            jQuery("#time_<?php echo $ident;?>").parent('td').hide();
+            jQuery("#control_<?php echo $ident;?> .btnPlay").parent('td').hide();
+            jQuery(".progressBar_<?php echo $ident;?>").hide();
+            jQuery("#volumeTD_<?php echo $ident;?>").parent('td').hide();
+            jQuery(".hd_<?php echo $ident;?>").parent('td').hide();
+            jQuery(".fullScreen_<?php echo $ident;?>").parent('td').hide();
+            var button_width = <?php echo $theme->appWidth; ?> - 240;
+            jQuery("#control_<?php echo $ident;?>").attr('style',"overflow:hidden;");
+            jQuery("#control_<?php echo $ident;?>").attr("style",jQuery("#control_1").attr("style")+"top : auto !important;bottom: 0px;width:"+button_width+"px; margin-left:160px;background: transparent;height: 27px;");
+            jQuery("#control_<?php echo $ident;?> #control_btns_<?php echo $ident;?>").css({"line-height":"27px","width":"100%"});
+            jQuery('#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').css({'background':'transparent','margin-left': '160px','text-align': 'inherit','top':'-130px'});
+            if(typeof player_<?php echo $ident;?> != "undefined" && player_<?php echo $ident;?> !=null){
+            if(typeof player_<?php echo $ident;?>.api == "function"){
+                jQuery("#videoID_<?php echo $ident;?>").attr("src",src+';player_id=videoID_<?php echo $ident; ?>;badge=0;byline=0;portrait=0;');
+                return false;}
+            }
+            jQuery("#videoID_<?php echo $ident;?>").replaceWith('<iframe id="videoID_<?php echo $ident ?>" type="text/html" name="videoID_<?php echo $ident ?>" width="<?php echo $theme->appWidth; ?>" height="<?php echo $theme->appHeight; ?>" src="'+src+';player_id=videoID_<?php echo $ident; ?>;badge=0;byline=0;portrait=0;" frameborder="0" allowfullscreen></iframe>');
+            jQuery("#videoID_<?php echo $ident;?>").load(function(){
+                youtube_ready_<?php echo $ident ?> = false;
+                vimeo_play_<?php echo $ident ?> = false;
+                set_vimeo_player_<?php echo $ident;?>();
+                var ua = navigator.userAgent.toLowerCase();
+                var isAndroid = ua.indexOf("android") > -1; //&& ua.indexOf("mobile");
+                if(!isAndroid) {
+                        play_<?php echo $ident; ?>();
+                }else{
+                     paly_<?php echo $ident; ?>.css('display', "");
+                    pause_<?php echo $ident; ?>.css('display', "none");
+                }
+            });
+            
+        }
+        function set_youtube_player_<?php echo $ident;?>(){
+            
+            if(typeof YT.Player != 'undefined'){
+            player_<?php echo $ident;?> = new YT.Player('videoID_<?php echo $ident;?>', {
+                  events: {'onReady':onPlayerReady_<?php echo $ident;?>,'onStateChange': onPlayerStateChange_<?php echo $ident;?>             
+                    }
+                 });
+            }else
+                setTimeout(function(){set_youtube_player_<?php echo $ident;?>()},200);
+        }
+  
+        function set_vimeo_player_<?php echo $ident;?>(){
+            
+            if(typeof $f != 'undefined'){ 
+            jQuery('#videoID_<?php echo $ident;?>').each(function(){
+                player_<?php echo $ident;?> =  $f(this);
+                player_<?php echo $ident;?>.addEvent('ready', onVimeoReady_<?php echo $ident ?>);
+                player_<?php echo $ident;?>.playVideo = function(){
+                    if(!vimeo_play_<?php echo $ident ?>)
+                    setTimeout(function(){player_<?php echo $ident;?>.playVideo();},500);
+                    player_<?php echo $ident;?>.api("play");
+                }
+                player_<?php echo $ident;?>.pauseVideo = function(){player_<?php echo $ident;?>.api("pause");}
+            });
+            }else
+                setTimeout(function(){set_vimeo_player_<?php echo $ident;?>()},200);
+        }
+        function video_control_<?php echo $ident;?>(src){
+           jQuery("#time_<?php echo $ident;?>").parent('td').show();
+           jQuery("#control_<?php echo $ident;?> .btnPlay").parent('td').show();
+            jQuery(".progressBar_<?php echo $ident;?>").show();
+            jQuery("#volumeTD_<?php echo $ident;?>").parent('td').show();
+            jQuery(".hd_<?php echo $ident;?>").parent('td').show();
+            jQuery(".fullScreen_<?php echo $ident;?>").parent('td').show();
+            jQuery("#control_<?php echo $ident;?>").attr('style',"overflow:hidden;");
+            jQuery("#control_<?php echo $ident;?> #control_btns_<?php echo $ident;?>").css("line-height","");
+            jQuery('#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').css({'background':'transparent','margin-left': '','text-align': 'center','top':'<?php echo $share_top;?>'});
+            jQuery("#videoID_<?php echo $ident;?>").replaceWith('<video ontimeupdate="timeUpdate_<?php echo $ident ?>()" ondurationchange="durationChange_<?php echo $ident ?>();" id="videoID_<?php echo $ident ?>" src="'+src+'" poster="<?php echo $vtttt ?>" style="width:100%; height:100%;margin:0px;position: absolute;top:0px;"><p>Your browser does not support the video tag.</p></video>');
+            video_<?php echo $ident;?> = jQuery('#videoID_<?php  echo $ident?>');
+            v_timeupdate_<?php  echo $ident?>(video_<?php echo $ident;?>);
+            v_ended_<?php  echo $ident?>(video_<?php echo $ident;?>);
+            youtube_ready_<?php echo $ident ?> = false;
+            vimeo_play_<?php echo $ident ?> = false;
+            player_<?php echo $ident;?> = null;
+        }
         var video_<?php echo $ident;?> = jQuery('#videoID_<?php  echo $ident?>');
         var paly_<?php echo $ident;?> = jQuery('#global_body_<?php echo $ident;?> .btnPlay');
         var pause_<?php echo $ident;?> = jQuery('#global_body_<?php echo $ident;?> .btnPause');
+        var check_play_<?php echo $ident;?> = false;
         function embed_url_<?php echo $ident;?>(a, b) {
-            jQuery('#embed_Url_<?php  echo $ident?>').html('<iframe allowFullScreen allowTransparency="true" frameborder="0" width="<?php echo $theme->appWidth ?>" height="<?php echo $theme->appHeight ?>" src="' + location.href + '&AlbumId=' + a + '&TrackId=' + b + '" type="text/html" ></iframe>')
+//            jQuery('#embed_Url_<?php  echo $ident?>').html('<iframe allowFullScreen allowTransparency="true" frameborder="0" width="<?php echo $theme->appWidth ?>" height="<?php echo $theme->appHeight ?>" src="' + location.href + '&AlbumId=' + a + '&TrackId=' + b + '" type="text/html" ></iframe>')
             jQuery('#embed_Url_<?php  echo $ident?>').focus();
             jQuery('#embed_Url_<?php  echo $ident?>').select();
         }
+        
         jQuery('#global_body_<?php echo $ident;?> .share_<?php echo $ident;?>, #global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').on('mouseenter', function () {
-            left = jQuery('#global_body_<?php echo $ident;?> .share_<?php echo $ident;?>').position().left
+            left = jQuery('#global_body_<?php echo $ident;?> .share_<?php echo $ident;?>').position().left;
             if (parseInt(jQuery('#global_body_<?php echo $ident;?> #play_list_<?php  echo $ident?>').css('width')) == 0)
                 jQuery('#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').css('left', left)
             else
@@ -2513,6 +2663,7 @@ function Spider_Video_Player_front_end($id)
             jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[0].style.display = "none";
             jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[1].style.display = "none";
             jQuery('#global_body_<?php echo $ident;?> .repeat_<?php  echo $ident?>')[2].style.display = "";
+            jQuery('#videoID_<?php echo $ident;?>').attr('scr',jQuery('#videoID_<?php echo $ident;?>').attr('scr')+"&loop=1");
         }
         <?php }?>
         <?php if($theme->defaultRepeat=='repeatAll'){ ?>
@@ -2530,6 +2681,7 @@ function Spider_Video_Player_front_end($id)
                     jQuery('.repeat_<?php  echo $ident?>')[0].style.display = "none";
                     jQuery('.repeat_<?php  echo $ident?>')[1].style.display = "none";
                     jQuery('.repeat_<?php  echo $ident?>')[2].style.display = "";
+                    jQuery('#videoID_<?php echo $ident;?>').attr('scr',jQuery('#videoID_<?php echo $ident;?>').attr('scr')+"&loop=1");
                     break;
                 case 'repeatOne':
                     jQuery('#repeat_<?php  echo $ident?>').val('repeatAll');
@@ -2545,18 +2697,18 @@ function Spider_Video_Player_front_end($id)
                     break;
             }
         })
-        jQuery('#global_body_<?php echo $ident;?> #voulume_img_<?php echo $ident;?>').on('click', function () {
+        jQuery('#global_body_<?php echo $ident;?> #voulume_img_<?php echo $ident;?>').live('click', function () {
             if (jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>')[0].style.width != '0%') {
                 video_<?php echo $ident;?>[0].volume = 0;
-                jQuery('#global_body_<?php echo $ident;?> #volumeBar_width_<?php  echo $ident?>').val(jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>')[0].style.width)
+                jQuery('body #volumeBar_width_<?php  echo $ident?>').val(jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>')[0].style.width)
                 jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width', '0%')
             }
             else {
-                video_<?php echo $ident;?>[0].volume = parseInt(jQuery('#global_body_<?php echo $ident;?> #volumeBar_width_<?php  echo $ident?>').val()) / 100;
-                jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width', jQuery('#global_body_<?php echo $ident;?> #volumeBar_width_<?php  echo $ident?>').val())
+                video_<?php echo $ident;?>[0].volume = parseInt(jQuery('body  #volumeBar_width_<?php  echo $ident?>').val()) / 100;
+                jQuery('#global_body_<?php echo $ident;?> .volume_<?php echo $ident;?>').css('width', jQuery('body #volumeBar_width_<?php  echo $ident?>').val())
             }
         })
-        jQuery('.hd_<?php echo $ident;?>').on('click', function () {
+        jQuery('.hd_<?php echo $ident;?>').live('click', function () {
             current_time_<?php  echo $ident?> = video_<?php echo $ident;?>[0].currentTime;
             HD_on_<?php  echo $ident?> = jQuery('#HD_on_<?php  echo $ident?>').val();
             current_playlist_table_<?php echo $ident;?> = jQuery('#current_playlist_table_<?php echo $ident;?>').val();
@@ -2833,17 +2985,34 @@ function Spider_Video_Player_front_end($id)
             if (current_playlist_table_<?php  echo $ident?> != track_list_<?php  echo $ident?>)
                 document.getElementById('track_list_<?php echo $ident;?>_' + track_list_<?php  echo $ident?>).style.display = "none";
             document.getElementById('track_list_<?php echo $ident;?>').value = current_playlist_table_<?php  echo $ident?>;
+             if(!is_youtube_video_<?php echo $ident ?>()){
+                 
             video_<?php echo $ident;?>[0].play();
-            paly_<?php echo $ident;?>.css('display', "none");
+             paly_<?php echo $ident;?>.css('display', "none");
             pause_<?php echo $ident;?>.css('display', "");
+        }
+            else
+                if(typeof player_<?php echo $ident;?> != 'undefined'){if(youtube_ready_<?php echo $ident ?>)player_<?php echo $ident ?>.playVideo();}
+           
         }
         function play_<?php echo $ident;?>() {
+            next_vid_<?php  echo $ident?> = true;
+            if(!is_youtube_video_<?php echo $ident ?>()){
             video_<?php echo $ident;?>[0].play();
-            paly_<?php echo $ident;?>.css('display', "none");
-            pause_<?php echo $ident;?>.css('display', "");
+            }      
+            else{
+                if(typeof player_<?php echo $ident;?> != 'undefined'){
+                    if(youtube_ready_<?php echo $ident ?>){
+                        player_<?php echo $ident ?>.playVideo();
+                    }
+                }
+            }
+            paly_<?php echo $ident; ?>.css('display', "none");
+            pause_<?php echo $ident; ?>.css('display', "");
         }
         jQuery('#global_body_<?php echo $ident;?> .btnPlay <?php if($theme->clickOnVid==1) echo ',#videoID_'.$ident.'' ?>, #global_body_<?php echo $ident;?> .btnPause').on('click', function () {
-            if (video_<?php echo $ident;?>[0].paused) {
+           if(!is_youtube_video_<?php echo $ident ?>()){
+        if (video_<?php echo $ident;?>[0].paused) {
                 video_<?php echo $ident;?>[0].play();
                 paly_<?php echo $ident;?>.css('display', "none");
                 pause_<?php echo $ident;?>.css('display', "");
@@ -2852,6 +3021,20 @@ function Spider_Video_Player_front_end($id)
                 video_<?php echo $ident;?>[0].pause();
                 paly_<?php echo $ident;?>.css('display', "");
                 pause_<?php echo $ident;?>.css('display', "none");
+            }
+        
+            }else{
+                if(!check_play_<?php echo $ident;?>){
+                     if(typeof player_<?php echo $ident;?> != 'undefined'){if(youtube_ready_<?php echo $ident ?>)player_<?php echo $ident ?>.playVideo();}
+                   check_play_<?php echo $ident;?> = true;
+                    paly_<?php echo $ident;?>.css('display', "none");
+                pause_<?php echo $ident;?>.css('display', "");
+                }else{
+                     if(typeof player_<?php echo $ident;?> != 'undefined')player_<?php echo $ident;?>.pauseVideo();
+                     check_play_<?php echo $ident;?> = false;
+                      paly_<?php echo $ident;?>.css('display', "");
+                pause_<?php echo $ident;?>.css('display', "none");
+                }
             }
             return false;
         });
@@ -2865,20 +3048,27 @@ function Spider_Video_Player_front_end($id)
         video_<?php echo $ident;?>.on('loadedmetadata', function () {
             jQuery('.duration_<?php echo $ident?>').text(video_<?php echo $ident;?>[0].duration);
         });
-        video_<?php echo $ident;?>.on('timeupdate', function () {
-            var progress_<?php  echo $ident?> = jQuery('#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>');
-            var currentPos_<?php  echo $ident?> = video_<?php echo $ident;?>[0].currentTime;
-            var maxduration_<?php  echo $ident?> = video_<?php echo $ident;?>[0].duration;
-            var percentage_<?php  echo $ident?> = 100 * currentPos_<?php  echo $ident?> / maxduration_<?php echo $ident;?>;
-            var position_<?php  echo $ident?> = (<?php echo $theme->appWidth; ?> * percentage_<?php  echo $ident?> / 100
-            )
-            -progress_<?php  echo $ident?>.offset().left;
-            jQuery('#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>').css('width', percentage_<?php  echo $ident?> + '%');
-        });
-        video_<?php echo $ident;?>.on('ended', function () {
+        
+        function v_timeupdate_<?php  echo $ident?>(el){
+             el.on('timeupdate', function () {
+                var progress_<?php  echo $ident?> = jQuery('#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>');
+                var currentPos_<?php  echo $ident?> = el[0].currentTime; //Get currenttime
+                var maxduration_<?php  echo $ident?> = el[0].duration; //Get video duration  
+                var percentage_<?php  echo $ident?> = 100 * currentPos_<?php  echo $ident?> / maxduration_<?php echo $ident;?>; //in %
+                var position_<?php  echo $ident?> = (<?php echo $theme->appWidth; ?> * percentage_<?php  echo $ident?> / 100
+                )
+                -progress_<?php  echo $ident?>.offset().left;
+                jQuery('#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>').css('width', percentage_<?php  echo $ident?> + '%');
+            });
+        }
+        function v_ended_<?php  echo $ident?>(el){
+        el.on('ended', function () {
             if (jQuery('#repeat_<?php  echo $ident?>').val() == "repeatOne") {
-                video_<?php echo $ident;?>[0].currentTime = 0;
-                video_<?php echo $ident;?>[0].play();
+               el[0].currentTime = 0;
+                if(!is_youtube_video_<?php echo $ident ?>())
+                el[0].play();
+                 else
+                if(typeof player_<?php echo $ident;?> != 'undefined'){if(youtube_ready_<?php echo $ident ?>)player_<?php echo $ident ?>.playVideo();}
                 paly_<?php echo $ident;?>.css('display', "none");
                 pause_<?php echo $ident;?>.css('display', "");
             }
@@ -2887,8 +3077,8 @@ function Spider_Video_Player_front_end($id)
             }
             if (jQuery('#repeat_<?php  echo $ident?>').val() == "repeatOff") {
                 if (vid_num_<?php  echo $ident?> == video_urls_<?php  echo $ident?>.length - 1) {
-                    video_<?php echo $ident;?>[0].currentTime = 0;
-                    video_<?php echo $ident;?>[0].pause();
+                    el[0].currentTime = 0;
+                    el[0].pause();
                     paly_<?php echo $ident;?>.css('display', "");
                     pause_<?php echo $ident;?>.css('display', "none");
                 }
@@ -2896,8 +3086,8 @@ function Spider_Video_Player_front_end($id)
             <?php if($theme->autoNext==1) { ?>
             if (jQuery('#repeat_<?php  echo $ident?>').val() == "repeatOff")
                 if (vid_num_<?php  echo $ident?> == video_urls_<?php  echo $ident?>.length - 1) {
-                    video_<?php echo $ident;?>[0].currentTime = 0;
-                    video_<?php echo $ident;?>[0].pause();
+                    el[0].currentTime = 0;
+                    el[0].pause();
                     paly_<?php echo $ident;?>.css('display', "");
                     pause_<?php echo $ident;?>.css('display', "none");
                 }
@@ -2905,7 +3095,8 @@ function Spider_Video_Player_front_end($id)
                     jQuery('#global_body_<?php echo $ident;?> .playNext_<?php echo $ident;?>').click();
                 }
             <?php }?>
-        })
+        });
+        }
         var timeDrag_<?php echo $ident;?> = false;
         /* Drag status */
         jQuery('#global_body_<?php echo $ident;?> .progressBar_<?php  echo $ident?>').mousedown(function (e) {
@@ -2930,7 +3121,6 @@ function Spider_Video_Player_front_end($id)
             var maxduration_<?php  echo $ident?> = video_<?php echo $ident;?>[0].duration; //Video duraiton
             var position_<?php  echo $ident?> = x - progress_<?php  echo $ident?>.offset().left; //Click pos
             var percentage_<?php  echo $ident?> = 100 * position_<?php  echo $ident?> / progress_<?php  echo $ident?>.width();
-
             if (percentage_<?php  echo $ident?> > 100) {
                 percentage_<?php  echo $ident?> = 100;
             }
@@ -2942,9 +3132,14 @@ function Spider_Video_Player_front_end($id)
             video_<?php echo $ident;?>[0].currentTime = maxduration_<?php  echo $ident?> * percentage_<?php  echo $ident?> / 100;
         };
         function startBuffer_<?php echo $ident;?>() {
-            setTimeout(function () {
+            setTimeout(function () {               
                 var maxduration_<?php echo $ident;?> = video_<?php echo $ident;?>[0].duration;
-                var currentBuffer_<?php echo $ident;?> = video_<?php echo $ident;?>[0].buffered.end(0);
+                try{
+                    var currentBuffer_<?php echo $ident;?> = video_<?php echo $ident;?>[0].buffered.end(0);
+                }catch(err){
+                     setTimeout(startBuffer_<?php echo $ident;?>, 500);
+                     return false;
+                }
                 var percentage_<?php echo $ident;?> = 100 * currentBuffer_<?php echo $ident;?> / maxduration_<?php echo $ident;?>;
                 jQuery('#global_body_<?php echo $ident;?> .bufferBar_<?php  echo $ident?>').css('width', percentage_<?php echo $ident;?> + '%');
                 if (currentBuffer_<?php echo $ident;?> < maxduration_<?php echo $ident;?>) {
@@ -3002,14 +3197,22 @@ function Spider_Video_Player_front_end($id)
         };
         var yy = 1;
         controlHideTime_<?php  echo $ident?> = '';
+        
+       
         jQuery("#global_body_<?php  echo $ident?>").each(function () {
             jQuery(this).mouseleave(function () {
                 controlHideTime_<?php  echo $ident?> = setInterval(function () {
+                    
                     yy = yy + 1;
                     if (yy <<?php echo $theme->autohideTime ?>) {
-                        return false
+                        return false;
                     }
                     else {
+                        if(is_youtube_video_<?php echo $ident ?>()){
+                        clearInterval(controlHideTime_<?php  echo $ident?>);
+                        yy = 1;
+                        return false;
+                    }
                         clearInterval(controlHideTime_<?php  echo $ident?>);
                         yy = 1;
                         jQuery("#event_type_<?php echo $ident;?>").val('mouseleave');
@@ -3034,32 +3237,27 @@ function Spider_Video_Player_front_end($id)
                         /*jQuery("#space").animate({
                          paddingLeft:
                         <?php echo (($theme->appWidth*20)/100) ?>+"px"},300)*/
-
                         <?php if($theme->playlistOverVid==0 && $theme->playlistPos==1){ ?>
                         jQuery("#videoID_<?php echo $ident;?>").animate({
                             width: <?php echo $theme->appWidth ?>+"px",
                             marginLeft: '0px'
                         }, 300);
                         <?php } ?>
-
                         <?php if($theme->playlistOverVid==0 && $theme->playlistPos==2){ ?>
                         jQuery("#videoID_<?php echo $ident;?>").animate({
                             width: <?php echo $theme->appWidth ?>+"px",
                         }, 300);
                         <?php } ?>
-
                         <?php if($theme->ctrlsSlideOut==1){ ?>
                         jQuery('.control').hide("slide", { direction: "<?php if($theme->ctrlsPos==1) echo 'up'; else echo 'down'; ?>" }, 1000);
                         <?php } ?>
-
                         <?php if($theme->playlistOverVid==0 && $theme->playlistPos==1){ ?>
                         jQuery("#videoID_<?php echo $ident;?>").animate({
                             width: <?php echo $theme->appWidth ?>+"px",
                             marginLeft: '0px'
                         }, 300);
+                        
                         <?php } ?>
-
-
                         <?php if($theme->playlistOverVid==0 && $theme->playlistPos==2){ ?>
                         jQuery("#videoID_<?php echo $ident;?>").animate({
                             width: <?php echo $theme->appWidth ?>+"px",
@@ -3067,21 +3265,24 @@ function Spider_Video_Player_front_end($id)
                         <?php } ?>
                         <?php }?>
                         <?php if($theme->ctrlsSlideOut==1){ ?>
-                        jQuery('#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>').hide("slide", { direction: "<?php if($theme->ctrlsPos==1) echo 'up'; else echo 'down'; ?>" }, 1000);
+                        jQuery('#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>').hide("slide", { direction: "<?php if($theme->ctrlsPos==1) echo 'up'; else echo 'down'; ?>", queue: false }, 1000);
+                        
                         <?php } ?>
                     }
                 }, 1000);
             });
             jQuery(this).mouseenter(function () {
                 if (controlHideTime_<?php  echo $ident?>) {
-                    clearInterval(controlHideTime_<?php  echo $ident?>)
+                    clearInterval(controlHideTime_<?php  echo $ident?>);
                     yy = 1;
                 }
                 if (document.getElementById('control_<?php  echo $ident?>').style.display == "none") {
                     jQuery('#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>').show("slide", { direction: "<?php if($theme->ctrlsPos==1) echo 'up'; else echo 'down'; ?>" }, 450);
+                    
                 }
             })
-        })
+        });
+        
         var xx = 1;
         volumeHideTime_<?php echo $ident;?> = '';
         jQuery("#volumeTD_<?php echo $ident;?>").each(function () {
@@ -3129,6 +3330,7 @@ else { ?>
                 jQuery("#play_list_<?php  echo $ident?>").animate({
                     width: <?php echo $theme->playlistWidth; ?>+"px",
                 }, 500);
+                if(!is_youtube_video_<?php echo $ident ?>()){
                 jQuery("#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>").animate({
                     width: <?php echo $theme->appWidth-$theme->playlistWidth; ?>+"px",
                     <?php if ($theme->playlistPos==1){ ?>
@@ -3142,20 +3344,18 @@ else { ?>
                 jQuery("#global_body_<?php echo $ident;?> #control_btns_<?php  echo $ident?>").animate({
                     width: <?php echo $theme->appWidth-$theme->playlistWidth; ?>+"px",
                 }, 500);
-
                 <?php if($theme->playlistOverVid==0 && $theme->playlistPos==1){ ?>
                 jQuery("#videoID_<?php echo $ident;?>").animate({
                     width: <?php echo $theme->appWidth-$theme->playlistWidth; ?>+'px',
                     marginLeft: <?php echo $theme->playlistWidth; ?>+'px'
                 }, 500);
                 <?php } ?>
-
-
                 <?php if($theme->playlistOverVid==0 && $theme->playlistPos==2){ ?>
                 jQuery("#videoID_<?php echo $ident;?>").animate({
                     width: <?php echo $theme->appWidth-$theme->playlistWidth; ?>+"px",
                 }, 500);
                 <?php } ?>
+            }
             }
             else {
                 jQuery("#global_body_<?php echo $ident;?> #play_list_<?php  echo $ident?>").animate({
@@ -3164,6 +3364,7 @@ else { ?>
                 setTimeout(function () {
                     jQuery("#play_list_<?php  echo $ident?>").css('display', 'none');
                 }, 1500)
+                if(!is_youtube_video_<?php echo $ident ?>()){
                 jQuery("#global_body_<?php echo $ident;?> .control_<?php  echo $ident?>").animate({
                     width: <?php echo $theme->appWidth; ?>+"px",
                     <?php if ($theme->playlistPos==1){ ?>
@@ -3177,26 +3378,21 @@ else { ?>
                 }, 1500);
                 /*jQuery("#space").animate({paddingLeft:
                 <?php echo (($theme->appWidth*20)/100)?>+'px'},1500)*/
-
                 <?php if($theme->playlistOverVid==0 && $theme->playlistPos==1){ ?>
                 jQuery("#videoID_<?php echo $ident;?>").animate({
                     width: <?php echo $theme->appWidth ?>+"px",
                     marginLeft: '0px'
                 }, 1500);
                 <?php } ?>
-
-
                 <?php if($theme->playlistOverVid==0 && $theme->playlistPos==2){ ?>
                 jQuery("#videoID_<?php echo $ident;?>").animate({
                     width: <?php echo $theme->appWidth ?>+"px",
                 }, 1500);
                 <?php } ?>
-
             }
-
+            }
         }
         jQuery('#global_body_<?php echo $ident;?> .playlist_<?php  echo $ident?>').on('click', show_hide_playlist);
-
         current_playlist_table_<?php  echo $ident?> = document.getElementById('current_playlist_table_<?php echo $ident;?>').value;
         video_urls_<?php echo $ident;?> = jQuery('#track_list_<?php  echo $ident?>_' + current_playlist_table_<?php  echo $ident?>).find('.vid_thumb_<?php echo $ident?>');
         function current_playlist_videos_<?php  echo $ident?>() {
@@ -3206,43 +3402,31 @@ else { ?>
         function in_array(needle, haystack, strict) {	// Checks if a value exists in an array
             // 
             // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-
             var found = false, key, strict = !!strict;
-
             for (key in haystack) {
                 if ((strict && haystack[key] === needle) || (!strict && haystack[key] == needle)) {
                     found = true;
                     break;
                 }
             }
-
             return found;
         }
-
-
         var vid_num_<?php  echo $ident?> = 0; //for set cur video number
-
         var used_track_<?php  echo $ident?> = new Array(); // played vido numbers 
-
-        jQuery('.playPrev_<?php  echo $ident?>').on('click', function () {
-
+        jQuery('#global_body_<?php echo $ident;?> .playPrev_<?php  echo $ident?>').on('click', function () {
+            next_vid_<?php  echo $ident?> = true;
             used_track_<?php  echo $ident?>[used_track_<?php  echo $ident?>.length] = vid_num_<?php  echo $ident?>;
             vid_num_<?php  echo $ident?>--;
-
             if (used_track_<?php  echo $ident?>.length >= video_urls_<?php  echo $ident?>.length) {
                 // reset old list
                 used_track_<?php  echo $ident?> = [];
-
-
                 if (jQuery('#shuffle_<?php  echo $ident?>').val() == 1) {
 // get new vido number out of used_tracks
                     vid_num_<?php  echo $ident?> = parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
                     while (in_array(vid_num_<?php  echo $ident?>, used_track_<?php  echo $ident?>)) {
                         vid_num_<?php  echo $ident?> = parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
                     }
-
                 }
-
             }
             if (jQuery('#shuffle_<?php  echo $ident?>').val() == 1) {
 // get new vido number out of used_tracks
@@ -3250,35 +3434,26 @@ else { ?>
                 while (in_array(vid_num_<?php  echo $ident?>, used_track_<?php  echo $ident?>)) {
                     vid_num_<?php  echo $ident?> = parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
                 }
-
             }
-
             if (vid_num_<?php  echo $ident?> < 0) {
                 vid_num_<?php  echo $ident?> = video_urls_<?php  echo $ident?>.length - 1;
             }
-            video_urls_<?php  echo $ident?>[vid_num_<?php  echo $ident?>].click()
+            video_urls_<?php  echo $ident?>[vid_num_<?php  echo $ident?>].click();
         });
-
-
         jQuery('#global_body_<?php echo $ident;?> .playNext_<?php echo $ident;?>').on('click', function () {
-
+            next_vid_<?php  echo $ident?> = true;
             used_track_<?php  echo $ident?>[used_track_<?php  echo $ident?>.length] = vid_num_<?php  echo $ident?>;
             vid_num_<?php  echo $ident?>++;
-
             if (used_track_<?php  echo $ident?>.length >= video_urls_<?php  echo $ident?>.length) {
                 // reset old list
                 used_track_<?php  echo $ident?> = [];
-
-
                 if (jQuery('#shuffle_<?php  echo $ident?>').val() == 1) {
 // get new vido number out of used_tracks
                     vid_num_<?php  echo $ident?> = parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
                     while (in_array(vid_num_<?php  echo $ident?>, used_track_<?php  echo $ident?>)) {
                         vid_num_<?php  echo $ident?> = parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
                     }
-
                 }
-
             }
             if (jQuery('#shuffle_<?php  echo $ident?>').val() == 1) {
 // get new vido number out of used_tracks
@@ -3286,14 +3461,12 @@ else { ?>
                 while (in_array(vid_num_<?php  echo $ident?>, used_track_<?php  echo $ident?>)) {
                     vid_num_<?php  echo $ident?> = parseInt(Math.random() * (video_urls_<?php  echo $ident?>.length - 0) + 0);
                 }
-
             }
-
             jQuery('#global_body_<?php echo $ident;?> .timeBar_<?php  echo $ident?>').css('width', '0%');
             if (vid_num_<?php  echo $ident?> == video_urls_<?php  echo $ident?>.length) {
                 vid_num_<?php  echo $ident?> = 0;
             }
-            video_urls_<?php  echo $ident?>[vid_num_<?php  echo $ident?>].click()
+            video_urls_<?php  echo $ident?>[vid_num_<?php  echo $ident?>].click();
         });
         jQuery(".lib_<?php  echo $ident?>").click(function () {
             jQuery('#album_div_<?php  echo $ident?>').css('transform', '');
@@ -3371,7 +3544,6 @@ else { ?>
             };
         }
         function changeColor_<?php  echo $ident?>() {
-
             for (i = 1; i < 30; i++)
                 if (document.getElementById('button' + i + '_<?php  echo $ident?>')) {
                     if (!originalPixels_<?php  echo $ident?>[i]) return; // Check if image has loaded
@@ -3391,21 +3563,40 @@ else { ?>
         <?php if($theme->spaceOnVid==1) { ?>
         var video_focus;
         jQuery('#global_body_<?php  echo $ident?> ,#videoID_<?php  echo $ident?>').each(function () {
-            jQuery(this).on('click', function () {
+            jQuery(this).live('click', function () {
                 setTimeout("video_focus=1", 100)
             })
         })
-        jQuery('body').on('click', function () {
+        jQuery('body').live('click', function () {
             video_focus = 0
         })
         jQuery(window).keypress(function (event) {
-            if (event.which == 13) {
-                event.preventDefault();
+            if(!is_youtube_video_<?php echo $ident ?>()){
+        if (video_<?php echo $ident;?>[0].paused) {
+                video_<?php echo $ident;?>[0].play();
+                paly_<?php echo $ident;?>.css('display', "none");
+                pause_<?php echo $ident;?>.css('display', "");
             }
-            if (event.keyCode == 32 && video_focus == 1) {
-                vidOnSpace_<?php echo $ident;?>()
-                return false;
+            else {
+                video_<?php echo $ident;?>[0].pause();
+                paly_<?php echo $ident;?>.css('display', "");
+                pause_<?php echo $ident;?>.css('display', "none");
             }
+        
+            }else{
+                if(!check_play_<?php echo $ident;?>){
+                     if(typeof player_<?php echo $ident;?> != 'undefined'){if(youtube_ready_<?php echo $ident ?>)player_<?php echo $ident ?>.playVideo();}
+                   check_play_<?php echo $ident;?> = true;
+                    paly_<?php echo $ident;?>.css('display', "none");
+                pause_<?php echo $ident;?>.css('display', "");
+                }else{
+                     if(typeof player_<?php echo $ident;?> != 'undefined')player_<?php echo $ident;?>.pauseVideo();
+                     check_play_<?php echo $ident;?> = false;
+                      paly_<?php echo $ident;?>.css('display', "");
+                pause_<?php echo $ident;?>.css('display', "none");
+                }
+            }
+            return false;
         });
         <?php }?>
         function vidOnSpace_<?php echo $ident;?>() {
@@ -3421,7 +3612,10 @@ else { ?>
             }
         }
         jQuery('#track_list_<?php  echo $ident?>_0').find('#thumb_0_<?php echo $ident?>').click();
+        if(!is_youtube_video_<?php echo $ident ?>())
         video_<?php echo $ident;?>[0].pause();
+        else
+                if(typeof player_<?php echo $ident;?> != 'undefined')player_<?php echo $ident;?>.pauseVideo();            
         if (paly_<?php echo $ident;?> && pause_<?php echo $ident;?>) {
             paly_<?php echo $ident;?>.css('display', "");
             pause_<?php echo $ident;?>.css('display', "none");
@@ -3438,7 +3632,7 @@ else { ?>
         </script>
     <?php
     if ($theme->openPlaylistAtStart)
-        echo "<script>jQuery(document).ready(show_hide_playlist);</script>";
+        echo "<script>jQuery(ifrae(show_hide_playlist);</script>";
     }
     ?>
     </div><br/>
@@ -3450,19 +3644,15 @@ else { ?>
     ob_end_clean();
     return $content;
 }
-
-
 //// add editor new mce button
 add_filter('mce_external_plugins', "Spider_Video_Player_register");
 add_filter('mce_buttons', 'Spider_Video_Player_add_button', 0);
-
 /// function for add new button
 function Spider_Video_Player_add_button($buttons)
 {
     array_push($buttons, "Spider_Video_Player_mce");
     return $buttons;
 }
-
 /// function for registr new button
 function Spider_Video_Player_register($plugin_array)
 {
@@ -3470,15 +3660,12 @@ function Spider_Video_Player_register($plugin_array)
     $plugin_array["Spider_Video_Player_mce"] = $url;
     return $plugin_array;
 }
-
-
 function add_button_style_Spider_Video_Player()
 {
-   echo '<script>var svp_plugin_url = "' .plugins_url('', __FILE__) .'";</script>';
+    echo '<script>var svp_plugin_url = "' .plugins_url('', __FILE__) .'";</script>';
+   
 }
-
 add_action('admin_head', 'add_button_style_Spider_Video_Player');
-
 //////////////////////////////////////////////////////////////////////////actions for popup and xmls
 require_once('functions_for_xml_and_ajax.php'); //include all functions for down call ajax
 add_action('wp_ajax_spiderVeideoPlayerPrewieve', 'spider_Veideo_Player_Prewieve');
@@ -3489,14 +3676,10 @@ add_action('wp_ajax_spiderVeideoPlayerselectvideo', 'spider_video_select_video')
 add_action('wp_ajax_spiderVeideoPlayersettingsxml', 'generete_sp_video_settings_xml');
 add_action('wp_ajax_spiderVeideoPlayerplaylistxml', 'generete_sp_video_playlist_xml');
 add_action('wp_ajax_spiderVeideoPlayervideoonly', 'viewe_sp_video_only');
-
-
 ////////////////////////////ajax for users
 add_action('wp_ajax_nopriv_spiderVeideoPlayervideoonly', 'viewe_sp_video_only');
 add_action('wp_ajax_nopriv_spiderVeideoPlayersettingsxml', 'generete_sp_video_settings_xml');
 add_action('wp_ajax_nopriv_spiderVeideoPlayerplaylistxml', 'generete_sp_video_playlist_xml');
-
-
 add_action('admin_menu', 'Spider_Video_Player_options_panel');
 function Spider_Video_Player_options_panel()
 {
@@ -3510,18 +3693,14 @@ function Spider_Video_Player_options_panel()
     add_submenu_page('Spider_Video_Player', 'Uninstall Spider_Video_Player ', 'Uninstall  Video Player', 'manage_options', 'Uninstall_Spider_Video_Player', 'Uninstall_Spider_Video_Player');
     add_action('admin_print_styles-' .$page_theme, 'sp_video_player_admin_styles_scripts');
     add_action('admin_print_styles-' .$Featured_Plugins, 'player_Featured_Plugins_styles');
-
 }
-
 function player_Featured_Plugins_styles()
 {
     wp_enqueue_style("Featured_Plugins", plugins_url("elements/featured_plugins.css", __FILE__));
 }
-
 function sp_video_player_admin_styles_scripts($id)
 {
     if (get_bloginfo('version') > 3.3) {
-
         wp_enqueue_script("jquery");
         wp_enqueue_script('jquery-ui-core');
         wp_enqueue_script("jquery-ui-widget");
@@ -3535,7 +3714,6 @@ function sp_video_player_admin_styles_scripts($id)
         wp_deregister_script('jquery-ui-slider');
         wp_register_script('jquery-ui-slider', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js');
         wp_enqueue_script('jquery-ui-slider');
-
     }
     wp_enqueue_script("mootols", plugins_url('elements/mootools.js', __FILE__));
     wp_enqueue_script("modal", plugins_url('elements/modal.js', __FILE__));
@@ -3543,11 +3721,8 @@ function sp_video_player_admin_styles_scripts($id)
     wp_enqueue_style("jqueri_ui_css", plugins_url('elements/jquery-ui.css', __FILE__));
     wp_enqueue_style("parsetheme_css", plugins_url('elements/parseTheme.css', __FILE__));
 }
-
 ///////////////////////////////////////////////////////////////////// TAGS
-
 require_once("nav_function/nav_html_func.php");
-
 add_filter('admin_head', 'ShowTinyMCE');
 function ShowTinyMCE($id)
 {
@@ -3565,21 +3740,14 @@ function ShowTinyMCE($id)
     do_action("admin_print_styles-post-php");
     do_action('admin_print_styles');
 }
-
 function Spider_Video_Player_player()
 {
-
     global $wpdb;
     $url = $wpdb->get_results("SELECT urlHdHtml5,urlHtml5 FROM " .$wpdb->prefix ."Spider_Video_Player_video");
-
-
     if (!$url) {
-
         $wpdb->query("ALTER TABLE " .$wpdb->prefix ."Spider_Video_Player_video  ADD urlHdHtml5 varchar(255) AFTER thumb, ADD urlHtml5 varchar(255) AFTER urlHD;");
         $wpdb->query("ALTER TABLE " .$wpdb->prefix ."Spider_Video_Player_player  ADD priority varchar(255) AFTER title;");
-
     }
-
     require_once("Spider_Video_Player_functions.php"); // add functions for player
     require_once("Spider_Video_Player_functions.html.php"); // add functions for vive player
     wp_enqueue_script('common');
@@ -3594,7 +3762,6 @@ function Spider_Video_Player_player()
     wp_enqueue_script('utils');
     do_action("admin_print_styles-post-php");
     do_action('admin_print_styles');
-
     if (isset($_GET["task"])) {
         $task = htmlspecialchars($_GET["task"]);
     } else {
@@ -3605,19 +3772,15 @@ function Spider_Video_Player_player()
     } else {
         $id = 0;
     }
-
     switch ($task) {
-
         case 'Spider_Video_Player':
             show_Spider_Video_Player();
             break;
         case "unpublish_Spider_Video_Player":
-			check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
-            change_tag($id);
+            check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
+			change_tag($id);
             show_Spider_Video_Player();
-
             break;
-
         case 'add_Spider_Video_Player':
             add_Spider_Video_Player();
             break;
@@ -3646,11 +3809,9 @@ function Spider_Video_Player_player()
                 show_Spider_Video_Player();
             }
             break;
-
         case 'edit_Spider_Video_Player':
             add_Spider_Video_Player();
             break;
-
         case 'remove_Spider_Video_Player':
 			$nonce_sp_vid = $_REQUEST['_wpnonce'];
 			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
@@ -3658,7 +3819,6 @@ function Spider_Video_Player_player()
             remove_Spider_Video_Player($id);
             show_Spider_Video_Player();
             break;
-
         case 'select_Spider_Video_Player':
             select_Spider_Video_Player();
             break;
@@ -3667,8 +3827,6 @@ function Spider_Video_Player_player()
             break;
     }
 }
-
-
 function player_Featured_Plugins()
 {
     ?>
@@ -3683,11 +3841,23 @@ function player_Featured_Plugins()
         </table>
         <form method="post">
             <ul id="featured-plugins-list">
+                <li class="photo-gallery">
+                    <div class="product">
+                        <div class="title">
+                            <strong class="heading">Photo Gallery</strong>
+                            <p>WordPress Photo Gallery Plugin</p>
+                        </div>
+                    </div>
+                    <div class="description">
+                        <p>Photo Gallery is a fully responsive WordPress Gallery plugin with advanced functionality. 
+                            It allows having different image galleries for your posts and pages, as well as different widgets. </p>
+                        <a target="_blank" href="http://web-dorado.com/products/wordpress-photo-gallery-plugin.html" class="download">Download</a>
+                    </div>
+                </li>
                 <li class="form-maker">
                     <div class="product">
                         <div class="title">
                             <strong class="heading">Form Maker</strong>
-
                             <p>Wordpress form builder plugin</p>
                         </div>
                     </div>
@@ -3700,7 +3870,6 @@ function player_Featured_Plugins()
                     <div class="product">
                         <div class="title">
                             <strong class="heading">Spider Calendar</strong>
-
                             <p>WordPress event calendar plugin</p>
                         </div>
                     </div>
@@ -3711,11 +3880,22 @@ function player_Featured_Plugins()
                            class="download">Download</a>
                     </div>
                 </li>
+                <li class="slider">
+                        <div class="product">
+                            <div class="title">
+                                <strong class="heading">Slider WD</strong>
+                                <p>WordPress slider plugin</p>
+                            </div>
+                        </div>
+                        <div class="description">
+                            <p>Slider WD is a responsive plugin for adding sliders to your site. Slides can use individual effects as well as effects for the layers (textual content, images, social sharing buttons).</p>
+                            <a target="_blank" href="http://web-dorado.com/products/wordpress-slider-plugin.html" class="download">Download</a>
+                        </div>
+                </li>
                 <li class="catalog">
                     <div class="product">
                         <div class="title">
                             <strong class="heading">Spider Catalog</strong>
-
                             <p>WordPress product catalog plugin</p>
                         </div>
                     </div>
@@ -3730,7 +3910,6 @@ function player_Featured_Plugins()
                     <div class="product">
                         <div class="title">
                             <strong class="heading">Spider Contacts</strong>
-
                             <p>Wordpress staff list plugin</p>
                         </div>
                     </div>
@@ -3745,7 +3924,6 @@ function player_Featured_Plugins()
                     <div class="product">
                         <div class="title">
                             <strong class="heading">Spider Facebook</strong>
-
                             <p>WordPress Facebook plugin</p>
                         </div>
                     </div>
@@ -3760,7 +3938,6 @@ function player_Featured_Plugins()
                     <div class="product">
                         <div class="title">
                             <strong class="heading">Spider FAQ</strong>
-
                             <p>WordPress FAQ Plugin</p>
                         </div>
                     </div>
@@ -3775,7 +3952,6 @@ function player_Featured_Plugins()
                     <div class="product">
                         <div class="title">
                             <strong class="heading">Zoom</strong>
-
                             <p>WordPress text zoom plugin</p>
                         </div>
                     </div>
@@ -3788,7 +3964,6 @@ function player_Featured_Plugins()
                     <div class="product">
                         <div class="title">
                             <strong class="heading">Flash Calendar</strong>
-
                             <p>WordPress flash calendar plugin</p>
                         </div>
                     </div>
@@ -3806,7 +3981,6 @@ function player_Featured_Plugins()
 }
 function Tags_Spider_Video_Player()
 {
-
     global $wpdb;
     require_once("tag_functions.php"); // add functions for Spider_Video_Player
     require_once("tag_function.html.php"); // add functions for vive Spider_Video_Player 
@@ -3824,11 +3998,9 @@ function Tags_Spider_Video_Player()
         case 'tag':
             show_tag();
             break;
-
         case 'add_tag':
             add_tag();
             break;
-
         case 'cancel_tag';
             cancel_tag();
             break;
@@ -3846,9 +4018,7 @@ function Tags_Spider_Video_Player()
             } else {
                 show_tag();
             }
-
             break;
-
         case 'save_tag':
             if (!$id) {
 				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
@@ -3859,76 +4029,62 @@ function Tags_Spider_Video_Player()
             }
             show_tag();
             break;
-
-        case 'saveorder';
-			check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
+        case 'saveorder':
+		    check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
             saveorder();
             break;
-
         case 'orderup' :
             ordertag(-1);
             break;
-
         case 'orderdown' :
             ordertag(1);
             break;
-
-
         case 'edit_tag':
             edit_tag($id);
             break;
-
         case 'remove_tag':
-			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+		    $nonce_sp_vid = $_REQUEST['_wpnonce'];
 			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
 			  die("Are you sure you want to do this?");
             remove_tag($id);
             show_tag();
             break;
-
         case 'publish_tag':
-			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+            $nonce_sp_vid = $_REQUEST['_wpnonce'];
 			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
 			  die("Are you sure you want to do this?");
-            change_tag($id);
+			change_tag($id);
             show_tag();
             break;
         case 'unpublish_tag':
-			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+            $nonce_sp_vid = $_REQUEST['_wpnonce'];
 			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
 			  die("Are you sure you want to do this?");
-            change_tag($id);
+			change_tag($id);
             show_tag();
             break;
-
         case 'required_tag':
-			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+            $nonce_sp_vid = $_REQUEST['_wpnonce'];
 			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
 			  die("Are you sure you want to do this?");
-            required_tag($id);
+			required_tag($id);
             show_tag();
             break;
         case 'unrequired_tag':
-			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+            $nonce_sp_vid = $_REQUEST['_wpnonce'];
 			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
 			  die("Are you sure you want to do this?");
-            required_tag($id);
+			required_tag($id);
             show_tag();
             break;
         default:
             show_tag();
             break;
-
     }
 }
-
-
 /////////////////////////////////// VIDEOS
-
-
 function Spider_Video_Player_Videos()
 {
-
     wp_enqueue_script('media-upload');
     wp_admin_css('thickbox');
     require_once("video_functions.php"); // add functions for Spider_Video_Player
@@ -3953,23 +4109,19 @@ function Spider_Video_Player_Videos()
         $id = 0;
     }
     switch ($task) {
-
         case 'video':
             show_video();
             break;
-
         case 'add_video':
             add_video();
             break;
-
         case 'published';
-			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+            $nonce_sp_vid = $_REQUEST['_wpnonce'];
 			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
 			  die("Are you sure you want to do this?");
-            published($id);
+			published($id);
             show_video();
             break;
-
         case 'Save':
             if (!$id) {
 			    check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
@@ -3989,46 +4141,35 @@ function Spider_Video_Player_Videos()
                 apply_video($id);
             }
             edit_video($id);
-
             break;
-
         case 'edit_video':
             edit_video($id);
             break;
-
         case 'remove_video':
-		    $nonce_sp_vid = $_REQUEST['_wpnonce'];
+            $nonce_sp_vid = $_REQUEST['_wpnonce'];
 			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
 			  die("Are you sure you want to do this?");
-            remove_video($id);
+			remove_video($id);
             show_video();
             break;
-
         case 'publish_video':
-		    $nonce_sp_vid = $_REQUEST['_wpnonce'];
+            $nonce_sp_vid = $_REQUEST['_wpnonce'];
 			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
 			  die("Are you sure you want to do this?");
-            change_video(1);
+			change_video(1);
             break;
         case 'unpublish_video':
-		    $nonce_sp_vid = $_REQUEST['_wpnonce'];
+            $nonce_sp_vid = $_REQUEST['_wpnonce'];
 			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
 			  die("Are you sure you want to do this?");
-            change_video(0);
+			change_video(0);
             break;
         default:
             show_video();
             break;
-
     }
-
-
 }
-
-
 ////////////////////////////////////////////// Playlists/////////////////////////////////////////////////////////
-
-
 function Spider_Video_Player_Playlists()
 {
     require_once("Playlist_functions.php"); // add functions for Spider_Video_Player
@@ -4043,25 +4184,20 @@ function Spider_Video_Player_Playlists()
     } else {
         $id = 0;
     }
-
     switch ($task) {
-
         case 'playlist':
             show_playlist();
             break;
         case "unpublish_playlist":
-			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+            $nonce_sp_vid = $_REQUEST['_wpnonce'];
 			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
 			  die("Are you sure you want to do this?");
-            change_tag($id);
+			change_tag($id);
             show_playlist();
-
             break;
-
         case 'add_playlist':
             add_playlist();
             break;
-
         case 'cancel_playlist';
             cancel_playlist();
             break;
@@ -4076,7 +4212,7 @@ function Spider_Video_Player_Playlists()
             show_playlist();
             break;
         case 'Apply':
-            if ($id == 0) {
+             if ($id == 0) {
                 check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
 				$save_or_no = save_playlist();
 			}
@@ -4090,19 +4226,16 @@ function Spider_Video_Player_Playlists()
                 show_playlist();
             }
             break;
-
         case 'edit_playlist':
             edit_playlist($id);
             break;
-
         case 'remove_playlist':
-			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+            $nonce_sp_vid = $_REQUEST['_wpnonce'];
 			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
 			  die("Are you sure you want to do this?");
-            remove_playlist($id);
+			remove_playlist($id);
             show_playlist();
             break;
-
         case 'select_playlist':
             select_playlist();
             break;
@@ -4110,22 +4243,14 @@ function Spider_Video_Player_Playlists()
             show_playlist();
             break;
     }
-
-
 }
-
-
 ////////////////////////////////////////////////////////////THEMS
-
-
 function Spider_Video_Player_Themes()
 {
     wp_enqueue_script('media-upload');
     wp_admin_css('thickbox');
     require_once("Theme_functions.php"); // add functions for Spider_Video_Player
     require_once("Themes_function.html.php"); // add functions for vive Spider_Video_Player
-
-
     if (isset($_GET["task"])) {
         $task = htmlspecialchars($_GET["task"]);
     } else {
@@ -4141,29 +4266,25 @@ function Spider_Video_Player_Themes()
             show_theme();
             break;
         case 'default':
-		    $nonce_sp_vid = $_REQUEST['_wpnonce'];
+            $nonce_sp_vid = $_REQUEST['_wpnonce'];
 			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
 			  die("Are you sure you want to do this?");
-            default_theme($id);
+			default_theme($id);
             show_theme();
             break;
-
         case 'add_theme':
             add_theme();
             break;
-
         case 'Save':
-            if ($id) {
+             if ($id) {
 				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 apply_theme($id);
             } else {
 				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 save_theme();
             }
-
             show_theme();
             break;
-
         case 'Apply':
             if ($id) {
 				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
@@ -4172,30 +4293,24 @@ function Spider_Video_Player_Themes()
 				check_admin_referer('nonce_sp_vid', 'nonce_sp_vid');
                 save_theme();
             }
-
             edit_theme($id);
             break;
-
         case 'edit_theme':
             edit_theme($id);
             break;
-
         case 'remove_theme':
-			$nonce_sp_vid = $_REQUEST['_wpnonce'];
+            $nonce_sp_vid = $_REQUEST['_wpnonce'];
 			if (! wp_verify_nonce($nonce_sp_vid, 'nonce_sp_vid') )
 			  die("Are you sure you want to do this?");
-            remove_theme($id);
+			remove_theme($id);
             show_theme();
             break;
         default:
             show_theme();
     }
 }
-
-
 function Uninstall_Spider_Video_Player()
 {
-
     global $wpdb;
     $base_name = plugin_basename('Spider_Video_Player');
     $base_page = 'admin.php?page=' .$base_name;
@@ -4203,14 +4318,10 @@ function Uninstall_Spider_Video_Player()
         $mode = trim(htmlspecialchars($_GET['mode']));
     else
         $mode = '';
-
-
     if (!empty($_POST['do'])) {
-
         if ($_POST['do'] == "UNINSTALL Spider_Video_Player") {
             check_admin_referer('Spider_Video_Player uninstall');
             if (trim($_POST['Spider_Video_Player_yes']) == 'yes') {
-
                 echo '<div id="message" class="updated fade">';
                 echo '<p>';
                 echo "Table 'Spider_Video_Player_tag' has been deleted.";
@@ -4240,15 +4351,11 @@ function Uninstall_Spider_Video_Player()
                 echo '</font><br />';
                 echo '</p>';
                 echo '</div>';
-
                 $mode = 'end-UNINSTALL';
             }
         }
     }
-
-
     switch ($mode) {
-
         case 'end-UNINSTALL':
             $deactivate_url = wp_nonce_url('plugins.php?action=deactivate&amp;plugin=' .plugin_basename(__FILE__), 'deactivate-plugin_' .plugin_basename(__FILE__));
             echo '<div class="wrap">';
@@ -4264,16 +4371,13 @@ function Uninstall_Spider_Video_Player()
                     <div class="wrap">
                         <div id="icon-Spider_Video_Player" class="icon32"><br/></div>
                         <h2><?php echo 'Uninstall Spider Video Player'; ?></h2>
-
                         <p>
                             <?php echo 'Deactivating Spider Video Player plugin does not remove any data that may have been created.To completely remove this plugin, you can uninstall it here.'; ?>
                         </p>
-
                         <p style="color: red">
                             <strong><?php echo 'WARNING:'; ?></strong><br/>
                             <?php echo 'Once uninstalled, this cannot be undone.You should use a Database Backup plugin of WordPress to back up all the data first.'; ?>
                         </p>
-
                         <p style="color: red">
                             <strong><?php echo 'The following WordPress Options/Tables will be DELETED:'; ?></strong><br/>
                         </p>
@@ -4309,14 +4413,7 @@ function Uninstall_Spider_Video_Player()
                 </form>
             <?php
     } // End switch($mode)
-
-
 }
-
-
-
-
-
 function Spider_Video_Player_activate()
 {
     global $wpdb;
@@ -4328,7 +4425,6 @@ function Spider_Video_Player_activate()
   `videos` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
-
     $sql_tag = "CREATE TABLE IF NOT EXISTS `" .$wpdb->prefix ."Spider_Video_Player_tag` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL,
@@ -4337,9 +4433,8 @@ function Spider_Video_Player_activate()
   `ordering` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
-
     $sql_theme = "CREATE TABLE IF NOT EXISTS `" .$wpdb->prefix ."Spider_Video_Player_theme` (
-  `id` int(11) NOT NULL auto_increment,
+`id` int(11) NOT NULL auto_increment,
   `default` int(2) NOT NULL,
   `title` varchar(256) NOT NULL,
   `appWidth` int(11) NOT NULL,
@@ -4394,7 +4489,6 @@ function Spider_Video_Player_activate()
   `openPlaylistAtStart` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ";
-    
     $sql_video = "CREATE TABLE IF NOT EXISTS `" .$wpdb->prefix ."Spider_Video_Player_video` (
   `id` int(11) NOT NULL auto_increment,
   `url` varchar(200) NOT NULL,
@@ -4417,7 +4511,6 @@ function Spider_Video_Player_activate()
   `priority` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
-
     $table_name = $wpdb->prefix ."Spider_Video_Player_theme";
     $sql_theme1 = "INSERT INTO `" .$table_name ."` VALUES(1, 1, 'Theme 1', 650, 400, 100, 0, 1, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playlist:1,playPrev:1,playPause:1,playNext:1,lib:1,stop:0,time:1,vol:1,+:1,hd:1,repeat:1,shuffle:1,play:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 12, 3, 3, 16, 20, '001326', '001326', '3665A3', 'C0B8F2', '000000', '00A2FF', 'DAE858', '0C8A58', 'DEDEDE', '000000', 'FFFFFF', 50, 79, 50, 1, 0)";
     $sql_theme2 = "INSERT INTO `" .$table_name ."` VALUES(2, 0, 'Theme 2', 650, 400, 60, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPrev:1,playPause:1,playNext:1,stop:0,playlist:1,lib:1,play:0,vol:1,+:1,time:1,hd:1,repeat:1,shuffle:1,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 0, 1, 6, 3, 3, 6, 8, 'FFBB00', '001326', 'FFA200', '030000', '595959', 'FF0000', 'E8E84D', 'FF5500', 'EBEBEB', '000000', 'FFFFFF', 82, 79, 0, 1, 0)";
@@ -4426,30 +4519,22 @@ function Spider_Video_Player_activate()
     $sql_theme5 = "INSERT INTO `" .$table_name ."` VALUES(5, 0, 'Theme 5', 650, 400, 100, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPrev:0,playPause:1,playlist:1,lib:1,playNext:0,stop:0,time:1,vol:1,+:1,hd:1,repeat:1,shuffle:1,play:0,pause:0,share:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 14, 4, 4, 14, 16, '878787', '001326', 'FFFFFF', '000000', '525252', '14B1FF', 'CCCCCC', '14B1FF', '030303', '000000', 'FFFFFF', 100, 75, 0, 1, 0)";
     $sql_theme6 = "INSERT INTO `" .$table_name ."` VALUES(6, 0, 'Theme 6', 650, 400, 100, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,vol:1,playPrev:0,playNext:0,stop:0,+:1,repeat:0,shuffle:0,play:0,pause:0,hd:1,share:1,time:1,fullScreen:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 14, 3, 3, 16, 16, '080808', '000000', '1C1C1C', 'FFFFFF', '40C6FF', '00A2FF', 'E8E8E8', '40C6FF', 'DEDEDE', '2E2E2E', 'FFFFFF', 61, 79, 0, 1, 0)";
     $sql_theme7 = "INSERT INTO `" .$table_name ."` VALUES(7, 0, 'Theme  7', 650, 400, 100, 0, 0, 0, 0, 50, 'repeatOff', 'shuffleOff', 5, 50, 2, 1, 1, 1, 1, 2, 'playPause:1,playlist:1,lib:1,playPrev:0,playNext:0,stop:0,vol:1,+:1,hd:0,repeat:0,shuffle:0,play:0,pause:0,share:1,fullScreen:1,time:1', 1, 0, '', 1, 0, 0, 50, 1, 1, 1, 12, 3, 3, 16, 16, '212121', '000000', '222424', 'FFCC00', 'FFFFFF', 'ABABAB', 'B8B8B8', 'EEFF00', 'DEDEDE', '000000', '000000', 90, 78, 0, 1, 0)";
-
     $table_name = $wpdb->prefix ."Spider_Video_Player_video";
-
     $sql_video_insert_row1 = "INSERT INTO `" .$table_name ."` (`id`, `url`,  `urlHtml5`, `urlHD`, `urlHDHtml5`, `thumb`, `title`, `published`, `type`, `fmsUrl`, `params`) VALUES
 (1, 'http://www.youtube.com/watch?v=eaE8N6alY0Y', 'http://www.youtube.com/watch?v=eaE8N6alY0Y', '', '', '" .plugins_url("images_for_start/red-sunset-casey1.jpg", __FILE__) ."', 'Sunset 1', 1, 'youtube', '', '2#===#Nature#***#1#===#2012#***#'),
 (2, 'http://www.youtube.com/watch?v=y3eFdvDdXx0', 'http://www.youtube.com/watch?v=y3eFdvDdXx0', '', '', '" .plugins_url("images_for_start/sunset10.jpg", __FILE__) ."', 'Sunset 2', 1, 'youtube', '', '2#===#Nature#***#1#===#2012#***#');";
-
-
     $table_name = $wpdb->prefix ."Spider_Video_Player_tag";
-
     $sql_tag_insert_row1 = "INSERT INTO `" .$table_name ."` VALUES(1, 'Year', 1, 1, 2)";
     $sql_tag_insert_row2 = "INSERT INTO `" .$table_name ."` VALUES(2, 'Genre', 1, 1, 1)";
-
     $table_name = $wpdb->prefix ."Spider_Video_Player_playlist";
-
     $sql_playlist_insert_row1 = "INSERT INTO `" .$table_name ."` VALUES(1, 'Nature', '" .plugins_url("images_for_start/sunset4.jpg", __FILE__) ."', 1, '1,2,')";
-
-
 //create tables
     $wpdb->query($sql_playlist);
     $wpdb->query($sql_Spider_Video_Player);
     $wpdb->query($sql_tag);
     $wpdb->query($sql_theme);
-  
+    $wpdb->query($sql_video);
+	
     $exist_that_col = false;
     $query = "SHOW COLUMNS FROM `" .$wpdb->prefix ."Spider_Video_Player_theme`";
     $colExists = $wpdb->get_results($query);
@@ -4463,39 +4548,34 @@ function Spider_Video_Player_activate()
     if (!$exist_that_col)
         $wpdb->query($sql_alter_theme);
     
-	$wpdb->query($sql_video);
-	$spider_video_player_theme = $wpdb->get_var("SELECT * FROM " . $wpdb->prefix . "Spider_Video_Player_theme");
-
-  ////// insert themt rows
-  if ($spider_video_player_theme == NULL) {
-    $wpdb->query($sql_theme1);
-    $wpdb->query($sql_theme2);
-    $wpdb->query($sql_theme3);
-    $wpdb->query($sql_theme4);
-    $wpdb->query($sql_theme5);
-    $wpdb->query($sql_theme6);
-    $wpdb->query($sql_theme7);
-  }
+    $spider_video_player_theme = $wpdb->get_var("SELECT * FROM " . $wpdb->prefix . "Spider_Video_Player_theme");	
+    ////// insert themt rows
+    if ($spider_video_player_theme == NULL) {
+      $wpdb->query($sql_theme1);
+      $wpdb->query($sql_theme2);
+      $wpdb->query($sql_theme3);
+      $wpdb->query($sql_theme4);
+      $wpdb->query($sql_theme5);
+      $wpdb->query($sql_theme6);
+      $wpdb->query($sql_theme7);
+    }
+    $spider_video_player_video = $wpdb->get_var("SELECT * FROM " . $wpdb->prefix . "Spider_Video_Player_video");
+    ////// insert video rows
+    if ($spider_video_player_video == NULL) {
+      $wpdb->query($sql_video_insert_row1);
+    }
+    $spider_video_player_tag = $wpdb->get_var("SELECT * FROM " . $wpdb->prefix . "Spider_Video_Player_tag");
+    ////// insert tag rows  
+    if ($spider_video_player_tag == NULL) {
+      $wpdb->query($sql_tag_insert_row1);
+      $wpdb->query($sql_tag_insert_row2); 
+    }
+    ////// insert playlist rows 
+    $spider_video_player_playlist = $wpdb->get_var("SELECT * FROM " . $wpdb->prefix . "Spider_Video_Player_playlist");
   
-  $spider_video_player_video = $wpdb->get_var("SELECT * FROM " . $wpdb->prefix . "Spider_Video_Player_video");
-  ////// insert video rows
-  if ($spider_video_player_video == NULL) {
-    $wpdb->query($sql_video_insert_row1);
-  }
-  
-  $spider_video_player_tag = $wpdb->get_var("SELECT * FROM " . $wpdb->prefix . "Spider_Video_Player_tag");
-  ////// insert tag rows  
-  if ($spider_video_player_tag == NULL) {
-	$wpdb->query($sql_tag_insert_row1);
-    $wpdb->query($sql_tag_insert_row2);
-  }
-
-  ////// insert playlist rows 
-  $spider_video_player_playlist = $wpdb->get_var("SELECT * FROM " . $wpdb->prefix . "Spider_Video_Player_playlist");
-  
-  if ($spider_video_player_playlist == NULL) {
-    $wpdb->query($sql_playlist_insert_row1);
-  }
+    if ($spider_video_player_playlist == NULL) {
+      $wpdb->query($sql_playlist_insert_row1);
+    }
 }
-
+Spider_Video_Player_activate();
 register_activation_hook(__FILE__, 'Spider_Video_Player_activate');

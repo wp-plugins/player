@@ -6,8 +6,6 @@ if(function_exists('current_user_can')){
 } else {
 	die('Access Denied');
 }
-
-
 function add_video(){
 	$lists['published'] =  '<input type="radio" name="published" id="published0" value="0" class="inputbox">
 							<label for="published0">No</label>
@@ -18,12 +16,9 @@ function add_video(){
 	$query = "SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_tag order by ordering";
 	$tags = $wpdb->get_results($query);
 	
-
-
 // display function
 	html_add_video($lists, $tags );
 }
-
 function show_video(){
 		global $wpdb;
 	$sort["default_style"]="manage-column column-autor sortable desc";
@@ -75,7 +70,7 @@ function show_video(){
 		$search_tag="";
 		}
 	if ( $search_tag ) {
-		$where= ' WHERE name LIKE "%'.$search_tag.'%"';
+		$where= ' WHERE title LIKE "%'.$search_tag.'%"';
 	}
 	if(isset($_POST['id_for_playlist']))
 	{
@@ -94,7 +89,6 @@ function show_video(){
 		}
 		}
 	}
-
 	
 	// get the total number of records
 	$query = "SELECT COUNT(*) FROM ".$wpdb->prefix."Spider_Video_Player_video". $where;
@@ -109,12 +103,9 @@ function show_video(){
     // display function
 	html_show_video($rows, $pageNav,$sort,$playlists);
 }
-
 function save_video(){
-
 	global $wpdb;
 	$s='';
-
 	if(isset($_POST["params"]))
 	foreach($_POST["params"] as $key=> $param )
 	{
@@ -128,7 +119,9 @@ function save_video(){
 	case 'youtube':
 		save_type_youtobe($s);
 		break;
-		
+	case 'vimeo':
+            save_video_vimeo($s);
+		break;	
 	case 'rtmp':
 		save_type_rmtp($s);
 		break;	
@@ -151,9 +144,9 @@ function save_video(){
 		'urlHtml5'   => esc_sql(esc_html(stripslashes($_POST["http_post_video_html5"]))),
         'urlHD'      => esc_sql(esc_html(stripslashes($_POST["http_post_video_UrlHD"]))),
 		'urlHDHtml5' => esc_sql(esc_html(stripslashes($_POST["http_post_video_UrlHD_html5"]))),
-        'published'  => esc_sql(esc_html(stripslashes($_POST["published"]))),
+        'published'  =>esc_sql(esc_html(stripslashes($_POST["published"]))),
         'type'       => "http",
-		'params'     =>esc_sql(esc_html(stripslashes($s))),
+		'params'     =>esc_html($s),
 		'title'      =>esc_sql(esc_html(stripslashes($_POST["title"]))),
 		'thumb'      =>esc_sql(esc_html(stripslashes($_POST["post_image"])))
                 ),
@@ -195,7 +188,7 @@ function save_video(){
         'urlHD'    => esc_sql(esc_html(stripslashes($_POST["urlHD_rtmp"]))),
         'published' =>esc_sql(esc_html(stripslashes($_POST["published"]))),
         'type'      => "http",
-		'params'   =>esc_sql(esc_html(stripslashes($s))),
+		'params'   =>esc_html($s),
 		'title'    =>esc_sql(esc_html(stripslashes($_POST["title"]))),
 		'thumb'    =>esc_sql(esc_html(stripslashes($_POST["post_image"]))),
 		'urlHtml5'   => '',
@@ -230,16 +223,18 @@ function save_video(){
  }
   function save_type_youtobe($s)
  {
-		 global $wpdb;
+      $url = str_replace('https', 'http', esc_sql(esc_html(stripslashes($_POST['url_youtube']))));
+      $url5 = "https://www.youtube.com/embed/".substr($_POST['url_youtube'], strpos($_POST['url_youtube'], '?v=')+3,11)."?enablejsapi=1&html5=1&controls=1&modestbranding=1&rel=0";
+            global $wpdb;
 		 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_video', array(
 		'id'	     => NULL,
-        'url'        => esc_sql(esc_html(stripslashes($_POST["url_youtube"]))),
+        'url'        => $url,
         'published'  =>esc_sql(esc_html(stripslashes($_POST["published"]))),
         'type'       => "youtube",
-		'params'     =>esc_sql(esc_html(stripslashes($s))),
+		'params'     =>esc_html($s),
 		'title'      =>esc_sql(esc_html(stripslashes($_POST["title"]))),
 		'thumb'      =>esc_sql(esc_html(stripslashes($_POST["post_image"]))),
-		'urlHtml5'   => '',
+		'urlHtml5'   =>$url5,
 		'urlHDHtml5' => ''
                 ),
 				array(
@@ -267,7 +262,45 @@ function save_video(){
 	
     return true;
  }
-
+function save_video_vimeo($s){
+        $url = "https://player.vimeo.com/video/".substr($_POST['url_vimeo'], strrpos($_POST['url_vimeo'], '/')+1)."?api=1";
+            global $wpdb;
+		 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_video', array(
+		'id'	     => NULL,
+        'url'        => esc_sql(esc_html(stripslashes($_POST['url_vimeo']))),
+        'published'  =>esc_sql(esc_html(stripslashes($_POST["published"]))),
+        'type'       => "vimeo",
+		'params'     =>esc_html($s),
+		'title'      =>esc_sql(esc_html(stripslashes($_POST["title"]))),
+		'thumb'      =>esc_sql(esc_html(stripslashes($_POST["post_image"]))),
+		'urlHtml5'   =>$url,
+		'urlHDHtml5' => ''
+                ),
+				array(
+				'%d',
+				'%s',
+				'%d',
+				'%s',	
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s'					
+				)
+                );
+					if(!$save_or_no)
+	{
+		?>
+	<div class="updated"><p><strong><?php _e('Error. Please install plugin again'); ?></strong></p></div>
+	<?php
+		return false;
+	}
+	?>
+	<div class="updated"><p><strong><?php _e('Item Saved'); ?></strong></p></div>
+	<?php
+	
+    return true;
+}
 function edit_video($id){
 	global $wpdb;
 	if(!$id)
@@ -292,13 +325,10 @@ function edit_video($id){
 							<label for="published0">No</label>
 							<input type="radio" name="published" id="published1" value="1" '.$published1.' class="inputbox">
 							<label for="published1">Yes</label>';
-
 	html_edit_video($lists, $row, $tags,$id);
 }
-
 function remove_video($id){
   global $wpdb;
-
   // If any item selected
   
     // Prepare sql statement, if cid array more than one, 
@@ -343,23 +373,6 @@ function remove_video($id){
 			  );
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function apply_video($id)
 {
 if(!$id)
@@ -367,14 +380,12 @@ if(!$id)
 	echo '<h1 style="color:#00C">error valu id=0 please reinstal plugin</h1>';
 	exit;
 }
-
 global $wpdb;
 	$s='';
-
 	if(isset($_POST["params"]))
 	foreach($_POST["params"] as $key=> $param )
 	{
-		$s=$s.$key.'#===#'.esc_html(stripslashes($param)).'#***#';
+		$s=$s.$key.'#===#'.esc_sql(esc_html(stripslashes($param))).'#***#';
 	}
 	switch($_POST["type"]){
 	case 'http':
@@ -384,6 +395,9 @@ global $wpdb;
 	case 'youtube':
 		apply_type_youtobe($s,$id);
 		break;
+	case 'vimeo':
+		apply_type_vimeo($s,$id);
+		break;
 		
 	case 'rtmp':
 		apply_type_rmtp($s,$id);
@@ -392,14 +406,7 @@ global $wpdb;
 	echo "<h1 style=\"color:#C00\">video cannot save error select type</h1>";
 	break;
 	}
-
-
 }
-
-
-
-
-
 function apply_type_http($s,$id)
  {
 	 global $wpdb;
@@ -411,11 +418,11 @@ function apply_type_http($s,$id)
 		'urlHtml5'    => esc_sql(esc_html(stripslashes($_POST["http_post_video_html5"]))),
         'urlHD'       => esc_sql(esc_html(stripslashes($_POST["http_post_video_UrlHD"]))),
 		'urlHDHtml5'  => esc_sql(esc_html(stripslashes($_POST["http_post_video_UrlHD_html5"]))),
-        'published'   => esc_sql(esc_html(stripslashes($_POST["published"]))),
+        'published'   =>esc_sql(esc_html(stripslashes($_POST["published"]))),
         'type'        => "http",
-		'params'      => esc_sql(esc_html(stripslashes($s))),
-		'title'       => esc_sql(esc_html(stripslashes($_POST["title"]))),
-		'thumb'       => esc_sql(esc_html(stripslashes($_POST["post_image"])))
+		'params'      =>esc_html($s),
+		'title'       =>esc_sql(esc_html(stripslashes($_POST["title"]))),
+		'thumb'       =>esc_sql(esc_html(stripslashes($_POST["post_image"])))
                 ),
 				array('id'=>$id),
 				array(
@@ -434,10 +441,8 @@ function apply_type_http($s,$id)
 	 
 				?>
 				<div class="updated"><p><strong><?php _e('Item Saved'); ?></strong></p></div>
-
 	<?php
 	
-
  }
   function apply_type_rmtp($s,$id)
  {
@@ -446,11 +451,11 @@ function apply_type_http($s,$id)
 		'fmsUrl'      => esc_sql(esc_html(stripslashes($_POST["fmsUrl"]))),
         'url'         => esc_sql(esc_html(stripslashes($_POST["url_rtmp"]))),
         'urlHD'       => esc_sql(esc_html(stripslashes($_POST["urlHD_rtmp"]))),
-        'published'   => esc_sql(esc_html(stripslashes($_POST["published"]))),
+        'published'   =>esc_sql(esc_html(stripslashes($_POST["published"]))),
         'type'        => "rtmp",
-		'params'      => esc_sql(esc_html(stripslashes($s))),
-		'title'       => esc_sql(esc_html(stripslashes($_POST["title"]))),
-		'thumb'       => esc_sql(esc_html(stripslashes($_POST["post_image"]))),
+		'params'      =>esc_html($s),
+		'title'       =>esc_sql(esc_html(stripslashes($_POST["title"]))),
+		'thumb'       =>esc_sql(esc_html(stripslashes($_POST["post_image"]))),
 		'urlHtml5'    => '',
 		'urlHDHtml5'  => ''
                 ),
@@ -471,24 +476,23 @@ function apply_type_http($s,$id)
                 );
 						?>
 				<div class="updated"><p><strong><?php _e('Item Saved'); ?></strong></p></div>
-
 	<?php
 	
-
  }
-  function apply_type_youtobe($s,$id)
- {
+  function apply_type_youtobe($s,$id) {
 		 global $wpdb;
+                 $url = str_replace('https', 'http', esc_sql(esc_html(stripslashes($_POST['url_youtube']))));
+                  $url5 = "https://www.youtube.com/embed/".substr($_POST['url_youtube'], strpos($_POST['url_youtube'], '?v=')+3,11)."?enablejsapi=1&html5=1&controls=1&modestbranding=1&rel=0";
 		 $save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_video', array(
-        'url'        => esc_sql(esc_html(stripslashes($_POST["url_youtube"]))),
+        'url'        => $url,
 		'urlHD'      => esc_sql(esc_html(stripslashes($_POST["urlHD"]))),
 		'fmsUrl'     => esc_sql(esc_html(stripslashes($_POST["fmsUrl"]))),
-        'published'  => esc_sql(esc_html(stripslashes($_POST["published"]))),
+        'published'  =>esc_sql(esc_html(stripslashes($_POST["published"]))),
         'type'       => "youtube",
-		'params'     => esc_sql(esc_html(stripslashes($s))),
-		'title'      => esc_sql(esc_html(stripslashes($_POST["title"]))),
-		'thumb'      => esc_sql(esc_html(stripslashes($_POST["post_image"]))),
-		'urlHtml5'   => '',
+		'params'     =>esc_html($s),
+		'title'      =>esc_sql(esc_html(stripslashes($_POST["title"]))),
+		'thumb'      =>esc_sql(esc_html(stripslashes($_POST["post_image"]))),
+		'urlHtml5'   => $url5,
 		'urlHDHtml5' => ''
                 ),
 				array('id'=>$id),
@@ -507,15 +511,47 @@ function apply_type_http($s,$id)
                 );
 						?>
 				<div class="updated"><p><strong><?php _e('Item Saved'); ?></strong></p></div>
-
+	<?php
+	
+ }
+  function apply_type_vimeo($s,$id) {
+		 global $wpdb;
+                  $url = "https://player.vimeo.com/video/".substr($_POST['url_vimeo'], strrpos($_POST['url_vimeo'], '/')+1)."?api=1";
+		 $save_or_no= $wpdb->update($wpdb->prefix.'Spider_Video_Player_video', array(
+        'url'        => esc_sql(esc_html(stripslashes($_POST["url_vimeo"]))),
+		'urlHD'      => esc_sql(esc_html(stripslashes($_POST["urlHD"]))),
+		'fmsUrl'     => esc_sql(esc_html(stripslashes($_POST["fmsUrl"]))),
+        'published'  =>esc_sql(esc_html(stripslashes($_POST["published"]))),
+        'type'       => "vimeo",
+		'params'     =>esc_html($s),
+		'title'      =>esc_sql(esc_html(stripslashes($_POST["title"]))),
+		'thumb'      =>esc_sql(esc_html(stripslashes($_POST["post_image"]))),
+		'urlHtml5'   => $url,
+		'urlHDHtml5' => ''
+                ),
+				array('id'=>$id),
+				array(
+				'%s',
+				'%s',				
+				'%s',
+				'%d',
+				'%s',	
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s'					
+				)
+                );
+						?>
+				<div class="updated"><p><strong><?php _e('Item Saved'); ?></strong></p></div>
 	<?php
 	
  }
  
  
  
- function published($id)
- {
+ function published($id) {
 	 		 global $wpdb;
 			 $yes_or_no=$wpdb->get_var($wpdb->prepare('SELECT published FROM '.$wpdb->prefix.'Spider_Video_Player_video WHERE `id`=%d',$id));
 			 if( $yes_or_no)
@@ -536,9 +572,4 @@ function apply_type_http($s,$id)
                 <?php
 	 
  }
-
-
-
-
-
  ?>

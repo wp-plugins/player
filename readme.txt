@@ -4,7 +4,7 @@ Donate link: https://web-dorado.com/products/wordpress-player.html
 Tags: video, video player ,video gallery, video plugin, Video Player plugin, video widget, videos, player, flash,flash player, html5 video, html5 player, HTML5 video player, youtube, youtube player, youtube Video Player, youtube videos, embed youtube, youtube widget, youtube plugin, youtube gallery, youtube playlist, MP4, video embed,video blog,  playlist, playlists, video playlist, high definition Video Player, myvideo, m4v, flash video player, video sidebar widget, Wp flash Video Player, video sharing, share video, HTML5 video gallery, embed video, video ekleme, mobile, HD, webm
 Requires at least: 3.4
 Tested up to: 4.2
-Stable tag: 1.5.7
+Stable tag: 1.5.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,12 +25,13 @@ Spider Video Player comes with a social media integration feature. The player su
 
 Features of Spider [WordPress Video Player](https://web-dorado.com/products/wordpress-player.html):  
 
-* Spider Video Player supports Flash and HTML5(supports only MP4, WebM, and Ogg formats).     
+* Spider Video Player supports Flash and HTML5.     
 * You can add the listed types of videos into Spider Video Player:  
     - Http: You can provide the URL of the video and its HD version (UrlHD) in the video player or select it from the uploaded videos.  (Note: Please provide direct link to the video and not the page containing the video)  
   
-    - YouTube: YouTube: Provide the YouTube link to the video in the URL field. Whenever adding the video use http:// option instead of https://.
-	YouTube videos will play in Flash mode unless the video also supports HTML5 feature. HTML5 support coming soon.   
+    - YouTube: Provide the YouTube link to the video in the URL field.  
+	
+	- Vimeo: Provide the Vimeo link to the video in the URL field. 
   
     - rtmp: Fill in the Flash Media Server (FMS) URL of the video for the video player along with the regular URL and UrlHD (HD version).  
 * Thumbnails can be added to each video in WordPress Video Player, and represent them in the video player window. There is also an option for adding an image for the whole video playlist.    
@@ -358,19 +359,13 @@ It is only possible to translate the front end of the plugin. To do so, you shou
 = 2. What content does the Spider Video Player Flash option support? =
 The Spider  Video Player Flash options supports playback of any media content format supported by the Adobe Flash Player. This includes FLV, H.264/MPEG-4, MP3, AAC, JPG, PNG and GIF files, as well as XML playlists. HTTP and RTMP streaming are supported, too.
 
-= 3. What content does the Spider Video Player HTML5 option support? =
-The HTML5 video player has support only for MP4, WebM, and Ogg formats.  
-
-= 4. Why should I use Priority feature? =
+= 3. Why should I use Priority feature? =
 The option is used for setting the priority of the Video player format. If you choose Flash priority the videos will work with Flash in case of devices/browsers with Flash support, otherwise the HTML5 player will be used.  
 
-= 5. What format is used for the YouTube videos? =
-The Video Player has support for YouTube videos. Those are being played in Flash format.  
-
-= 6. How to include YouTube videos to the playlists? =
+= 4. How to include YouTube videos to the playlists? =
 You should simply include the link of the YouTube video. 
 
-= 7. Can I customize the Spider Video Player? =
+= 5. Can I customize the Spider Video Player? =
 Yes, you can use one of the standard themes of the player included in the package and change them according to your needs and preferences. Moreover, you can create your own themes.   
 
  

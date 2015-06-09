@@ -46,7 +46,6 @@ function print_html_nav($count_items,$page_number,$serch_fields=""){
 	<div class="tablenav-pages">
     <span class="displaying-num"><?php echo $count_items; ?> items</span>
 	<?php if($count_items>20) {
-
 			if($page_number==1)
 			{
 				$first_page="first-page disabled";

@@ -1,4 +1,4 @@
-	<?php			
+<?php			
 if(function_exists('current_user_can')){
 	if(!current_user_can('manage_options')) {
 	die('Access Denied');
@@ -27,6 +27,7 @@ function submitbutton(pressbutton)
 		alert('Set Video title');
 		return;
 	}
+        
 <?php 
 foreach($tags as $tag)
 {
@@ -41,7 +42,6 @@ foreach($tags as $tag)
 		
 ';
 }
-
 ?>
 	submitform( pressbutton );
 }
@@ -52,6 +52,7 @@ function removeVideo(id)
 }
 function change_type(type)
 {
+        document.getElementById('vimeo_note').setAttribute('style','display:none');
 	switch(type)
 	{
 		case 'http':
@@ -61,14 +62,15 @@ function change_type(type)
 			document.getElementById('http_post_video').innerHTML="";
 			
 			document.getElementById('url_youtube').type='hidden';
+			document.getElementById('url_vimeo').type='hidden';
 			document.getElementById('url_rtmp').type='hidden';
 			document.getElementById('div_urlHtml5').style.display="inline";
 			document.getElementById('div_urlHdHtml5').style.display="inline";
 			document.getElementById('div_url').style.display="inline";
 			document.getElementById('urlHD_rtmp').style.display="none";
 			document.getElementById('url').type='hidden';
-			document.getElementById('tr_urlHtml5').setAttribute('style');
-			document.getElementById('tr_urlHdHtml5').setAttribute('style');
+			document.getElementById('tr_urlHtml5').removeAttribute('style');
+			document.getElementById('tr_urlHdHtml5').removeAttribute('style');
 			document.getElementById('http_post_video_UrlHD').innerHTML="";
 			document.getElementById('div_urlHD').style.display="inline";
 			document.getElementById('urlHD').type='hidden';
@@ -83,6 +85,7 @@ function change_type(type)
 			document.getElementById('url_youtube').type='text';
 			document.getElementById('url_youtube').size='80';
 			document.getElementById('url_rtmp').type='hidden';
+			document.getElementById('url_vimeo').type='hidden';
 			document.getElementById('tr_urlHtml5').style.display="none";
 			document.getElementById('div_urlHD').style.display="none";
 			document.getElementById('tr_urlHD').setAttribute('style','display:none');
@@ -92,9 +95,26 @@ function change_type(type)
 			document.getElementById('tr_fmsUrl').setAttribute('style','display:none');
 			
 		  break;
+                  case 'vimeo':
+			document.getElementById('tr_urlHdHtml5').style.display="none";
+			document.getElementById('div_url').style.display="none";
+			document.getElementById('url_vimeo').type='text';
+			document.getElementById('url_vimeo').size='80';
+			document.getElementById('url_rtmp').type='hidden';
+			document.getElementById('url_youtube').type='hidden';
+			document.getElementById('tr_urlHtml5').style.display="none";
+			document.getElementById('div_urlHD').style.display="none";
+			document.getElementById('tr_urlHD').setAttribute('style','display:none');
+			document.getElementById('urlHD').type='text';
+			document.getElementById('url').style.display="none";
+			document.getElementById('urlHD').size='80';
+			document.getElementById('tr_fmsUrl').setAttribute('style','display:none');
+			document.getElementById('vimeo_note').removeAttribute('style');
+		  break;
 		case 'rtmp':
 			document.getElementById('div_url').style.display="none";
 			document.getElementById('url_youtube').type='hidden';
+			document.getElementById('url_vimeo').type='hidden';
 			document.getElementById('url_rtmp').size='80';
 			document.getElementById('url_rtmp').type='text';
 			document.getElementById('urlHD_rtmp').type='text';
@@ -205,9 +225,7 @@ jQuery(function() {
 	});
 });
 </script>
-
 <style type="text/css">
-
 .admintable td
 {
 padding:15px;
@@ -216,8 +234,13 @@ border-top:1px solid #cccccc;
 border-left:1px solid #cccccc;
 border-bottom:1px solid #cccccc;
 }
+#vimeo_note{
+    display: inline-block;
+    margin-left: 30px;
+    color: red;
+    line-height: 0px;
+}
 </style>
-
 <?php ?>
 <table width="95%">
    <tr>   
@@ -253,8 +276,9 @@ border-bottom:1px solid #cccccc;
 					<td style="background:#E8E8E8 ;">
                                    <input type="radio" value="http" name="type" checked="checked" onchange="change_type('http')" />http
                                    <input type="radio" value="youtube"  name="type" onchange="change_type('youtube')" />youtube
+                                   <input type="radio" value="vimeo"  name="type" onchange="change_type('vimeo')" />vimeo
                                    <input type="radio" value="rtmp" name="type"  onchange="change_type('rtmp')" />rtmp
-									
+					<p id="vimeo_note" style="display:none">* Only for HTML5 Player</p>				
 					</td>
 				</tr>
                 <tr id="tr_fmsUrl" style="display:none" >
@@ -289,6 +313,7 @@ border-bottom:1px solid #cccccc;
 						
 						<input  type="hidden" name="url_http" id="url_http" value=""  size="80" style="border:1px solid #CCCCCC;"/>
                         <input type="hidden" name="url_youtube" id="url_youtube" value=""  size="80" style="border:1px solid #CCCCCC;"/>
+                        <input type="hidden" name="url_vimeo" id="url_vimeo" value=""  size="80" style="border:1px solid #CCCCCC;"/>
                         <input type="hidden" name="url_rtmp" id="url_rtmp" value=""  size="80" style="border:1px solid #CCCCCC;"/>
                         </td>
                 </tr>  
@@ -403,7 +428,6 @@ foreach($tags as $tag)
 				</tr>
 				';
 }
-
 ?>
 				<tr>
 					<td class="key" style="background:#E0E0E0;">
@@ -418,14 +442,13 @@ foreach($tags as $tag)
 					</td>
 				</tr>                
  </table>    
-    <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>          
+    <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?>           
     <input type="hidden" name="option" value="com_player" />
     <input type="hidden" name="task" value="" />
 </form>
 <div id="sbox-content" style="zoom: 1; opacity: 0; "></div>
 <?php
 }
-
 function html_show_video($rows, $pageNav,$sort,$playlists){
 		global $wpdb;
 	?>
@@ -486,17 +509,16 @@ This section allows you to upload videos or add videos from the Internet. <a hre
             <option value="0" <?php $zxc='selected="selected"'; if(isset($_POST["id_for_playlist"])){if($_POST["id_for_playlist"]>0 ){$zxc=""; }} echo $zxc;  ?> > Select a Playlist </option>
             <?php foreach($playlists as $playlist){	?>
                         <option value="<?php echo $playlist->id ?>" <?php if(isset($_POST["id_for_playlist"])) { if($_POST["id_for_playlist"]==$playlist->id){ echo'selected="selected"'; }} ?> ><?php echo $playlist->title ?></option>
-
                        <?php }?> 
                      
             </select>
     </div>
 </div>
+    	<label for="search_events_by_title" style="font-size:14px">Title: </label>
     <?php
 	$serch_value='';
 	if(isset($_POST['serch_or_not'])) {if($_POST['serch_or_not']=="search"){ $serch_value=esc_js(esc_html(stripslashes($_POST['search_events_by_title']))); }else{$serch_value="";}}
 	$serch_fields='<div class="alignleft actions" style="width:180px;">
-    	<label for="search_events_by_title" style="font-size:14px">Title: </label>
         <input type="text" name="search_events_by_title" value="'.$serch_value.'" id="search_events_by_title" onchange="clear_serch_texts()">
     </div>
 	<div class="alignleft actions">
@@ -511,7 +533,7 @@ This section allows you to upload videos or add videos from the Internet. <a hre
  <thead>
  <TR style="background:#E8E8E8">
  <th scope="col"  id="id" class="<?php if($sort["sortid_by"]=="id") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style=" width:50px" ><a href="javascript:ordering('id',<?php if($sort["sortid_by"]=="id") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>ID</span><span class="sorting-indicator"></span></a></th>
- <th scope="col" id="title" class="<?php if($sort["sortid_by"]=="title") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:70px" ><a href="javascript:ordering('title',<?php if($sort["sortid_by"]=="title") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Title</span><span class="sorting-indicator"></span></a></th>
+ <th scope="col" id="title" class="<?php if($sort["sortid_by"]=="title") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:150px" ><a href="javascript:ordering('title',<?php if($sort["sortid_by"]=="title") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Title</span><span class="sorting-indicator"></span></a></th>
  <th scope="col" id="type" class="<?php if($sort["sortid_by"]=="type") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="width:80px" ><a href="javascript:ordering('type',<?php if($sort["sortid_by"]=="type") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>Type</span><span class="sorting-indicator"></span></a></th>
   <th scope="col" id="URL" class="<?php if($sort["sortid_by"]=="url") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="" ><a href="javascript:ordering('url',<?php if($sort["sortid_by"]=="url") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>URL</span><span class="sorting-indicator"></span></a></th>
   <th scope="col" id="URL_html5" class="<?php if($sort["sortid_by"]=="urlHtml5") echo $sort["custom_style"]; else echo $sort["default_style"]; ?>" style="" ><a href="javascript:ordering('urlHtml5',<?php if($sort["sortid_by"]=="urlHtml5") echo $sort["1_or_2"]; else echo "1"; ?>)"><span>URL html5</span><span class="sorting-indicator"></span></a></th>
@@ -537,7 +559,7 @@ This section allows you to upload videos or add videos from the Internet. <a hre
          <td><img width="50" src="<?php echo $rows[$i]->thumb; ?>" title="<?php echo $rows[$i]->thumb; ?>" style="border:none;"></td>
          <td><a <?php if(!$rows[$i]->published) echo 'style="color:#C00"'; ?> href="admin.php?page=Spider_Video_Player_Videos&task=published&id=<?php echo $rows[$i]->id; ?>&_wpnonce=<?php echo $sp_vid_nonce; ?>"><?php if($rows[$i]->published) echo "Yes"; else echo "No"; ?></a></td>
          <td><a href="admin.php?page=Spider_Video_Player_Videos&task=edit_video&id=<?php echo $rows[$i]->id; ?>">Edit</a></td>
-         <td><a href="admin.php?page=Spider_Video_Player_Videos&task=remove_video&id=<?php echo $rows[$i]->id; ?>&_wpnonce=<?php echo $sp_vid_nonce; ?>">Delete</a></td>
+         <td><a href="#" href-data="admin.php?page=Spider_Video_Player_Videos&task=remove_video&id=<?php echo $rows[$i]->id; ?>&_wpnonce=<?php echo $sp_vid_nonce; ?>">Delete</a></td>
                
   </tr> 
  <?php } ?>
@@ -547,7 +569,6 @@ This section allows you to upload videos or add videos from the Internet. <a hre
  <input type="hidden" name="id_for_playlist" id="id_for_playlist" value="<?php if(isset($_POST['id_for_playlist'])) echo esc_js(esc_html(stripslashes($_POST['id_for_playlist'])));?>" />
  <input type="hidden" name="asc_or_desc" id="asc_or_desc" value="<?php if(isset($_POST['asc_or_desc'])) echo esc_js(esc_html(stripslashes($_POST['asc_or_desc'])));?>"  />
  <input type="hidden" name="order_by" id="order_by" value="<?php if(isset($_POST['order_by'])) echo esc_js(esc_html(stripslashes($_POST['order_by'])));?>"  />
-
  <?php
 ?>
     
@@ -557,7 +578,6 @@ This section allows you to upload videos or add videos from the Internet. <a hre
   
     <?php
 }
-
 function html_edit_video($lists, $row,$tags,$id){
 		?>
         
@@ -592,20 +612,17 @@ foreach($tags as $tag)
 		
 ';
 }
-
 ?>
 	submitform( pressbutton );
 }
-
 function removeVideo(id)
 {
 				document.getElementById(id+"_link").innerHTML='Select Video';
 				document.getElementById(id).value='';
 }
-
 function change_type(type)
 {
-	
+	document.getElementById('vimeo_note').setAttribute('style','display:none');
 	switch(type)
 	{
 		case 'http':
@@ -613,16 +630,17 @@ function change_type(type)
 			document.getElementById('http_post_video').innerHTML=document.getElementById('url_http').value;
 		else
 			document.getElementById('http_post_video').innerHTML="";
-			
+			document.getElementById('tr_urlHtml5').removeAttribute('style');
 			document.getElementById('url_youtube').type='hidden';
+			document.getElementById('url_vimeo').type='hidden';
 			document.getElementById('url_rtmp').type='hidden';
 			document.getElementById('div_urlHtml5').style.display="inline";
 			document.getElementById('div_urlHdHtml5').style.display="inline";
 			document.getElementById('div_url').style.display="inline";
 			document.getElementById('urlHD_rtmp').style.display="none";
 			document.getElementById('url').type='hidden';
-			document.getElementById('tr_urlHtml5').setAttribute('style');
-			document.getElementById('tr_urlHdHtml5').setAttribute('style');
+			
+			document.getElementById('tr_urlHdHtml5').removeAttribute('style');
 			document.getElementById('http_post_video_UrlHD').innerHTML="";
 			document.getElementById('div_urlHD').style.display="inline";
 			document.getElementById('urlHD').type='hidden';
@@ -636,6 +654,7 @@ function change_type(type)
 			document.getElementById('url_youtube').type='text';
 			document.getElementById('url_youtube').size='80';
 			document.getElementById('url_rtmp').type='hidden';
+			document.getElementById('url_vimeo').type='hidden';
 			document.getElementById('tr_urlHtml5').style.display="none";
 			document.getElementById('div_urlHD').style.display="none";
 			document.getElementById('tr_urlHD').setAttribute('style','display:none');
@@ -644,9 +663,26 @@ function change_type(type)
 			document.getElementById('urlHD').size='80';
 			document.getElementById('tr_fmsUrl').setAttribute('style','display:none');
 		  break;
+                  case 'vimeo':
+			document.getElementById('tr_urlHdHtml5').style.display="none";
+			document.getElementById('div_url').style.display="none";
+			document.getElementById('url_vimeo').type='text';
+			document.getElementById('url_vimeo').size='80';
+			document.getElementById('url_rtmp').type='hidden';
+			document.getElementById('url_youtube').type='hidden';
+			document.getElementById('tr_urlHtml5').style.display="none";
+			document.getElementById('div_urlHD').style.display="none";
+			document.getElementById('tr_urlHD').setAttribute('style','display:none');
+			document.getElementById('urlHD').type='text';
+			document.getElementById('url').style.display="none";
+			document.getElementById('urlHD').size='80';
+			document.getElementById('tr_fmsUrl').setAttribute('style','display:none');
+                        document.getElementById('vimeo_note').removeAttribute('style');
+		  break;
 		case 'rtmp':
 			document.getElementById('div_url').style.display="none";
 			document.getElementById('url_youtube').type='hidden';
+			document.getElementById('url_vimeo').type='hidden';
 			document.getElementById('url_rtmp').size='80';
 			document.getElementById('url_rtmp').type='text';
 			document.getElementById('urlHD_rtmp').type='text';
@@ -669,7 +705,6 @@ function change_type(type)
 <?php 
 $pname= array();
 $pvalue= array();
-
 $params=explode('#***#',$row->params);
 foreach($params as $param)
 {
@@ -680,11 +715,8 @@ if($param)
 		$pvalue[]=htmlspecialchars($temp[1]);
 	}
 }
-
 ?>
-
 i=<?php echo count($pname); ?>;
-
 //-->
 </script> 
 <script type="text/javascript">
@@ -735,10 +767,8 @@ jQuery(function() {
   		if (e.keyCode == 27) formfield=null;
 	});
 });
-
 </script>   
 <style type="text/css">
-
 .admintable td
 {
 padding:15px;
@@ -747,8 +777,13 @@ border-top:1px solid #cccccc;
 border-left:1px solid #cccccc;
 border-bottom:1px solid #cccccc;
 }
+#vimeo_note{
+    display: inline-block;
+    margin-left: 30px;
+    color: red;
+    line-height: 0px;
+}
 </style>
-
 <table width="95%">
    <tr>   
 <td width="100%" style="font-size:14px; font-weight:bold"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-3.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
@@ -785,11 +820,12 @@ This section allows you to upload videos or choose YouTube videos.<a href="http:
 					<td style="background:#E8E8E8;">
                                    <input type="radio" value="http" name="type" <?php if($row->type=="http") echo 'checked="checked"';?> onchange="change_type('http')" />http
                                    <input type="radio" value="youtube"  name="type" <?php if($row->type=="youtube") echo 'checked="checked"';?> onchange="change_type('youtube')" />youtube
+                                    <input type="radio" value="vimeo"  name="type" <?php if($row->type=="vimeo") echo 'checked="checked"';?> onchange="change_type('vimeo')" />vimeo
                                    <input type="radio" value="rtmp" name="type" <?php if($row->type=="rtmp" || $row->type=="0") echo 'checked="checked"';?> onchange="change_type('rtmp')" />rtmp
-									
+					<p id="vimeo_note" <?php if($row->type!="vimeo") echo 'style="display:none"'; ?>>* Only for HTML5 Player</p>				
 					</td>
 				</tr>
-                <tr id="tr_fmsUrl" <?php if($row->type=="http" || $row->type=="youtube") echo 'style="display:none"'; ?>>
+                <tr id="tr_fmsUrl" <?php if($row->type=="http" || $row->type=="youtube" || $row->type=="vimeo") echo 'style="display:none"'; ?>>
                         <td class="key" style="background:#E0E0E0;">
                                 <label for="fmsUrl">
                                         <?php echo 'fmsUrl'; ?>:
@@ -823,10 +859,11 @@ This section allows you to upload videos or choose YouTube videos.<a href="http:
                 <input  type="hidden" name="url_http" id="url_http" value="<?php if($row->type=="http") echo htmlspecialchars($row->url); ?>" <?php if($row->type=="http") echo 'type="text"'; else echo 'type="hidden" size="80"';?> />
                 
                 <input <?php if($row->type=="youtube") echo 'type="text"  size="80"'; else echo 'type="hidden"';?> name="url_youtube" style="border:1px solid #CCCCCC;" id="url_youtube" value="<?php if($row->type=="youtube") echo htmlspecialchars($row->url) ?>"  />
+                <input <?php if($row->type=="vimeo") echo 'type="text"  size="80"'; else echo 'type="hidden"';?> name="url_vimeo" style="border:1px solid #CCCCCC;" id="url_vimeo" value="<?php if($row->type=="vimeo") echo htmlspecialchars($row->url) ?>"  />
                 <input <?php if($row->type=="rtmp" || $row->type=="0") echo 'type="text" size="80"'; else echo 'type="hidden" ';?> name="url_rtmp"  style="border:1px solid #CCCCCC;" id="url_rtmp" value="<?php if($row->type=="rtmp") echo htmlspecialchars($row->url) ?>"  />     
                         </td>
                 </tr>
-                <tr id="tr_urlHtml5" <?php if($row->type=="rtmp" || $row->type=="youtube" || $row->type=="0") echo 'style="display:none"'; ?>>
+                <tr id="tr_urlHtml5" <?php if($row->type=="rtmp" || $row->type=="youtube" || $row->type=="0" || $row->type=="vimeo") echo 'style="display:none"'; ?>>
                         <td class="key" style="background:#E0E0E0;">
                                 <label for="File">
                                         <?php echo 'Url(HTML5) MP4,WebM,Ogg' ; ?>:
@@ -848,7 +885,7 @@ This section allows you to upload videos or choose YouTube videos.<a href="http:
                         </td>
                 </tr>    
                 
-                <tr  id="tr_urlHD" <?php if($row->type=="youtube") echo 'style="display:none"'; ?> >
+                <tr  id="tr_urlHD" <?php if($row->type=="youtube" || $row->type=="vimeo") echo 'style="display:none"'; ?> >
                         <td class="key" style="background:#E0E0E0;">
                                 <label for="UrlHD">
                                         <?php echo  'UrlHD'; ?>:
@@ -872,7 +909,7 @@ This section allows you to upload videos or choose YouTube videos.<a href="http:
                 <input type="<?php if($row->type=="rtmp" || $row->type=="0") echo "text"; else echo "hidden";?>" name="urlHD_rtmp" id="urlHD_rtmp" style="border:1px solid #CCCCCC;" value="<?php if($row->type=="rtmp" || $row->type=="0") echo htmlspecialchars($row->urlHD); ?>" size="80"/>
                         </td>
                 </tr>
-                <tr id="tr_urlHdHtml5" <?php if($row->type=="rtmp" || $row->type=="youtube" || $row->type=="0") echo 'style="display:none"'; ?>>
+                <tr id="tr_urlHdHtml5" <?php if($row->type=="rtmp" || $row->type=="youtube" || $row->type=="0" || $row->type=="vimeo") echo 'style="display:none"'; ?>>
                         <td class="key" style="background:#E0E0E0;">
                                 <label for="UrlHD">
                                         <?php echo  'UrlHD(HTML5) MP4,WebM,Ogg' ; ?>:
@@ -902,7 +939,6 @@ This section allows you to upload videos or choose YouTube videos.<a href="http:
 					</td>
                 	<td style="background:#E8E8E8;">
 					<input type="text" value="<?php if($row->thumb )echo htmlspecialchars($row->thumb); ?>" name="post_image" id="post_image" class="text_input" style="width:417px; border:1px solid #CCCCCC;"; /><a class="button lu_upload_button" href="#" />Select</a><br>
-
 <a href="javascript:removeImage();">Remove Image</a><br />
 <div style="position:absolute; width:1px; height:1px; top:0px; overflow:hidden">
 <textarea id="tempimage" name="tempimage" class="mce_editable"></textarea><br />
@@ -914,12 +950,10 @@ function removeImage()
 				document.getElementById("post_image").value="";
 }
 </script>
-
                                        <div style="height:150px;">
                        <img style="display:<?php if($row->thumb=='') echo 'none'; else echo 'block' ?>; border:none;" height="150" id="imagebox" src="<?php echo htmlspecialchars($row->thumb) ; ?>" />     
                                        </div>                    </td>
 <?php 
-
 foreach($tags as $tag)
 {
 	
@@ -955,7 +989,6 @@ foreach($tags as $tag)
 				';
 	}
 }
-
 ?>
     
 				<tr>
@@ -970,7 +1003,7 @@ foreach($tags as $tag)
 						?>
 					</td>
 				</tr>                
- </table> 
+ </table>   
 <?php wp_nonce_field('nonce_sp_vid', 'nonce_sp_vid'); ?> 
 <input type="hidden" name="id" value="<?php echo $row->id?>" />        
 <input type="hidden" name="cid[]" value="<?php echo $row->id; ?>" />         
@@ -978,4 +1011,3 @@ foreach($tags as $tag)
         <?php		
        
 }
-

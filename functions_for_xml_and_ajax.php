@@ -896,7 +896,6 @@ function checkAll( n, fldName ) {
 
 
 function generete_sp_video_playlist_xml(){
-	
 global $wpdb;
 $single=htmlspecialchars($_GET["single"]);
 
@@ -912,7 +911,10 @@ $show_trackid=htmlspecialchars($_GET['show_trackid']);
 				foreach($playlists_id as $playlist_id)
 				{
 					$query =$wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_playlist WHERE published='1' AND id=%d",$playlist_id) ;
-					$playlists[] = $wpdb->get_row($query);
+					
+                                        
+                                        
+                                        $playlists[] = $wpdb->get_row($query);
 				}
 foreach($playlists as $playlist)
 				{
@@ -923,8 +925,11 @@ foreach($playlists as $playlist)
 						$videos_id= array_slice($videos_id,0, count($videos_id)-1);   
 						foreach($videos_id as $video_id)
 						{
-							$query =$wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE id = %d",$video_id) ;
-							$viedos_temp[] = $wpdb->get_row($query);
+							$query =$wpdb->prepare("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_video WHERE type!=%s AND id = %d",'vimeo',$video_id);
+							$video_row = $wpdb->get_row($query);
+                                                        if($video_row){
+                                                            $viedos_temp[] =$video_row;
+                                                        }
 						}
 			
 						$videos[$playlist->id] = $viedos_temp;

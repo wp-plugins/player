@@ -11,7 +11,6 @@ function add_theme(){
     $row=$wpdb->get_row("SELECT * FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE `default`=1");
 	html_add_theme($row);
 }
-
 function show_theme(){
 global $wpdb;
 	$sort["default_style"]="manage-column column-autor sortable desc";
@@ -63,7 +62,7 @@ global $wpdb;
 		$search_tag="";
 		}
 	if ( $search_tag ) {
-		$where= ' WHERE title LIKE "%'.$wpdb->escape($search_tag).'%"';
+		$where= ' WHERE title LIKE "%'.$search_tag.'%"';
 	}
 	
 	
@@ -78,7 +77,6 @@ global $wpdb;
 	$rows = $wpdb->get_results($query);
 	html_show_theme($rows, $pageNav, $sort);
 }
-
 function save_theme(){
 	 global $wpdb;
 	 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_theme', array(
@@ -319,7 +317,6 @@ function apply_theme($id){
     return true;
 	
 }
-
 function edit_theme($id){
 	global $wpdb;
 	if(!$id)
@@ -335,7 +332,6 @@ function edit_theme($id){
 	// display function 
 		html_edit_theme($row, $id);
 }
-
 function remove_theme($id){
    global $wpdb;
    if($wpdb->get_var($wpdb->prepare("SELECT `default` FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE id=%d",$id)))
@@ -359,7 +355,6 @@ function remove_theme($id){
  <?php
  }
 }
-
 function default_theme($id){
 	global $wpdb;
 	$ids_for=$wpdb->get_col("SELECT id FROM ".$wpdb->prefix."Spider_Video_Player_theme WHERE `default`=1");

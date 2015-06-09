@@ -8,7 +8,6 @@
  * http://docs.jquery.com/UI
  */
 (function( $, undefined ) {
-
 // prevent duplicate loading
 // this is only a problem because we proxy existing functions
 // and we don't want to double proxy them
@@ -16,10 +15,8 @@ $.ui = $.ui || {};
 if ( $.ui.version ) {
 	return;
 }
-
 $.extend( $.ui, {
 	version: "1.8.17",
-
 	keyCode: {
 		ALT: 18,
 		BACKSPACE: 8,
@@ -55,11 +52,9 @@ $.extend( $.ui, {
 		WINDOWS: 91 // COMMAND
 	}
 });
-
 // plugins
 $.fn.extend({
 	propAttr: $.fn.prop || $.fn.attr,
-
 	_focus: $.fn.focus,
 	focus: function( delay, fn ) {
 		return typeof delay === "number" ?
@@ -74,7 +69,6 @@ $.fn.extend({
 			}) :
 			this._focus.apply( this, arguments );
 	},
-
 	scrollParent: function() {
 		var scrollParent;
 		if (($.browser.msie && (/(static|relative)/).test(this.css('position'))) || (/absolute/).test(this.css('position'))) {
@@ -86,15 +80,12 @@ $.fn.extend({
 				return (/(auto|scroll)/).test($.curCSS(this,'overflow',1)+$.curCSS(this,'overflow-y',1)+$.curCSS(this,'overflow-x',1));
 			}).eq(0);
 		}
-
 		return (/fixed/).test(this.css('position')) || !scrollParent.length ? $(document) : scrollParent;
 	},
-
 	zIndex: function( zIndex ) {
 		if ( zIndex !== undefined ) {
 			return this.css( "zIndex", zIndex );
 		}
-
 		if ( this.length ) {
 			var elem = $( this[ 0 ] ), position, value;
 			while ( elem.length && elem[ 0 ] !== document ) {
@@ -115,22 +106,18 @@ $.fn.extend({
 				elem = elem.parent();
 			}
 		}
-
 		return 0;
 	},
-
 	disableSelection: function() {
 		return this.bind( ( $.support.selectstart ? "selectstart" : "mousedown" ) +
 			".ui-disableSelection", function( event ) {
 				event.preventDefault();
 			});
 	},
-
 	enableSelection: function() {
 		return this.unbind( ".ui-disableSelection" );
 	}
 });
-
 $.each( [ "Width", "Height" ], function( i, name ) {
 	var side = name === "Width" ? [ "Left", "Right" ] : [ "Top", "Bottom" ],
 		type = name.toLowerCase(),
@@ -140,7 +127,6 @@ $.each( [ "Width", "Height" ], function( i, name ) {
 			outerWidth: $.fn.outerWidth,
 			outerHeight: $.fn.outerHeight
 		};
-
 	function reduce( elem, size, border, margin ) {
 		$.each( side, function() {
 			size -= parseFloat( $.curCSS( elem, "padding" + this, true) ) || 0;
@@ -153,28 +139,23 @@ $.each( [ "Width", "Height" ], function( i, name ) {
 		});
 		return size;
 	}
-
 	$.fn[ "inner" + name ] = function( size ) {
 		if ( size === undefined ) {
 			return orig[ "inner" + name ].call( this );
 		}
-
 		return this.each(function() {
 			$( this ).css( type, reduce( this, size ) + "px" );
 		});
 	};
-
 	$.fn[ "outer" + name] = function( size, margin ) {
 		if ( typeof size !== "number" ) {
 			return orig[ "outer" + name ].call( this, size );
 		}
-
 		return this.each(function() {
 			$( this).css( type, reduce( this, size, true, margin ) + "px" );
 		});
 	};
 });
-
 // selectors
 function focusable( element, isTabIndexNotNaN ) {
 	var nodeName = element.nodeName.toLowerCase();
@@ -196,54 +177,41 @@ function focusable( element, isTabIndexNotNaN ) {
 		// the element and all of its ancestors must be visible
 		&& visible( element );
 }
-
 function visible( element ) {
 	return !$( element ).parents().andSelf().filter(function() {
 		return $.curCSS( this, "visibility" ) === "hidden" ||
 			$.expr.filters.hidden( this );
 	}).length;
 }
-
 $.extend( $.expr[ ":" ], {
 	data: function( elem, i, match ) {
 		return !!$.data( elem, match[ 3 ] );
 	},
-
 	focusable: function( element ) {
 		return focusable( element, !isNaN( $.attr( element, "tabindex" ) ) );
 	},
-
 	tabbable: function( element ) {
 		var tabIndex = $.attr( element, "tabindex" ),
 			isTabIndexNaN = isNaN( tabIndex );
 		return ( isTabIndexNaN || tabIndex >= 0 ) && focusable( element, !isTabIndexNaN );
 	}
 });
-
 // support
 $(function() {
 	var body = document.body,
 		div = body.appendChild( div = document.createElement( "div" ) );
-
 	$.extend( div.style, {
 		minHeight: "100px",
 		height: "auto",
 		padding: 0,
 		borderWidth: 0
 	});
-
 	$.support.minHeight = div.offsetHeight === 100;
 	$.support.selectstart = "onselectstart" in div;
-
 	// set display to none to avoid a layout bug in IE
 	// http://dev.jquery.com/ticket/4014
 	body.removeChild( div ).style.display = "none";
 });
-
-
-
-
-
 // deprecated
 $.extend( $.ui, {
 	// $.ui.plugin is deprecated.  Use the proxy pattern instead.
@@ -310,5 +278,4 @@ $.extend( $.ui, {
 		return $.ui.isOverAxis( y, top, height ) && $.ui.isOverAxis( x, left, width );
 	}
 });
-
 })( jQuery );

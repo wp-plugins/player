@@ -7,7 +7,6 @@
 	display:table;
 	list-style:none;
 }
-
 #main_featured_plugins_page #featured-plugins-list li {
 	display:block;
 	height:113px;
@@ -15,14 +14,12 @@
 	margin:0px 0px 12px 0px;
 	background:#ededed;
 }
-
 #main_featured_plugins_page #featured-plugins-list li  .product {
 	position:relative;
 	float:left;
 	width:35%;
 	height:113px;
 }
-
 #main_featured_plugins_page #featured-plugins-list li  .title {
 	float:left;
 	height:113px;
@@ -32,8 +29,9 @@
 	border-top-right-radius:3px;
 	border-bottom-right-radius:3px;
 }
-
 #main_featured_plugins_page #featured-plugins-list  li.form-maker  .product {background:url(images/form.jpg) left center no-repeat;}
+#main_featured_plugins_page #featured-plugins-list  li.photo-gallery  .product {background:url(images/photo-gallery.jpg) left center no-repeat;}
+#main_featured_plugins_page #featured-plugins-list  li.slider  .product {background:url(images/slider.jpg) left center no-repeat;}
 #main_featured_plugins_page #featured-plugins-list  li.catalog  .product {background:url(images/catalog.jpg) left center no-repeat;}
 #main_featured_plugins_page #featured-plugins-list  li.contact-maker  .product {background:url(images/contact.maker.jpg) left center no-repeat;}
 #main_featured_plugins_page #featured-plugins-list  li.contacts  .product {background:url(images/contacts.jpg) left center no-repeat;}
@@ -44,8 +42,6 @@
 #main_featured_plugins_page #featured-plugins-list  li.player  .product {background:url(images/player.jpg) left center no-repeat;}
 #main_featured_plugins_page #featured-plugins-list  li.spider-calendar  .product {background:url(images/spider.calendar.jpg) left center no-repeat;}
 #main_featured_plugins_page #featured-plugins-list  li.zoom .product {background:url(images/zoom.jpg) left center no-repeat;}
-
-
 #main_featured_plugins_page #featured-plugins-list li  .title  .heading {
 	display:block;
 	position:relative;
@@ -53,23 +49,19 @@
 	color:#014f73;
 	margin:30px 0px -10px 20px;
 }
-
 #main_featured_plugins_page #featured-plugins-list li  .title  p {
 	font-size:14px;
 	color:#444;
 	margin-left:20px;
 }
-
 #main_featured_plugins_page #featured-plugins-list li  .description {
 	float:right;
 	width:50%;
 	height:113px;
 }
-
 #main_featured_plugins_page #featured-plugins-list li  .description  p {
 	text-align:right;
 }
-
 #main_featured_plugins_page #featured-plugins-list li  .description   a.download, #main_featured_plugins_page #featured-plugins-list li  .description   a.download:link, #main_featured_plugins_page #featured-plugins-list li  .description   a.download:visited {
 	display:block;
 	width:106px;

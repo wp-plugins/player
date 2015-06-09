@@ -6,9 +6,7 @@ if(function_exists('current_user_can')){
 } else {
 	die('Access Denied');
 }
-
 function add_playlist(){
-
   wp_admin_css('thickbox');
 	$lists['published'] =  '<input type="radio" name="published" id="published0" value="0" class="inputbox">
 							<label for="published0">No</label>
@@ -18,7 +16,6 @@ function add_playlist(){
 // display function
 	html_add_playlist($lists);
 }
-
 function show_playlist(){
 	global $wpdb;
 	$sort["default_style"]="manage-column column-autor sortable desc";
@@ -70,7 +67,7 @@ function show_playlist(){
 		$search_tag="";
 		}
 	if ( $search_tag ) {
-		$where= ' WHERE name LIKE "%'.$search_tag.'%"';
+		$where= ' WHERE title LIKE "%'.$search_tag.'%"';
 	}
 	
 	
@@ -86,7 +83,7 @@ function show_playlist(){
 	{
 		if($_POST['asc_or_desc'])
 			{
-				$sort["sortid_by"]=esc_sql(esc_html(stripslashes($_POST['order_by'])));
+				$sort["sortid_by"] = esc_sql(esc_html(stripslashes($_POST['order_by'])));
 				if($_POST['asc_or_desc']==1)
 				{
 					$order=" ASC";
@@ -101,7 +98,6 @@ function show_playlist(){
 	$rows = $wpdb->get_results($query);	    	
 	html_show_playlist($rows, $pageNav, $sort);
 }
-
 function save_playlist(){
 	global $wpdb;
 	$save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_playlist', array(
@@ -132,9 +128,6 @@ function save_playlist(){
 	
     return true;
 }
-
-
-
 function Apply_playlist($id)
 {
 	global $wpdb;
@@ -160,17 +153,6 @@ function Apply_playlist($id)
 	
     return true;
 }
-
-
-
-
-
-
-
-
-
-
-
 function edit_playlist($id){
 	global $wpdb;
 	
@@ -207,17 +189,6 @@ function edit_playlist($id){
 	
 	html_edit_playlist($row,$viedos,$lists);
 }
-
-
-
-
-
-
-
-
-
-
-
 function change_tag( $id ){
   global $wpdb;
   $published=$wpdb->get_var($wpdb->prepare("SELECT published FROM ".$wpdb->prefix."Spider_Video_Player_playlist WHERE `id`=%d",$id ));
@@ -244,22 +215,6 @@ function change_tag( $id ){
 	
     return true;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function remove_playlist($id){
    global $wpdb;
  $sql_remov_tag=$wpdb->prepare("DELETE FROM ".$wpdb->prefix."Spider_Video_Player_playlist WHERE id=%d",$id);
@@ -276,9 +231,4 @@ function remove_playlist($id){
  <?php
  }
 }
-
-
-
-
-
 ?>
