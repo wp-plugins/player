@@ -4,7 +4,7 @@ Donate link: https://web-dorado.com/products/wordpress-player.html
 Tags: video, video player ,video gallery, video plugin, Video Player plugin, video widget, videos, player, flash,flash player, html5 video, html5 player, HTML5 video player, youtube, youtube player, youtube Video Player, youtube videos, embed youtube, youtube widget, youtube plugin, youtube gallery, youtube playlist, MP4, video embed,video blog,  playlist, playlists, video playlist, high definition Video Player, myvideo, m4v, flash video player, video sidebar widget, Wp flash Video Player, video sharing, share video, HTML5 video gallery, embed video, video ekleme, mobile, HD, webm
 Requires at least: 3.4
 Tested up to: 4.2
-Stable tag: 1.5.8
+Stable tag: 1.5.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,51 +19,50 @@ Spider Video [WordPress  Player](https://web-dorado.com/products/wordpress-playe
 [User Manual](https://web-dorado.com/spider-video-player-wordpress-guide-step-1.html)  
 [Frequently Asked Questions](https://web-dorado.com/forum/spider-video-player-wordpress/1035-spider-video-player-faq.html) 
 
-Spider Video Player is a WordPress video plugin that allows you to easily add videos to your website. It has the possibility of organizing videos into playlists and choosing a preferred layout for the player. Spider Video Player is one of the best WordPress video players available in WordPress plugin directory. Spider Video Player for WordPress provides a convenient user interface, incorporating all the common features for video players including video quality selection, sharing, full screen, shuffle and more.  There is a possibility to edit the themes for the Spider Video Player to make its appearance more relevant to your website design and color scheme.  This is an optimal video player solution for your WordPress website, providing effective integration and high level of customization. 
-Spider Video Player comes with a social media integration feature. The player supports HD videos, which is an essential feature for the high quality players. Thus the users visiting and watching the videos on your website will be able to share the videos on most of the popular media (Facebook, Google+ and Twiter). 
+Spider Video Player is a WordPress video plugin that allows you to easily add videos to your website. It has the possibility of organizing videos into playlists and choosing preferred layout for the player. Spider Video Player is one of the best WordPress video players available in WordPress plugin directory. Spider Video Player for WordPress provides a convenient user interface, incorporating all the common features for video players including video quality selection, sharing, full screen, shuffle and more. There is a possibility to edit the themes for the Spider Video Player to make its appearance more relevant to your website design and color scheme. This is an optimal video player solution for your WordPress website, providing effective integration and high level of customization. Spider Video Player comes with a social media integration feature. The player supports HD videos, which is an essential feature for the high quality players. Thus the users visiting and watching the videos on your website will be able to share the videos on most of the popular media (Facebook, Google+ and Twiter).
 
 
-Features of Spider [WordPress Video Player](https://web-dorado.com/products/wordpress-player.html):  
+Features of Spider [WordPress Video Player](https://web-dorado.com/products/wordpress-player.html):     
 
-* Spider Video Player supports Flash and HTML5.     
-* You can add the listed types of videos into Spider Video Player:  
-    - Http: You can provide the URL of the video and its HD version (UrlHD) in the video player or select it from the uploaded videos.  (Note: Please provide direct link to the video and not the page containing the video)  
-  
-    - YouTube: Provide the YouTube link to the video in the URL field.  
-	
-	- Vimeo: Provide the Vimeo link to the video in the URL field. 
-  
-    - rtmp: Fill in the Flash Media Server (FMS) URL of the video for the video player along with the regular URL and UrlHD (HD version).  
-* Thumbnails can be added to each video in WordPress Video Player, and represent them in the video player window. There is also an option for adding an image for the whole video playlist.    
-* Multiple playlists for each video player. Possibility to add tags for each video. Parameters for sorting videos and creating video playlists.  
-* Possibility to choose the height and width of the video player. You can as well define the video size adjustment options for the player window.     
-* Possibility to watch videos in the full screen mode of the video player.  
-* Possibility to choose different playback options (auto play, auto next song, etc.) for the video player.  
-* Options to set the transparency level of video player buttons.    
-* Possibility to change positions and colors of video control buttons on the video player.  
-* You can also show or hide video control buttons on the video player by click on the buttons from Themes section.  
-* Possibility to change library, videos and frames background color on the video player.  
-* Possibility to shuffle and repeat videos in playlist on the video player.  
-* Possibility to display the player both in Video/playlist mode and Library mode (where library can host mutliple playlists).     
-* HTML5 version of the Player has support for .mp4, .ogg and .webm format files, whereas for Flash option, there are extra file formats.       
-* Possibility to quickly switch to the library and back to the playlist changing the video.    
-* Possibility of adding either a large playlist or a single video for pages and posts.   
-* 7 default themes   
-* Possibility of displaying HD button in the front end for switching to the HD version of the video.   
-* Possibility to embed the videos used with the player.   
-* Possibility to add social media sharing buttons- Facebook, Google+ and Twitter
-* Possibility to choose the location of the playlist (left/right).   
-* Possibility to choose the timing, when the playlist is hidden from the video.
-* Possibility of adding  required/not required tags for each video.      
-* Possibility to edit the columns/rows for the library, as well as its text size.   
-* Possibility to change the position of the control buttons using drag and drop feature.   
-* Possibility to choose the animation type for the load of the Flash player.   
-* An option of setting the format priority for the videos  
+* Support for Flash and HTML5 playback      
+* Support for listed types of videos into Spider Video Player:        
+    - Http: You can provide the URL of the video and its HD version (UrlHD) in the video player or select it from the uploaded videos. (Note: Please provide direct link to the video and not the page containing the video)     
+    - YouTube: You can embed YouTube links. Both Flash and HTML5 are supported.    
+    - Vimeo: You can embed Vimeo link. Only HTML5 is supported.  
+    - rtmp:  You can fill in the Flash Media Server (FMS) URL of the video for the video player along with the regular URL and UrlHD (HD version).    
+Thumbnails can be added for each video in WordPress Video Player,  including Vimeo and YouTube videos .These will represent the video within the video player library There is also an option for adding a thumbnail for the entire video playlist.         
+Spider video WordPress Player has wonderful flash effects. You can add several video players in one page with different themes and playlists. With Spider video player you can have unlimited playlists with unlimited number of videos.        
+The list of other features includes:       
+* Multiple playlists for each video player. Possibility to add tags for each video.    
+* Parameters for sorting videos and creating video playlists.   
+* Customizable height and width of the video player. You can also define the video size adjustment options for the library view   
+* Video player full screen mode   
+* Multiple different playback options to choose from (auto play, auto next song, etc.)   
+* Options to set the transparency level of video player buttons.   
+* Options to set the position and colors of video control buttons on the video player   
+* Fully enhanced Themes section   
+* Customizable color features for library, videos and frames background color   
+* Shuffle and repeat videos within the playlists of the video player.  
+* Possibility to display the player both in Video/playlist mode and Library mode (where library can host multiple playlists).   
+* HTML5 version of the Player has support for .mp4, .ogg and .webm format files,  as well as YouTube and Vimeo videos, whereas for Flash option, there are extra file formats (plus YouTube videos)   
+* Quick switch to the library and back to the playlist view   
+* Shortcodes for adding large playlists or single videos for pages and posts   
+* 7 fully customizable default themes   
+* HD button support in the front end for switching to the HD version of the video by the site users  
+* Video Player embedding feature   
+* Social media sharing buttons- Facebook, Google+ and Twitter  
+* Positioning options for the  playlist (left/right)  
+* Playlist out settings  
+* Support for required/not required tags for each video  
+* Additional options for editing the columns/rows for the library, as well as its text size  
+* Drag and drop support for changing the sequence of the control buttons  
+* Animation type options for the Flash player load  
+* Format priority for the videos (Flash/HTML5 based on device)  
 * Option of changing control bar position (up/down)   
+ 
+Upgrade to [WordPress Player Pro](https://web-dorado.com/products/wordpress-player.html) to add features:    
 
-Upgrade to [WordPress Player Pro](https://web-dorado.com/products/wordpress-player.html) to add features: 
-
-* Possibility to remove WebDorado watermark from the player, as well as possibility to add custom Watermark.  
+* Possibility to remove WebDorado watermark from the player, as well as possibility to add custom Watermark with Flash videos. 
  
 Spider video [WordPress  Player](https://web-dorado.com/products/wordpress-player.html) has wonderful flash effects. You can add several video players in one page with different themes and playlists. With Spider video player you can have unlimited playlists with unlimited number of videos.
  
@@ -124,6 +123,12 @@ Vietnamese (vi)
 
 
 == Changelog ==
+
+= 1.5.9 =
+minor bugs fixed
+
+= 1.5.8 =
+html5 support for vimeo and youtube videos
 
 = 1.5.7 =
 minor bugs fixed

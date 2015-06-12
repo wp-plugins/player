@@ -3,7 +3,7 @@
 Plugin Name: Spider Video Player 
 Plugin URI: http://web-dorado.com/products/wordpress-player.html
 Description:Spider Video Player supports both HTML5 and Flash, allowing you to play videos on any mobile device.Spider WordPress Video Player allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player.
-Version: 1.5.8
+Version: 1.5.9
 Author: http://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -179,7 +179,7 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
         global $many_players;
         $track_URL = '';
         $track_poster = $trackk->thumb;
-        if ($trackk->urlHtml5 == "" || !strpos($trackk->url, 'embed')) {
+        if (($trackk->urlHtml5 == "" || !strpos($trackk->url, 'embed')) && $trackk->type!="vimeo") {
             if($trackk->type=="youtube" ){
                 $track_URL = "https://www.youtube.com/embed/".substr($trackk->url, strpos($trackk->url, '?v=')+3,11)."?enablejsapi=1&html5=1&controls=1&modestbranding=1&rel=0";
             } else {
@@ -2496,7 +2496,7 @@ function Spider_Video_Player_front_end($id)
             jQuery(".fullScreen_<?php echo $ident;?>").parent('td').hide();
             var button_width = <?php echo $theme->appWidth; ?> - 240;
             jQuery("#control_<?php echo $ident;?>").attr('style',"overflow:hidden;");
-            jQuery("#control_<?php echo $ident;?>").attr("style",jQuery("#control_1").attr("style")+"top : auto !important;bottom: 0px;width:"+button_width+"px; margin-left:160px;height: 27px;line-height: 27px;background: transparent;");
+            jQuery("#control_<?php echo $ident;?>").attr("style",jQuery("#control_<?php echo $ident;?>").attr("style")+" top : auto !important;bottom: 0px;width:"+button_width+"px; margin-left:160px;height: 27px;line-height: 27px;background: transparent;");
             jQuery("#control_<?php echo $ident;?> #control_btns_<?php echo $ident;?>").css({"line-height":"27px","width":"100%"});
             jQuery('#global_body_<?php echo $ident;?> #share_buttons_<?php echo $ident;?>').css({'background':'transparent','margin-left': '160px','text-align': 'inherit','top':'-130px'});
             jQuery("#videoID_<?php echo $ident;?>").replaceWith('<iframe id="videoID_<?php echo $ident ?>" type="text/html" width="<?php echo $theme->appWidth; ?>" height="<?php echo $theme->appHeight; ?>" src="'+src+'" frameborder="0" allowfullscreen></iframe>');
