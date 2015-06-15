@@ -288,8 +288,8 @@ border-bottom:1px solid #cccccc;
 <input type="hidden" name="params" id="playlists" value="<?php echo $value; ?>">
 <table width="90%">
 <tr>   
-<td style="font-size:14px; font-weight:bold;"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a></a><br />
-This section allows you to create players, providing them with playlist(s) and a distinct visual theme. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">More...</a></td>   
+<td style="font-size:14px; font-weight:bold;"><a href="https://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;"><a href="https://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a></a><br />
+This section allows you to create players, providing them with playlist(s) and a distinct visual theme. <a href="https://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">More...</a></td>   
         </tr>
     <tr>
   <td width="100%"><h2><?php if($title) echo $title; else echo "Add Spider Video Player"; ?></h2></td>
@@ -399,8 +399,8 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
 	<?php $sp_vid_nonce = wp_create_nonce('nonce_sp_vid'); ?>
 	<table cellspacing="10" width="100%">
    <tr>   
-<td width="100%" style="font-size:14px; font-weight:bold"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
-This section allows you to create players, providing them with playlist(s) and a distinct visual theme. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">More...</a></td>   
+<td width="100%" style="font-size:14px; font-weight:bold"><a href="https://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
+This section allows you to create players, providing them with playlist(s) and a distinct visual theme. <a href="https://web-dorado.com/spider-video-player-wordpress-guide-step-6.html" target="_blank" style="color:blue; text-decoration:none;">More...</a></td>   
         </tr>
     <tr>
     <td style="width:210px">
@@ -408,9 +408,8 @@ This section allows you to create players, providing them with playlist(s) and a
     <input type="button" style="float:left; position:relative; top:10px; margin-left:20px" class="button-secondary action" value="Add a player" name="custom_parametrs" onclick="window.location.href='admin.php?page=Spider_Video_Player&task=add_Spider_Video_Player'" />
     </td>
  	<td colspan="7" align="right" style="font-size:16px;">
-  		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
-		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
-				Get the full version&nbsp;&nbsp;&nbsp;&nbsp;<br />Without a watermark&nbsp;&nbsp;&nbsp;&nbsp;
+  		<a href="https://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
+		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="https://web-dorado.com/files/fromSVP.php" width="215">
 		</a>
         </td>
     </tr>

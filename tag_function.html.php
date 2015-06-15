@@ -35,10 +35,10 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
 <table width="100%">
  <tr>   
 <td style="font-size:14px; font-weight:bold">
-<a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
+<a href="https://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
 This section allows you to create tags. <br />
 A tag is a keyword or term that is assigned to the video, helping to describe it and making it easier to find it by browsing or searching.<br />
-Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">More...</a>
+Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="https://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">More...</a>
 </td> 
 </tr>
 </table>
@@ -146,10 +146,10 @@ border-bottom:1px solid #cccccc;
     <thead>
     
         <tr>   
-<td width="100%" style="font-size:14px; font-weight:bold"><a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
+<td width="100%" style="font-size:14px; font-weight:bold"><a href="https://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
 This section allows you to create tags. <br />
 A tag is a keyword or term that is assigned to the video, helping to describe it and making it easier to find it by browsing or searching.<br />
-Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">More...</a>
+Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="https://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">More...</a>
 </td> 
         </tr>
     </thead>
@@ -160,9 +160,8 @@ Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="http://web-dor
     </td>       
 	</td>
      <td colspan="7" align="right" style="font-size:16px;">
-  		<a href="http://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
-		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="http://web-dorado.com/files/fromSVP.php" width="215"><br>
-				Get the full version&nbsp;&nbsp;&nbsp;&nbsp;<br />Without a watermark&nbsp;&nbsp;&nbsp;&nbsp;
+  		<a href="https://web-dorado.com/files/fromSVP.php" target="_blank" style="color:red; text-decoration:none;">
+		<img src="<?php echo plugins_url("images/header.png",__FILE__) ?>" border="0" alt="https://web-dorado.com/files/fromSVP.php" width="215">
 		</a>
         </td>
 
@@ -262,10 +261,10 @@ var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.
 <table width="100%">
  <tr>   
 <td style="font-size:14px; font-weight:bold">
-<a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
+<a href="https://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">User Manual</a><br />
 This section allows you to create tags. <br />
 A tag is a keyword or term that is assigned to the video, helping to describe it and making it easier to find it by browsing or searching.<br />
-Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="http://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">More...</a>
+Examples of tags: Year, Date, Artist, Album, Genre, etc. <a href="https://web-dorado.com/spider-video-player-wordpress-guide-step-2.html" target="_blank" style="color:blue; text-decoration:none;">More...</a>
 </td> 
 </tr>
 </table>
