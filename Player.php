@@ -3,7 +3,7 @@
 Plugin Name: Spider Video Player 
 Plugin URI: https://web-dorado.com/products/wordpress-player.html
 Description:Spider Video Player supports both HTML5 and Flash, allowing you to play videos on any mobile device.Spider WordPress Video Player allows you to easily add videos to your website with the possibility of organizing videos into playlists and choosing a preferred layout for the player.
-Version: 1.5.10
+Version: 1.5.12
 Author: https://web-dorado.com/
 License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -172,7 +172,7 @@ function Spider_Single_Video_front_end($track, $theme_id, $priority)
     ?>
     <div id="spidervideoplayerhtml5_<?php echo $ident ?>" style="display:none">
     <?php
-    if ($priority == 1 || $priority == 0) {
+    if ($priority == 1 ) {
         global $wpdb;
         $playlist_array = '';
         $trackk = $wpdb->get_row($wpdb->prepare("SELECT * FROM " .$wpdb->prefix ."Spider_Video_Player_video WHERE id=%d", $track));
@@ -1804,7 +1804,7 @@ function Spider_Video_Player_front_end($id)
     ?>
     <div id="spidervideoplayerhtml5_<?php echo $ident ?>" style="display:none">
     <?php
-    if ($priority == 1 || $priority == 0) {
+    if ($priority == 1 ) {
         $theme_id = $wpdb->get_row($wpdb->prepare("SELECT theme FROM " .$wpdb->prefix ."Spider_Video_Player_player WHERE id=%d", $id));
         $playlist = $wpdb->get_row($wpdb->prepare("SELECT playlist FROM " .$wpdb->prefix ."Spider_Video_Player_player WHERE id=%d", $id));
         $playlist_array = explode(',', $playlist->playlist);

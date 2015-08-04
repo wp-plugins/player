@@ -284,7 +284,7 @@ border-bottom:1px solid #cccccc;
                 <tr id="tr_fmsUrl" style="display:none" >
                         <td class="key" style="background:#E0E0E0;">
                                 <label for="fmsUrl">
-                                        <?php echo  'fmsUrl'; ?>:
+                                        <?php echo  'RTMP Server Path'; ?>:
                                 </label>
                         </td>
                         <td  id="td_fmsUrl" style="background:#E8E8E8 ;">
@@ -294,7 +294,7 @@ border-bottom:1px solid #cccccc;
                 <tr>
                         <td class="key" style="background:#E0E0E0;">
                                 <label for="File">
-                                        <?php echo 'URl' ; ?>:
+                                        <?php echo 'RTMP Stream Name' ; ?>:
                                 </label>
                         </td>
                         <td id="td_url" style="background:#E8E8E8 ;">
@@ -827,7 +827,7 @@ This section allows you to upload videos or choose YouTube videos.<a href="https
                 <tr id="tr_fmsUrl" <?php if($row->type=="http" || $row->type=="youtube" || $row->type=="vimeo") echo 'style="display:none"'; ?>>
                         <td class="key" style="background:#E0E0E0;">
                                 <label for="fmsUrl">
-                                        <?php echo 'fmsUrl'; ?>:
+                                        <?php echo 'RTMP Server Path'; ?>:
                                 </label>
                         </td>
                         <td  id="td_fmsUrl" style="background:#E8E8E8;">
