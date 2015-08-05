@@ -1005,7 +1005,7 @@ echo	'	<albumFree title="Single Video" thumb="" id="0">
 ';
 if($single_vid->type!='youtube'){
     if($single_vid->type=='rtmp')
-        echo '<track id="'.$single_vid->id.'" type="'.$single_vid->type.'" fmsUrl="'.htmlspecialchars($single_vid->fmsUrl).'" url="'.htmlspecialchars($single_vid->url).'" thumb="'.htmlspecialchars($single_vid->thumb).'">'.$single_vid->title.'</track>';
+        echo '<track id="'.$single_vid->id.'" type="'.$single_vid->type.'" fmsUrl="'.htmlspecialchars($single_vid->fmsUrl).'" url="'.htmlspecialchars($single_vid->url).'" urlHD="'.htmlspecialchars($single_vid->urlHD).'" thumb="'.htmlspecialchars($single_vid->thumb).'">'.$single_vid->title.'</track>';
     else
         echo '<track id="'.$single_vid->id.'" type="'.$single_vid->type.'" url="'.htmlspecialchars($single_vid->url).'" thumb="'.htmlspecialchars($single_vid->thumb).'">'.$single_vid->title.'</track>';
 }else

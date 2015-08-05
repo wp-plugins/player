@@ -294,7 +294,7 @@ border-bottom:1px solid #cccccc;
                 <tr>
                         <td class="key" style="background:#E0E0E0;">
                                 <label for="File">
-                                        <?php echo 'RTMP Stream Name' ; ?>:
+                                        <?php echo 'URL' ; ?>:
                                 </label>
                         </td>
                         <td id="td_url" style="background:#E8E8E8 ;">

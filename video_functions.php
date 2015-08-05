@@ -183,11 +183,11 @@ function save_video(){
 		 global $wpdb;
 	 	 $save_or_no= $wpdb->insert($wpdb->prefix.'Spider_Video_Player_video', array(
 		'id'	   => NULL,
-		'urlHD'    => esc_sql(esc_html(stripslashes($_POST["fmsUrl"]))),
+		'fmsUrl'    => esc_sql(esc_html(stripslashes($_POST["fmsUrl"]))),
         'url'      => esc_sql(esc_html(stripslashes($_POST["url_rtmp"]))),
         'urlHD'    => esc_sql(esc_html(stripslashes($_POST["urlHD_rtmp"]))),
         'published' =>esc_sql(esc_html(stripslashes($_POST["published"]))),
-        'type'      => "http",
+        'type'      => "rtmp",
 		'params'   =>esc_html($s),
 		'title'    =>esc_sql(esc_html(stripslashes($_POST["title"]))),
 		'thumb'    =>esc_sql(esc_html(stripslashes($_POST["post_image"]))),
